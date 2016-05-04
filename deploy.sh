@@ -21,6 +21,7 @@ echo Fetching from spec-generator
 cp -r ../0.1/ .
 cp -r ../0.2/ .
 cp -r ../0.3/ .
+cp -r ../0.3/* .
 # curl "https://labs.w3.org/spec-generator/?type=respec&url=http://openactive.github.io/spec-template/index.html" > index.static.html;
 
 # The first and only commit to this new Git repo contains all the
