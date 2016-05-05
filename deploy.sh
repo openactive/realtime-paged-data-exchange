@@ -39,9 +39,9 @@ cp -r ../0.3/* .
 
 cd ..
 
-node respec/tools/respec2html.js --src "file://$PWD/0.1/index.html" --out "$PWD/out/0.1/index.html"
-node respec/tools/respec2html.js --src "file://$PWD/0.2/index.html" --out "$PWD/out/0.2/index.html"
-node respec/tools/respec2html.js --src "file://$PWD/0.3/index.html" --out "$PWD/out/index.html"
+node respec/tools/respec2html.js --src "file://$PWD/0.1/index.html" --out "$PWD/out/0.1/static.html"
+node respec/tools/respec2html.js --src "file://$PWD/0.2/index.html" --out "$PWD/out/0.2/static.html"
+node respec/tools/respec2html.js --src "file://$PWD/0.3/index.html" --out "$PWD/out/static.html"
 
 cd out
 
