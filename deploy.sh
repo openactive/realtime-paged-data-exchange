@@ -48,7 +48,7 @@ echo Copying static files
 cp -r ../0.1.0 .
 cp -r ../0.2.2 .
 cp -r ../0.2.3 .
-cp -r ../WorkingDraft/* .
+cp -r ../EditorsDraft/* .
 
 cd ..
 
