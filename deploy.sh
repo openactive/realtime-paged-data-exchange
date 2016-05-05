@@ -33,9 +33,9 @@ git config user.email "travis@openactive.org"
 
 # compile using spec-generator (handling each version separately)
 echo Fetching from spec-generator
-cp -r ../0.1.0/ .
-cp -r ../0.2.2/ .
-cp -r ../0.2.3/ .
+cp -r ../0.1.0 .
+cp -r ../0.2.2 .
+cp -r ../0.2.3 .
 cp -r ../WorkingDraft/* .
 
 cd ..
