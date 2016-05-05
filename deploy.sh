@@ -46,13 +46,22 @@ echo Running respec2html
 node respec/tools/respec2html.js
 
 rm "$PWD/out/0.2.3/index.html"
-echo "file://$PWD/0.2.3/index2.html"
-echo "$PWD/out/0.2.3/index.html"
-node respec/tools/respec2html.js --haltonerror --haltonwarn --src "file://$PWD/0.2.3/index.html" --out "$PWD/out/0.2.3/index.html" 2>&1
+node respec/tools/respec2html.js --haltonerror --haltonwarn --src "file://$PWD/0.2.3/index.html" --out "$PWD/out/0.2.3/index.html"
+{
+if [ ! -f "$PWD/out/0.2.3/index.html" ]; then
+    echo "/out/0.2.3/index.html was not generated!"
+    exit 2
+fi
+}
+
 rm "$PWD/out/index.html"
-echo "file://$PWD/WorkingDraft/index2.html"
-echo "$PWD/out/index.html"
-node respec/tools/respec2html.js --haltonerror --haltonwarn --src "file://$PWD/WorkingDraft/index.html" --out "$PWD/out/index.html" 2>&1
+node respec/tools/respec2html.js --haltonerror --haltonwarn --src "file://$PWD/WorkingDraft/index.html" --out "$PWD/out/index.html"
+{
+if [ ! -f "$PWD/out/index.html2" ]; then
+    echo "/out/index.html was not generated!"
+    exit 2
+fi
+}
 
 cd out
 
