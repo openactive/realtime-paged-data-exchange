@@ -33,15 +33,15 @@ git config user.email "travis@openactive.org"
 
 # compile using spec-generator (handling each version separately)
 echo Fetching from spec-generator
-cp -r ../0.1/ .
-cp -r ../0.2/ .
-cp -r ../0.3/* .
+cp -r ../0.1.0/ .
+cp -r ../0.2.2/ .
+cp -r ../0.2.3/ .
+cp -r ../WorkingDraft/* .
 
 cd ..
 
-node respec/tools/respec2html.js --src "file://$PWD/0.1/index.html" --out "$PWD/out/0.1/static.html"
-node respec/tools/respec2html.js --src "file://$PWD/0.2/index.html" --out "$PWD/out/0.2/static.html"
-node respec/tools/respec2html.js --src "file://$PWD/0.3/index.html" --out "$PWD/out/static.html"
+node respec/tools/respec2html.js --src "file://$PWD/0.2.3/index.html" --out "$PWD/out/0.2.3/index.html"
+node respec/tools/respec2html.js --src "file://$PWD/WorkingDraft/index.html" --out "$PWD/out/index.html"
 
 cd out
 
