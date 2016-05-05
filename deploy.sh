@@ -32,7 +32,8 @@ git config user.name "Travis CI"
 git config user.email "travis@openactive.org"
 
 # compile using spec-generator (handling each version separately)
-echo Fetching from spec-generator
+
+echo Copying static files
 cp -r ../0.1.0 .
 cp -r ../0.2.2 .
 cp -r ../0.2.3 .
@@ -40,8 +41,12 @@ cp -r ../WorkingDraft/* .
 
 cd ..
 
-node respec/tools/respec2html.js --src "file://$PWD/0.2.3/index.html" --out "$PWD/out/0.2.3/index.html"
-node respec/tools/respec2html.js --src "file://$PWD/WorkingDraft/index.html" --out "$PWD/out/index.html"
+echo Running respec2html
+
+rm "$PWD/out/0.2.3/index.html"
+node respec/tools/respec2html.js --src "file://$PWD/0.2.3/index.html" --out "$PWD/out/0.2.3/index2.html"
+rm "$PWD/out/index.html"
+node respec/tools/respec2html.js --src "file://$PWD/WorkingDraft/index.html" --out "$PWD/out/index2.html"
 
 cd out
 
