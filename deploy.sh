@@ -46,9 +46,9 @@ echo Running respec2html
 node respec/tools/respec2html.js
 
 rm "$PWD/out/0.2.3/index.html"
-node respec/tools/respec2html.js --haltonerror --haltonwarn --src "file://$PWD/0.2.3/index.html" --out "$PWD/out/0.2.3/index.html"
+node respec/tools/respec2html.js --haltonerror --haltonwarn --src "file://$PWD/0.2.3/index2.html" --out "$PWD/out/0.2.3/index.html"
 rm "$PWD/out/index.html"
-node respec/tools/respec2html.js --haltonerror --haltonwarn --src "file://$PWD/WorkingDraft/index.html" --out "$PWD/out/index.html"
+node respec/tools/respec2html.js --haltonerror --haltonwarn --src "file://$PWD/WorkingDraft/index2.html" --out "$PWD/out/index.html"
 
 cd out
 
