@@ -4,6 +4,21 @@ set -e # exit with nonzero exit code if anything fails
 # squash messages
 git config --global push.default matching
 
+# prepare respec build
+
+# clear the respec directory
+rm -rf respec || exit 0;
+
+# get existing gh-pages
+git clone -b develop "https://github.com/w3c/respec.git"
+
+cd respec
+
+npm install
+
+cd ..
+
+
 # clear and re-create the out directory
 rm -rf out || exit 0;
 mkdir out;
@@ -20,8 +35,16 @@ git config user.email "travis@openactive.org"
 echo Fetching from spec-generator
 cp -r ../0.1/ .
 cp -r ../0.2/ .
-cp -r ../0.3/ .
 cp -r ../0.3/* .
+
+cd ..
+
+node respec/tools/respec2html.js --src "file://$PWD/0.1/index.html" --out "$PWD/out/0.1/index.html"
+node respec/tools/respec2html.js --src "file://$PWD/0.2/index.html" --out "$PWD/out/0.2/index.html"
+node respec/tools/respec2html.js --src "file://$PWD/0.3/index.html" --out "$PWD/out/index.html"
+
+cd out
+
 # curl "https://labs.w3.org/spec-generator/?type=respec&url=http://openactive.github.io/spec-template/index.html" > index.static.html;
 
 # The first and only commit to this new Git repo contains all the
