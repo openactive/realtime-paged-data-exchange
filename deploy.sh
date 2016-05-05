@@ -31,7 +31,18 @@ git init
 git config user.name "Travis CI"
 git config user.email "travis@openactive.org"
 
-# compile using spec-generator (handling each version separately)
+# compile using respec2html (handling each version separately)
+function respec2html {
+  rm $2
+  echo Running respec2html for $3
+  node respec/tools/respec2html.js --haltonerror --haltonwarn --src $1 --out $2
+  {
+  if [ ! -f $2 ]; then
+      echo "respect2html failed to generate index.html for $3"
+      exit 2
+  fi
+  }
+}
 
 echo Copying static files
 cp -r ../0.1.0 .
@@ -41,27 +52,8 @@ cp -r ../WorkingDraft/* .
 
 cd ..
 
-echo Running respec2html
-
-node respec/tools/respec2html.js
-
-rm "$PWD/out/0.2.3/index.html"
-node respec/tools/respec2html.js --haltonerror --haltonwarn --src "file://$PWD/0.2.3/index.html" --out "$PWD/out/0.2.3/index.html"
-{
-if [ ! -f "$PWD/out/0.2.3/index.html" ]; then
-    echo "/out/0.2.3/index.html was not generated!"
-    exit 2
-fi
-}
-
-rm "$PWD/out/index.html"
-node respec/tools/respec2html.js --haltonerror --haltonwarn --src "file://$PWD/WorkingDraft/index.html" --out "$PWD/out/index.html"
-{
-if [ ! -f "$PWD/out/index.html2" ]; then
-    echo "/out/index.html was not generated!"
-    exit 2
-fi
-}
+respec2html "file://$PWD/0.2.3/index.html" "$PWD/out/0.2.3/index.html" "0.2.3"
+respec2html "file://$PWD/WorkingDraft2/index.html" "$PWD/out/index.html" "WorkingDraft"
 
 cd out
 
