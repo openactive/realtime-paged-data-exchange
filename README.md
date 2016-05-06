@@ -1,4 +1,4 @@
-# Openactive Real-Time Paged Exchange Specification
+# Openactive Real-Time Paged Exchange Specification [![Build Status](https://travis-ci.org/openactive/realtime-paged-data-exchange.svg?branch=master)](https://travis-ci.org/openactive/realtime-paged-data-exchange)
 
 ## Versions
 
