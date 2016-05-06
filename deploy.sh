@@ -14,7 +14,7 @@ git clone -b develop "https://github.com/openactive/respec.git"
 
 cd respec
 
-npm install
+# npm install #note: not required for phantom
 
 cd ..
 
@@ -34,11 +34,11 @@ git config user.email "travis@openactive.org"
 # compile using respec2html (handling each version separately)
 function respec2html {
   rm $2
-  echo Running respec2html (Nightmare) for $3
+  echo Running respec2html Nightmare for $3
   node respec/tools/respec2html.js --haltonerror --haltonwarn --src $1 --out $2
   {
   if [ ! -f $2 ]; then
-      echo "respect2html (Nightmare) failed to generate index.html for $3"
+      echo "respect2html Nightmare failed to generate index.html for $3"
       exit 2
   fi
   }
@@ -47,11 +47,11 @@ function respec2html {
 # old version using phantom still available in case of issues
 function respec2htmlPhantom {
   rm $2
-  echo Running respec2html (Phantom) for $3
+  echo Running respec2html Phantom for $3
   phantomjs --ssl-protocol=any respec/tools/respec2html-phantom.js -e -w $1 $2 15000
   {
   if [ ! -f $2 ]; then
-      echo "respect2html (Phantom) failed to generate index.html for $3"
+      echo "respect2html Phantom failed to generate index.html for $3"
       exit 2
   fi
   }
