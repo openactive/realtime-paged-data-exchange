@@ -2,7 +2,7 @@
 
 ## Versions
 
-The following versions are maintained, with no breaking changes made within a major version, and no additive changes made within a minor version.
+The following versions are maintained, with no breaking changes made within a major version (e.g. 1.x.x), and no additive changes made within a minor version (e.g. 1.1.x).
 
 ## Version History
 
