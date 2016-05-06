@@ -9,6 +9,7 @@ gulp.task('express', function() {
   var app = express();
   app.use(require('connect-livereload')({port: 35729}));
   app.use(express.static(__dirname));
+  app.use(express.static(__dirname + "/respec")) ; //Respec dev mode
   app.listen(4000, '0.0.0.0');
 });
 
@@ -46,7 +47,8 @@ gulp.task('editorsdraft', function() {
 
   var thisDir = path.dirname(fs.realpathSync(__filename));
 
-  const src = "file://" + thisDir + "/EditorsDraft/index.html";
+  //const src = "file://" + thisDir + "/EditorsDraft/index.html";
+  const src = "http://localhost:4000/EditorsDraft/index.html";
   console.log(src);
   const out = "./EditorsDraft/live.html";
   const whenToHalt = {
