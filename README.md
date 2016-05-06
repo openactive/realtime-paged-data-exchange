@@ -6,7 +6,7 @@ The following versions are maintained, with no breaking changes made within a ma
 
 ## Version History
 
-Version | Date | Change Log | Change Summary
+Version | Date Published | Change Log | Change Summary
 ---|---|---|---|---
  0.1.0 | 1 Nov 2015  | [Commits](https://github.com/openactive/realtime-paged-data-exchange/commits/master/0.1.0/index.html) [Issues](https://github.com/openactive/realtime-paged-data-exchange/milestones/0.1.0) | Draft specification circulated for the purposes of gathering feedback.
  0.2.0 | 28 Jan 2016 | [Commits](https://github.com/openactive/realtime-paged-data-exchange/commits/master/0.2.0/index.html) [Issues](https://github.com/openactive/realtime-paged-data-exchange/milestones/0.2.0) | Improved to increase clarity, and additional real-time transport options.
