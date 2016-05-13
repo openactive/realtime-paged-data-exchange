@@ -1,10 +1,10 @@
 # Openactive Real-Time Paged Exchange Specification [![Build Status](https://travis-ci.org/openactive/realtime-paged-data-exchange.svg?branch=master)](https://travis-ci.org/openactive/realtime-paged-data-exchange)
 
-## Versions
+### Versions
 
 The following versions are maintained, with no breaking changes made within a major version (e.g. 1.x.x), and no additive changes made within a minor version (e.g. 1.1.x).
 
-## Version History
+### Version History
 
 Version | Date Published | Change Log | Change Summary
 ---|---|---|---|---
