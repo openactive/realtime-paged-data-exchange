@@ -1,13 +1,15 @@
 # Openactive Real-Time Paged Exchange Specification [![Build Status](https://travis-ci.org/openactive/realtime-paged-data-exchange.svg?branch=master)](https://travis-ci.org/openactive/realtime-paged-data-exchange)
 
-## Versions
+## Versioning
 
-The following versions are maintained, with no breaking changes made within a major version (e.g. 1.x.x), and no additive changes made within a minor version (e.g. 1.1.x).
+No breaking changes are made within a major version (e.g. 1.x.x), and no additive changes made within a minor version (e.g. 1.1.x).
 
-## Version History
+## Specification
 
 [//]: # (Below the SNIP is included in Openactive.io)
 [//]: # (_SNIP_)
+
+This specification tackles the generic use-case of unidirectional real-time data synchronisation between two systems, where the receiving system requires only summary data from the origin system.
 
 Version | Date Published | Change Log | Change Summary
 ---|---|---|---|---
