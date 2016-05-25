@@ -400,13 +400,13 @@ data | Note this key is not included if state is `'deleted'`
     A full example REST response from polling:
 
     ```
-    /getSessions?from=Date(a)
+    /getSessions?afterTimestamp=1453931101&afterId={c15814e5-8931-470c-8a16-ef45afedaece}
     -> { items: [
             {
-                state: 'updated',
+                state: "updated",
                 kind: "session",
                 id: "{c15814e5-8931-470c-8a16-ef45afedaece}",
-                modified: Date(a),
+                modified: 1453931101,
                 data: {
                    lat: 51.5072,
                    lng: -0.1275,
@@ -415,13 +415,13 @@ data | Note this key is not included if state is `'deleted'`
                 }
             },
             {
-                state: 'deleted',
+                state: "deleted",
                 kind: "session",
                 id: "{d97f73fb-4718-48ee-a6a9-9c7d717ebd85}",
-                modified: Date(b)
+                modified: 1453931925
             }
           ],
-          next: '/getSessions?from=Date(b)&after={d97f73fb-4718-48ee-a6a9-9c7d717ebd85}'
+          next: '/getSessions?afterTimestamp=1453931925&afterId={d97f73fb-4718-48ee-a6a9-9c7d717ebd85}'
     }
     ```
 
