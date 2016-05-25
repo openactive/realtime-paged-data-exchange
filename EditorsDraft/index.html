@@ -300,7 +300,7 @@
     ```javascript
     var query;
     if (queryParams.from) {
-        query = Session.query().filter((Session.modified == queryParams.from && Session.id > queryParams.after) || (Session.modified > queryParams.from));
+        query = Session.query().filter((Session.modified == queryParams.afterTimestamp && Session.id > queryParams.afterId) || (Session.modified > queryParams.afterTimestamp));
     } else {
         query = Session.query()
     }
@@ -341,7 +341,7 @@
     ```JSON
     <response> => {
           items: [<item>,<item>,<item>,...],
-          next: "/getSessions?from=<date>&after=<id>"
+          next: "/getSessions?afterTimestamp=<date>&afterId=<id>"
        }
     ```
 
@@ -443,7 +443,7 @@ data | Note this key is not included if state is `'deleted'`
 
     ## Polling
 
-    A basic REST endpoint which accepts the from and after parameters is required to allow a full cache refresh / data download on demand (e.g. `/getSessions?from=Date(b)&after={d97f73fb}`).
+    A basic REST endpoint which accepts the from and after parameters is required to allow a full cache refresh / data download on demand (e.g. `/getSessions?afterTimestamp=Date(b)&afterId={d97f73fb}`).
 
     For cases where only a polling endpoint is available, the client will poll the endpoint using heuristic backoff.
 
@@ -501,7 +501,7 @@ data | Note this key is not included if state is `'deleted'`
     Response grammar / example:
 
     ```
-    /stream?from=Date(b)&after={d97f73fb-4718-48ee-a6a9-9c7d717ebd85}
+    /stream?afterTimestamp=Date(b)&afterId={d97f73fb-4718-48ee-a6a9-9c7d717ebd85}
     ->
     event: itemupdate
     data: <item>
@@ -517,7 +517,7 @@ data | Note this key is not included if state is `'deleted'`
     An example stream is below:
 
     ```
-    /stream?from=Date(a)&after={a97f73fb-4718-48ee-a6a9-9c7d717ebd85}
+    /stream?afterTimestamp=Date(a)&afterId={a97f73fb-4718-48ee-a6a9-9c7d717ebd85}
     ->
     event: itemupdate
     data: {
@@ -548,7 +548,7 @@ data | Note this key is not included if state is `'deleted'`
 
     As with Server-sent events, only the `<item>` from the `<response>` is required to be sent in the message, as AMQP makes the explicit paging redundant.
 
-    For very high volumes, this allows the server to send multiple pages in parallel, as it can calculate the "from" and "after" parameter and control the send. The client can also process these in parallel (particularly useful in the case of shared or No-SQL data stores, with scaling queue processors), using the timestamp of each record to ensure records are only updated with newer data.
+    For very high volumes, this allows the server to send multiple pages in parallel, as it can calculate the "afterTimestamp" and "afterId" parameter and control the send. The client can also process these in parallel (particularly useful in the case of shared or No-SQL data stores, with scaling queue processors), using the timestamp of each record to ensure records are only updated with newer data.
     However this requires additional infrastructure and the use of certificates (more complex to configure than HTTPS).
 
 
