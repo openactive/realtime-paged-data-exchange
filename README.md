@@ -11,6 +11,8 @@ No breaking changes are made within a major version (e.g. 1.x.x), and no additiv
 
 This specification tackles the generic use-case of unidirectional real-time data synchronisation between two systems, where the receiving system requires only summary data from the origin system.
 
+** If you have any issues implementing the standard or have any questions relating to it, please do post an issue to the [Activation Repo](https://github.com/openactive/activation).**
+
 Version | Date Published | Change Log | Change Summary
 ---|---|---|---|---
  [0.1.0](https://www.openactive.io/realtime-paged-data-exchange/0.1.0/) | 1 Nov 2015  | [Commits](https://github.com/openactive/realtime-paged-data-exchange/commits/master/0.1.0/index.html) [Issues](https://github.com/openactive/realtime-paged-data-exchange/milestones/0.1.0) | Draft specification circulated for the purposes of gathering feedback.
