@@ -9,9 +9,9 @@ No breaking changes are made within a major version (e.g. 1.x.x), and no additiv
 [//]: # (Below the SNIP is included in Openactive.io)
 [//]: # (_SNIP_)
 
-This specification tackles the generic use-case of unidirectional real-time data synchronisation between two systems, where the receiving system requires only summary data from the origin system.
-
 **If you have any issues implementing the standard or have any questions relating to it, please do post an issue to the [Activation Issue Tracker](https://github.com/openactive/activation).**
+
+This specification tackles the generic use-case of unidirectional real-time data synchronisation between two systems, where the receiving system requires only summary data from the origin system.
 
 Version | Date Published | Change Log | Change Summary
 ---|---|---|---|---
