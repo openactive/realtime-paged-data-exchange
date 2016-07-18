@@ -25,7 +25,7 @@ Version | Date Published | Change Log | Change Summary
 
 Before posting the example implementation to the [Activation Issue Tracker](https://github.com/openactive/activation/issues), check the following common issues have been included in your thinking:
 
-- Date formats, are you using the ISO 8601?
+- Date formats, are you using the ISO 8601 for all dates? Are your "modified" timestamps integer? 
 - Are records deleted from your system marked with a deleted flag and included in the "Deleted" state
 - Does your feed include all historical data from the beginning of time and not just data in the future or from today's date
 - Have you included as much data as possible
