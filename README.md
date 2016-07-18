@@ -27,11 +27,11 @@ Before posting the example implementation to the [Activation Issue Tracker](http
 
 - Date formats, are you using the ISO 8601 for all dates, and are they in UTC (without timezone)? Are your "modified" timestamps integer? 
 - Are records deleted from your system marked with a deleted flag and included in the "Deleted" state
-- Does your feed include all historical data from the beginning of time and not just data in the future or from today's date
-- Have you included as much data as possible
-- Does your implementation match your internal state as closely as possible (i.e. you are not generating sessions that don't actually yet exist as records in your system from a recurrance rule, but are instead providing the recurrance rule).
-- Does each page contain a licensing key?
-- Are Session URLs are included in the data block for each session, so a user can find out details from source?
-- Is the Next URL present on the last page?
+- Does your feed include all historical data from the beginning of time and not just data in the future or from today's date? 
 - Does the endpoint without any parameters return the first page (from the beginning of time)?
+- Have you included as many data fields as possible
+- Does your implementation match your internal state as closely as possible (i.e. you are not generating sessions that don't actually yet exist as records in your system from a recurrance rule, but are instead providing the recurrance rule data directly).
+- Does each page contain a "license" key?
+- Are Session URLs included in the data block for each session, so a user can find out details from source?
+- Is the Next URL present on the last page?
 - Are HTML or Markdown encoded data fields included in plain as well as raw form as separate fields?
