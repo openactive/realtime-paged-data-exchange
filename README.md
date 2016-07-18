@@ -35,3 +35,4 @@ Before posting the example implementation to the [Activation Issue Tracker](http
 - Are Session URLs included in the data block for each session, so a user can find out details from source?
 - Is the Next URL present on the last page?
 - Are HTML or Markdown encoded data fields included in plain as well as raw form as separate fields?
+- Do embedded related entities have IDs?
