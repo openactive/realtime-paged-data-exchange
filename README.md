@@ -25,7 +25,9 @@ Version | Date Published | Change Log | Change Summary
 
 Before posting the example implementation to the [Activation Issue Tracker](https://github.com/openactive/activation/issues), check the following common issues have been included in your thinking:
 
-- Date formats, are you using the ISO 8601 for all dates, and are they in UTC (without timezone)? Are your "modified" timestamps integer? 
+- Date formats, are you using ISO8601 for all user-facing dates, and integers for timestamps
+  - Are your user-facing dates ISO8601 time representation, expressed as local time with a correct offset from UTC (e.g "2016-07-13T20:00:00-05:00")
+  - Are your "modified" timestamps integer? 
 - Are records deleted from your system marked with a deleted flag and included in the "Deleted" state
 - Does your feed include all historical data from the beginning of time and not just data in the future or from today's date? 
 - Does the endpoint without any parameters return the first page (from the beginning of time)?
