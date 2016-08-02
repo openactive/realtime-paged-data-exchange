@@ -38,7 +38,7 @@ Before posting the example implementation to the [Activation Issue Tracker](http
 - Is the Next URL present on the last page?
 - Are HTML or Markdown encoded data fields included in plain as well as raw form as separate fields?
 - Do embedded related entities have IDs?
-- If an embedded related entity is updated, the main item's timestamp reflects this?
-- Are all URLs are absolute?
+- If an embedded related entity is updated, does the main item's timestamp reflect this?
+- Are all URLs absolute?
 - Are images included where available, with URLs to each thumbnail size available as well as the original image?
 - For image URLs, is an empty string is returned instead of a placeholder image when there is no image available?
