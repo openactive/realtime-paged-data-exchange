@@ -40,4 +40,5 @@ Before posting the example implementation to the [Activation Issue Tracker](http
 - Do embedded related entities have IDs?
 - If an embedded related entity is updated, the main item's timestamp reflects this?
 - Are all URLs are absolute?
+- Are images included where available, with URLs to each thumbnail size available as well as the original image?
 - For image URLs, is an empty string is returned instead of a placeholder image when there is no image available?
