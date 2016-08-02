@@ -27,7 +27,7 @@ Before posting the example implementation to the [Activation Issue Tracker](http
 
 - Date formats, are you using ISO8601 for all user-facing dates, and integers for timestamps
   - Are your user-facing dates ISO8601 format, expressed as local time with a correct offset from UTC (e.g "2016-07-13T20:00:00-05:00"), or as UTC (e.g. "2014-08-12T18:50:00Z")
-  - Are you using integer "modified" timestamps? 
+  - Are you using integer "modified" timestamps? (recommended but not required)
 - Are records deleted from your system marked with a deleted flag and included in the "Deleted" state
 - Does your feed include all historical data from the beginning of time and not just data in the future or from today's date? 
 - Does the endpoint without any parameters return the first page (from the beginning of time)?
