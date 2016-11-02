@@ -13,7 +13,7 @@ This specification tackles the generic use-case of unidirectional real-time data
 
 To get started, build a single API endpoint that conforms to the specification, and check it with the validator:
 
-- ** [Current Specification](https://www.openactive.io/realtime-paged-data-exchange/)**
+- **[Current Specification](https://www.openactive.io/realtime-paged-data-exchange/)**
 - [Validator](https://www.openactive.io/endpoint-validator/)
 
 If you have any issues implementing the standard or have any questions relating to it, please do post an issue to the [Activation Issue Tracker](https://github.com/openactive/activation).
