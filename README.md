@@ -9,7 +9,7 @@ This specification tackles the generic use-case of unidirectional real-time data
 [//]: # (Below the SNIP is included in Openactive.io)
 [//]: # (_SNIP_)
 
-####  Getting Started
+###  Getting Started
 
 To get started, build a single API endpoint that conforms to the specification, and check it with the validator:
 
@@ -18,7 +18,7 @@ To get started, build a single API endpoint that conforms to the specification, 
 
 If you have any issues implementing the standard or have any questions relating to it, please do post an issue to the [Activation Issue Tracker](https://github.com/openactive/activation).
 
-####  Implementation checklist
+###  Implementation checklist
 
 Before posting the example implementation to the [Activation Issue Tracker](https://github.com/openactive/activation/issues), check the following common issues have been included in your thinking:
 
