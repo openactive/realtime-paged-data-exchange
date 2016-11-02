@@ -2,7 +2,7 @@
 > - [OpenActive: Activation Issue Tracker](https://github.com/openactive/activation) - help implementing the spec. 
 > - [OpenActive: The Steps](https://www.openactive.io/technology.html#the-steps) - what to do after you've implemented the spec. 
 
-# OpenActive: Real-Time Paged Data Exchange Specification [![Build Status](https://travis-ci.org/openactive/realtime-paged-data-exchange.svg?branch=master)](https://travis-ci.org/openactive/realtime-paged-data-exchange)
+# OpenActive: Real-Time Paged Exchange Specification [![Build Status](https://travis-ci.org/openactive/realtime-paged-data-exchange.svg?branch=master)](https://travis-ci.org/openactive/realtime-paged-data-exchange)
 
 This specification tackles the generic use-case of unidirectional real-time data synchronisation between two systems, where the receiving system requires only summary data from the origin system.
 
