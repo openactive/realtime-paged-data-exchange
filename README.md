@@ -11,10 +11,12 @@ This specification tackles the generic use-case of unidirectional real-time data
 
 ###  Getting Started
 
-To get started post an example on the [Activation Issue Tracker](https://github.com/openactive/activation/blob/master/README.md), build a single API endpoint that conforms to the specification, check it with the validator:
+To get started post an example on the [Activation Issue Tracker](https://github.com/openactive/activation/blob/master/README.md), build a new API endpoint that conforms to the specification, check it with the validator:
 
 - **[Current Specification (Editor's Draft)](https://www.openactive.io/realtime-paged-data-exchange/)**
 - [Validator](https://www.openactive.io/endpoint-validator/)
+
+**TLDR:** Section 3-4 of the specification explains the concept, Section 4.6 is an example, post your hypothetical JSON as an issue in this repo to get feedback.
 
 ###  Implementation checklist
 
