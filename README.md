@@ -1,5 +1,5 @@
 > - **[OpenActive: RPDE specification](hhttps://github.com/openactive/realtime-paged-data-exchange/blob/master/README.md)** - the spec.
-> - [OpenActive: Activation Issue Tracker](https://github.com/openactive/activation) - help implementing the spec. 
+> - [OpenActive: Activation Issue Tracker](https://github.com/openactive/activation/blob/master/README.md) - help implementing the spec. 
 > - [OpenActive: The Steps](https://www.openactive.io/technology.html#the-steps) - what to do after you've implemented the spec. 
 
 # OpenActive: Real-Time Paged Exchange Specification [![Build Status](https://travis-ci.org/openactive/realtime-paged-data-exchange.svg?branch=master)](https://travis-ci.org/openactive/realtime-paged-data-exchange)
@@ -11,14 +11,14 @@ This specification tackles the generic use-case of unidirectional real-time data
 
 ###  Getting Started
 
-To get started post an example on the [Activation Issue Tracker](https://github.com/openactive/activation), build a single API endpoint that conforms to the specification, and check it with the validator:
+To get started post an example on the [Activation Issue Tracker](https://github.com/openactive/activation/blob/master/README.md), build a single API endpoint that conforms to the specification, and check it with the validator:
 
 - **[Current Specification (Editor's Draft)](https://www.openactive.io/realtime-paged-data-exchange/)**
 - [Validator](https://www.openactive.io/endpoint-validator/)
 
 ###  Implementation checklist
 
-Before posting the example implementation to the [Activation Issue Tracker](https://github.com/openactive/activation/issues), check the following common issues have been included in your thinking:
+Before posting the example implementation to the [Activation Issue Tracker](https://github.com/openactive/activation/blob/master/README.md), check the following common issues have been included in your thinking:
 
 - Date formats, are you using ISO8601 for all user-facing dates, and integers for timestamps
   - Are your user-facing dates ISO8601 format, expressed as local time with a correct offset from UTC (e.g "2016-07-13T20:00:00-05:00"), or as UTC (e.g. "2014-08-12T18:50:00Z")
