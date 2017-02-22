@@ -39,7 +39,7 @@ Before posting the example implementation to the [Activation Issue Tracker](http
 - For image URLs, is an empty string is returned instead of a placeholder image when there is no image available?
 - Are all responses returned with header `Content-Type: application/json`?
 - Are the next URL parameters urlencoded?
-- Are you using the correct database query to return data. See [this sample code](https://github.com/openactive/rpde-sample-azure/blob/master/RpdeSample/run.csx) for a SQL equivalent of the specification. There where clause should look as follows for the case where afterId and afterTimestamp are used: `WHERE (MODIFIEDDATE = @afterTimestamp AND ID > @afterId) OR (MODIFIEDDATE > @afterTimestamp)`
+- Are you using the correct database query to return data. See [this sample code](https://github.com/openactive/rpde-sample-azure/blob/master/RpdeSample/run.csx) for a SQL equivalent of the pseudocode in the specification. The `where` clause should look as follows for the case where afterId and afterTimestamp are both used: `WHERE (MODIFIEDDATE = @afterTimestamp AND ID > @afterId) OR (MODIFIEDDATE > @afterTimestamp)`
 
 ### Specification Revision History
 
