@@ -30,7 +30,7 @@ Before posting the example implementation to the [Activation Issue Tracker](http
 - Does your implementation match your internal state as closely as possible (i.e. you are not generating sessions that don't actually yet exist as records in your system from a recurrance rule, but are instead providing the recurrance rule data directly).
 - Does each page contain a "license" key (see [this issue](https://github.com/openactive/activation/issues/19) for details, note that this is not yet updated in the spec)?
 - Are Session URLs included in the data block for each session, so a user can find out details from source?
-- Is the Next URL present on the last page?
+- Is the Next URL present on the last page? The Next URL on the last page (no items) should default to the ID and timestamp of the current request
 - Are HTML or Markdown encoded data fields included in plain as well as raw form as separate fields?
 - Do embedded related entities have IDs?
 - If an embedded related entity is updated, does the main item's timestamp reflect this?
