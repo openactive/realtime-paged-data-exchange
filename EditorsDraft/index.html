@@ -105,8 +105,24 @@
           isRecTrack:   true,
           isNoTrack:    true,
           issueBase:    "https://github.com/openactive/realtime-paged-data-exchange/issues/",
-          format: "markdown"
-
+          format: "markdown",
+          localBiblio: {
+            "Modelling-Opportunity-Data": {
+                "href": "https://www.openactive.io/modelling-opportunity-data/",
+                "title": "Modelling Opportunity Data",
+                "publisher": "Open Active Community Group",            
+            },
+            "SCHEMA-ORG": {
+                "href": "http://schema.org/",
+                "title": "Schema.org"
+                
+            },
+            "Publishing-Opportunity-Data": {
+                "href": "https://www.openactive.io/opportunity-data-primer/",
+                "title": "Publishing Opportunity Data: A Primer",
+                "publisher": "Open Active Community Group",            
+            }                                  
+          }
         };
     </script>
 
@@ -378,21 +394,19 @@ data | Note this key is not included if state is `'deleted'`
 
     ### `<data>`
 
-    _Note that this element is non-normative._
-
-    ```
-    <data> => {
-          lat: 51.5072,
-          lng: -0.1275,
-          name: 'Acrobatics with Dave',
-              groupId: "{0657FD6D-A4AB-43C4-84E5-0933C84B4F4F}" (7)
-          clubId: "{38A52BE4-9352-453E-AF97-5C3B448652F0}"
-       }
-    ```
-
-    The `<data>` part of the response is then open for whatever data structure is most appropriate for the particular entity type ("kind"). Other Openactive specifications will cover this content.
-
-    Although IDs are provided for related entities here, this example structure is not part of the standard.
+    The `<data>` part of the response is open for applications for populate with whatever data structure is most appropriate for the entity type ("kind") being exchanged. 
+    
+    Applications SHOULD use a standard data model to increase interoperability of the exchanged data. For example an application may choose to use entities and properties defined in [[SCHEMA-ORG]] to help structure data in a useful way for reusers. 
+    
+    Applications that are exchanging data about entities described in [[Modelling-Opportunity-Data]] SHOULD ensure that their data conforms to that specification. 
+    This includes data on Events, Organisations, Places, etc. [[Publishing-Opportunity-Data]] provides additional examples and guidance on using that data model 
+    in ways that are compatible with the other standards publishing by OpenActive.
+    
+    Applications that publish data using bespoke data models SHOULD provide users with relevant documentation.
+    
+    <div class="note">
+    The remainder of this specification uses simple examples when showing `<data>` elements in responses. However these examples are for illustrative purposes only. Read the 
+    </div>
 
 
     ## Example
