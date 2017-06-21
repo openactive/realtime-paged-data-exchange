@@ -35,7 +35,7 @@ git config user.email "travis@openactive.org"
 function respec2html {
   rm $2
   echo Running respec2html Nightmare for $3
-  xvfb-run --server-args="-screen 0 1024x768x24" node respec/tools/respec2html.js --haltonerror --haltonwarn --src $1 --out $2
+  DEBUG=nightmare xvfb-run --server-args="-screen 0 1024x768x24" node respec/tools/respec2html.js --haltonerror --haltonwarn --src $1 --out $2
   {
   if [ ! -f $2 ]; then
       echo "respect2html Nightmare failed to generate index.html for $3"
