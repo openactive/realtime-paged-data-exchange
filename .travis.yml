@@ -6,4 +6,4 @@ script: bash ./deploy.sh
 env:
   global:
     - ENCRYPTION_LABEL: "58f03f5bafdc"
-    - GH_REF: github.com/openactive/realtime-paged-data-exchange.git
+    - GH_REF: "git@github.com/openactive/realtime-paged-data-exchange.git"
