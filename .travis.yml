@@ -5,5 +5,5 @@ node_js:
 script: bash ./deploy.sh
 env:
   global:
+    - ENCRYPTION_LABEL: "58f03f5bafdc"
     - GH_REF: github.com/openactive/realtime-paged-data-exchange.git
-    - secure: gjGtvotU6TxrspMVvJhT+a5ilyUzSDjdfbR2pr5CBW71BHVBN7fjCvxyjBLkrAloNZpv8RhpheyOSJqF8AZdonZc0vZ97z9WXJY7KDTm8Jch8JIsIFqA9k1yDmznM+d+BMZeUAv/+g2i/SIB55n5Heqpxy+4ufjVlHpjLeq3paNskvDUmj9G1b6bpj3cl9jEj0ptBLx+4TRSLHG9tvLVBBhSmY8wrdIs85EFxLWSQXQI3XZGYF3Lcxc47EUVMJed9aCiHs7GtnyIiunJW/2AAizh/OkbMHqgkekZYOdnz3PyQHq6x6t5NIfPEF16WGpxqgdd/vaZ+uvES/6y6LKxDYvTHPIxaXCTOUIZZJmAtTWPOG5F36TrYHpuigeFT1gH4GxSA0xJqnBbZFXYKM7vN87osBe0CNWN6ppeqhG/TmwJ5w5HG27sdIFI5d9qpUI6FnYoeZyXBg9LRuzXOSJDYcWnJ402z9tlO6SCdpu8U5XVYXiRtHAUjV4+9bglmBmXqjyauvM83BsaO5qbeLVVXK/Eo7EQ+vmb7VHkKz+QHfzRQMG/Xs+hrflahchtRj1Yj/xnKIOs/E4aB/pEv0Mn5IgoSThrEXcubmdHWqfaOdZ8SWoXa/2wSHVlH7auOgmsvWTLNeW+B9qH4GzoIPXMTbh8vEG5F2mgpQfOkYTZqlU=
