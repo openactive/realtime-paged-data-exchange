@@ -49,13 +49,21 @@ gulp.task('editorsdraft', function() {
 
   //const src = "file://" + thisDir + "/EditorsDraft/index.html";
   const src = "http://localhost:4000/EditorsDraft/index.html";
-  console.log(src);
+  //console.log(src);
   const out = "./EditorsDraft/live.html";
   const whenToHalt = {
     haltOnError: false,
     haltOnWarn: false,
   };
   const timeout = 10000;
+
+  console.log("");
+  console.log("*********************************************************");
+  console.log("*                                                       *");
+  console.log("*  Visit: http://localhost:4000/EditorsDraft/live.html  *");
+  console.log("*                                                       *");
+  console.log("*********************************************************");
+  console.log("");
 
   return fetchAndWrite(src, out, whenToHalt, timeout).then(notifyEditorsDraft);
 });

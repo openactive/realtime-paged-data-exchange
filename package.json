@@ -1,6 +1,10 @@
 {
   "version": "0.0.1",
   "homepage": "https://www.openactive.io/",
+  "scripts": {
+    "postinstall": "rm -rf respec && git clone git@github.com:openactive/respec.git && cd respec && npm install",
+    "start": "gulp"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/openactive/spec-template/"
