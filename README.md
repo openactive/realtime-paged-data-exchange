@@ -49,6 +49,9 @@ No breaking changes are made within a major version (e.g. 1.x.x), and no additiv
 | Version | Date Published | Change Log | Change Summary |
 |---------|----------------|------------|----------------|
 | Version | Date Published | Change Log | Change Summary |
+| Version | Date Published | Change Log | Change Summary |
+|---------|----------------|------------|----------------|
+
 
 [0.1.0](https://www.openactive.io/realtime-paged-data-exchange/0.1.0/) | 12 Nov 2015  | [Commits](https://github.com/openactive/realtime-paged-data-exchange/commits/master/0.1.0/index.html) [Issues](https://github.com/openactive/realtime-paged-data-exchange/milestones/0.1.0) | Draft specification circulated for the purposes of gathering feedback.
  [0.2.0](https://www.openactive.io/realtime-paged-data-exchange/0.2.0/) | 6 Feb 2016 | [Commits](https://github.com/openactive/realtime-paged-data-exchange/commits/master/0.2.0/index.html) [Issues](https://github.com/openactive/realtime-paged-data-exchange/milestones/0.2.0) | Improved to increase clarity, and additional real-time transport options.
