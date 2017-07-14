@@ -167,6 +167,7 @@
       background-image: url('https://www.openactive.io/assets/openactive-label-editorsdraft.png') !important;
     }
     body.toc-sidebar #toc {
+      background-size: 25px auto !important;
       background-attachment: fixed !important;
     }
     h1 {
@@ -177,6 +178,12 @@
     }
     #toc {
       padding-top: 0px !important;
+    }
+    .remove {
+      background-colour: yellow;
+    }
+    code {
+        color: #C83500;
     }
     </style>
 
@@ -364,17 +371,19 @@
 
     ```JSON
     <response> => {
-          items: [<item>,<item>,<item>,...],
-          next: "/getSessions?afterTimestamp=<date>&afterId=<id>"
+          "next": "/getSessions?afterTimestamp=<date>&afterId=<id>",
+          "items": [<item>,<item>,<item>,......],
+          "license": "https://creativecommons.org/licenses/by/4.0/"
        }
     ```
 
     A generic response specification is included here, the idea being that we standardise the transport encapsulation for the records (paging and polling logic) across entities and systems so that, we can genericise this logic on both sides.
 
-Key | Description
+Property | Status | Notes
 --- | ---
-items | An array of `<item>`, which should simply by empty `[]` if no results are returned.
-next | For polling, the "next" URL in the response is a precomputed next URL that would be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, this is outside the scope of this standard.
+next | <em class="rfc2119">REQUIRED</em> | For polling, the "next" URL in the response is a precomputed next URL that would be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, this is outside the scope of this standard.
+items | <em class="rfc2119">REQUIRED</em> | An array of `<item>`, which should simply by empty `[]` if no results are returned.
+[`license`](http://purl.org/dc/terms/license) | <em class="rfc2119">REQUIRED</em> | Reference to the license under which the data has been published
 
 
     ### `<item>`
