@@ -72,8 +72,8 @@ cp -r ../EditorsDraft/* .
 cd ..
 
 respec2html "file://$PWD/0.2.3/index.html" "$PWD/out/0.2.3/index.html" "0.2.3"
-respec2html "file://$PWD/0.2.4/index.html" "$PWD/out/0.2.3/index.html" "0.2.4"
-respec2html "file://$PWD/0.3.0/index.html" "$PWD/out/0.2.3/index.html" "0.3.0"
+respec2html "file://$PWD/0.2.4/index.html" "$PWD/out/0.2.4/index.html" "0.2.4"
+respec2html "file://$PWD/0.3.0/index.html" "$PWD/out/0.3.0/index.html" "0.3.0"
 respec2html "file://$PWD/EditorsDraft/index.html" "$PWD/out/index.html" "EditorsDraft"
 
 cd out
