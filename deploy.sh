@@ -61,13 +61,19 @@ function respec2htmlPhantom {
 
 echo Copying static files
 cp -r ../0.1.0 .
+cp -r ../0.2.0 .
+cp -r ../0.2.1 .
 cp -r ../0.2.2 .
 cp -r ../0.2.3 .
+cp -r ../0.2.4 .
+cp -r ../0.3.0 .
 cp -r ../EditorsDraft/* .
 
 cd ..
 
 respec2html "file://$PWD/0.2.3/index.html" "$PWD/out/0.2.3/index.html" "0.2.3"
+respec2html "file://$PWD/0.2.4/index.html" "$PWD/out/0.2.3/index.html" "0.2.4"
+respec2html "file://$PWD/0.3.0/index.html" "$PWD/out/0.2.3/index.html" "0.3.0"
 respec2html "file://$PWD/EditorsDraft/index.html" "$PWD/out/index.html" "EditorsDraft"
 
 cd out

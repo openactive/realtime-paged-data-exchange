@@ -2,7 +2,7 @@
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en'>
   <head>
     <meta charset='utf-8'/>
-    <title>Realtime Paged Data Exchange 0.2.3</title>
+    <title>Realtime Paged Data Exchange 0.3.0</title>
 
     <script type="text/javascript" class='remove'>
         var respecConfig = {
@@ -13,7 +13,7 @@
           shortName:            "realtime-paged-data-exchange",
 
           // if you wish the publication date to be other than today, set this
-          publishDate:  "2016-05-01",
+          publishDate:  "2017-06-21",
 
           // if there is a previously published draft, uncomment this and set its YYYY-MM-DD date
           // and its maturity status
@@ -23,7 +23,7 @@
           // if there a publicly available Editor's Draft, this is the link
           edDraftURI:           "https://www.openactive.io/realtime-paged-data-exchange/",
           //prevED:  "https://www.openactive.io/spec-template/",
-          previousURI:  "https://www.openactive.io/realtime-paged-data-exchange/0.2.2/",
+          previousURI:  "https://www.openactive.io/realtime-paged-data-exchange/0.2.4/",
           testSuiteURI: "https://www.openactive.io/endpoint-validator/",
           copyrightStart: 2015,
 
@@ -34,17 +34,17 @@
           // only "name" is required
           editors: [
               { name: "Nick Evans", url: "http://nickevans.me/",
-                company: "imin", companyURL: "http://www.imin.co/",
+                company: "Open Data Institute", companyURL: "http://opendata.institute/",
                 w3cid: 87551 },
-              { name: "James Smith", url: "http://floppy.org.uk",
-                company: "Open Data Institute", companyURL: "http://opendata.institute/" }
+              { name: "Leigh Dodds", url: "http://ldodds.com/",
+                company: "Open Data Institute", companyURL: "http://opendata.institute/",
+                w3cid: 55359 }
 
           ],
 
           // authors, add as many as you like.
           // This is optional, uncomment if you have authors as well as editors.
           // only "name" is required. Same format as editors.
-
           authors: [
               { name: "Luke Winship", url: "http://lukehesluke.co/",
                 company: "imin", companyURL: "http://www.imin.co/",
@@ -62,20 +62,20 @@
                 class: "repo"
             }, {
                 key: "Issues",
-                href: "https://github.com/openactive/realtime-paged-data-exchange/milestones/0.2.3"
+                href: "https://github.com/openactive/realtime-paged-data-exchange/issues/"
             }, {
                 key: "Version",
                 data: [
                     {
-                        value: "0.2.3 (deprecated)"
+                        value: "0.3.0 (stable)"
                     },
                     {
                         value: "Previous",
-                        href: "https://www.openactive.io/realtime-paged-data-exchange/0.2.2/"
+                        href: "https://www.openactive.io/realtime-paged-data-exchange/0.2.4/"
                     },
                     {
                         value: "Next",
-                        href: "https://www.openactive.io/realtime-paged-data-exchange/0.2.4/"
+                        href: "https://www.openactive.io/realtime-paged-data-exchange/"
                     },               
                 ]
             }
@@ -116,39 +116,33 @@
           isRecTrack:   true,
           isNoTrack:    true,
           issueBase:    "https://github.com/openactive/realtime-paged-data-exchange/issues/",
-          format: "markdown"
-
+          format: "markdown",
+          localBiblio: {
+            "Modelling-Opportunity-Data": {
+                "href": "https://www.openactive.io/modelling-opportunity-data/",
+                "title": "Modelling Opportunity Data",
+                "publisher": "Open Active Community Group",            
+            },
+            "SCHEMA-ORG": {
+                "href": "http://schema.org/",
+                "title": "Schema.org"
+                
+            },
+            "Publishing-Opportunity-Data": {
+                "href": "https://www.openactive.io/opportunity-data-primer/",
+                "title": "Publishing Opportunity Data: A Primer",
+                "publisher": "Open Active Community Group",            
+            }                                  
+          }
         };
     </script>
 
     <script src='https://www.openactive.io/respec/builds/respec-w3c-common.js' class='remove'></script>
-    <!-- <script src="https://code.jquery.com/jquery-1.12.0.min.js" class='remove'></script> -->
 
+    <!-- <script src='/builds/respec-w3c-common.js' class='remove'></script>-->
 
-    <script type="text/javascript" class='remove'>
-        //respecEvents.sub("end-all", function () {
-            //document.body.style.backgroundImage="url('https://www.openactive.io/logos/openactive-label-01.png')";
-            //document.body.style.backgroundPosition="40px 40px";
+    <!-- <script src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common' async class='remove'></script> -->
 
-            //$('body').css('background-image',"url('https://www.openactive.io/logos/openactive-label-01.png')");
-
-            //$('h1').before('<h1 style="font-size: 45px; text-transform: uppercase;">Openactive</h1>');
-
-            //$('h1').css('font-family',"'Open Sans',sans-serif");
-            //$('h1').css('font-weight','300');
-            //$('h1').css('color', '#69b9ff');
-
-            //$('#toc').css('padding-top','190px');
-
-            //Only prettyprint code blocks, not lines of code
-            /*$('code').filter(function() {
-              return $( this ).html().indexOf('\n') >= 0;
-            }).addClass("prettyprint");
-
-            PR.prettyPrint();*/
-
-        //});
-    </script>
     <style>
     table {border-collapse: collapse; border: 1px solid #bec9d9}
     td, th {padding: 3px 0.5em; border-left:1px solid black; border-right: 1px solid black; border-bottom:1px solid #E2EDFE;}
@@ -173,7 +167,7 @@
     body {
       background: white top left fixed no-repeat !important;
       background-size: 25px auto !important;
-      background-image: url('https://www.openactive.io/assets/openactive-label-deprecated.png') !important;
+      background-image: url('https://www.openactive.io/assets/openactive-label-stable.png') !important;
     }
     body.toc-sidebar #toc {
       background-attachment: fixed !important;
@@ -205,19 +199,32 @@
 
     # Introduction
 
-    The Openactive specifications are modular, each focussing on a specific use cases regarding physical activity data.
+    ## Openactive
 
     The W3C Openactive Community Group was established with the objective of facilitating the sharing and use of physical activity data. The motivation for that is physical activity data is currently largely closed, and sharing and opening up of this data has enormous potential.
 
-    This specification tackles the generic use-case of unidirectional real-time data synchronisation between two systems, where the receiving system requires only summary data from the origin system.
+    Openactive specifications are modular, each focussing on a specific use cases regarding physical activity data.
 
-    Other aspects of the Community Group's work, which includes the collation and specification of test suites to assess conformance to referenced standards, and the specification of a framework within which such conformance testing might be assessed are referenced.
+    Other aspects of the Community Group's work includes the collation and specification of test suites to assess conformance to referenced standards, and the specification of a framework within which such conformance testing might be assessed are referenced.
+
+    ## Use case and requirements
+
+    Booking systems contains session data (a specific event at a time in a location). Examples include bookable squash courts, Yoga classes, and running groups.
+
+    ### Realtime
+    This session data is frequently updated, as sessions are booked, descriptions changed. The data must be available as close to real-time as possible.
+
+    ### Simplicity of implementation
+    Many booking systems are maintained by an agency or supplier, and changes are funded by organisations with a small budgets. Hence simplicity and speed of implementation is paramount.
+
+    ### Flexibility of interface
+    Due to the cost of work on the booking system side, this interface must not be a constraint to innovation. Innovators should be able to easily implement novel solutions on top of the data without additional effort on the booking system side. This means ideally pushing all query complexity out of the booking system in order to maximise flexibility, and providing a simple sync.
 
     ## Scope
 
-    This standard is tightly defined to cover data exchange and synchronisation itself; to cover the real-time exchange of generic entities between two systems.
+    This specification is tightly defined to cover data exchange and synchronisation itself; to cover the real-time exchange of generic entities between two systems.
 
-    Goals:
+    ### Goals
 
     - Sharing of session data, including related metadata (clubs, courses, membership requirements, skill level, cost), and events (e.g. open days).
     - Paging and synchronisation to ensure robust incremental transport of data.
@@ -225,7 +232,7 @@
     - (Stretch goal) Extendable to support real-time, high volume data transfer, to satisfy peak load requirements.
 
 
-    Non-Goals:
+    ### Non-Goals
 
     - User Authentication.
     - Booking and payment.
@@ -253,46 +260,106 @@
 
     # Overall approach
 
-    In order to create a simple standard that is robust and scalable, the transport mechanism is separated from the paged exchange specifics. By applying paging to all transport alternatives, the approach is inherently scalable.
+    In order to create a simple specification that is robust and scalable, the transport mechanism is separated from the paged exchange specifics. By applying paging to all transport alternatives, the approach is inherently scalable.
 
-    ![](images/image02.png)
+    The specification is split into the three labelled elements of <a href='#fig-elements-of-this-specification'></a>.
 
 
-    # Robust Paged JSON Data Exchange
+    <figure>
+      ![](images/image02.png)
+      <figcaption>Elements of this specification</figcaption>
+    </figure>
 
-    A paged approach to JSON data exchange requiring minimum traffic for real-time or near-real-time synchronisation
 
-    The paged JSON data exchange standard is incredibly simple to implement, but conceptually requires some explanation.
 
-    Consider the data exchanged as pages of a continuous stream of records which are sorted first by modified timestamp, and second by ID. This dual sort allows for pages of arbitrary size to be sent without concern for race conditions; if a record is updated during the transfer it will simply reappear further down the stream. If the consumer reaches the end of the stream they are up-to-date, and can frequently revisit the end of the stream in order to retrieve further updates.
+    # Paging
 
-    ![](images/image00.png)
+    A paged approach to [[!JSON]] data exchange is used, requiring minimum traffic for real-time or near-real-time synchronisation.
 
-    Specifically, a JSON page is exchanged, the content of which is defined by two parameters:
 
-    - **from**: the modified timestamp, after which results will be returned (if not specified will return from beginning of time)
-    - **after**: the ID after which results will be returned (if not specified will return all IDs from the first)
+    ## Simplicity
 
-    Note that the "modified timestamp" ("from" parameter) does not need to be an actual time that can be associated with a clock to conform to this standard; a database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx), the former deprecated as of SQL Server 2012 in favour of the latter). The consumer ("System 2") maintains a timestamp cursor for each endpoint independently, so at a minimum the "modified" field must provide a deterministic chronological ordering within the scope of the endpoint only.
+    The paged [[!JSON]] data exchange standard is incredibly simple to implement, but conceptually requires some explanation.
 
-    In the example diagram above, `from=1453931925&after=12` would return the second page indicated, hence the last record of a returned page of results can be used as parameters to retrieve the next page of results. This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client.
+    ## Core concept
+
+    Consider an ordered list as shown in <a href='#fig-illustration-of-the-deterministic-list'></a>, with the following invariants:
+
+    - A continuous list of records that MUST be sorted deterministically and chronological (in the order they were updated). Either (i) ordered first by modified timestamp, and second by ID or (ii) ordered by an incrementing counter where records are assigned a new unique value on each update.
+
+    - Every record MUST only be represented *once* in this list at a given moment, with its position in the list depending on when it was last updated. Records can freely move position in the list as they are updated.
+
+    - This deterministic ordering based on timestamp allows for pages of arbitrary size to be sent without concern for race conditions; if a record is updated during the transfer of a page it MUST appear on a subsiquent page (i.e. simply reappear further down the list).
+
+    - Pages are defined using a "next page URL", which MUST contain enough information to identify a position in the list (e.g. by a "timestamp" and "ID" combination). It MUST NOT reference a specific record, as that record can change position in the list.
+
+    - If a "next page URL" is not used to access the list, the first page MUST be returned.
+
+    - If the consumer reaches the end of the list they consider themselves up-to-date at that moment, and can frequently revisit the end of the list in order to retrieve further updates.
+
+    <figure>
+      ![](images/image00.png)
+      <figcaption>Illustration of the deterministic list</figcaption>
+    </figure>
+
+
+
+    ## Example Implementations
+
+    Two example implementations are described below, both adhere to the specified invariants. One of these two examples SHOULD be used as a basis for any implementation, unless the invariants are well understood and the implementation can be thoroughly tested.
+
+
+    ### Modified Timestamp and ID
+
+    The content of a [[!JSON]] page which could be defined by two parameters:
+
+    - **afterTimestamp**: the modified timestamp, after which results will be returned (if not specified will return from beginning of time)
+    - **afterId**: the ID after which results will be returned (if not specified will return all IDs from the first)
+
+
+    In this example, `afterTimestamp=1453931925&afterId=12` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list'></a>. ence the last record of a returned page of results can be used as parameters to retrieve the next page of results. This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client.
+
+    Note that the timestamp does not need to reflect actual time, as long as it providers a chronological ordering. An integer, string or other representation is sufficient, provided it is sufficiently comparable to support the invariants.
+
 
     For a single entity type (e.g. sessions), the data returned can be defined as follows:
 
     ```javascript
     var query;
     if (queryParams.from) {
-        query = Session.query().filter((Session.modified == queryParams.from && Session.id > queryParams.after) || (Session.modified > queryParams.from));
+        query = Session.query().filter((Session.modified == queryParams.afterTimestamp && Session.id > queryParams.afterId) || (Session.modified > queryParams.afterTimestamp));
     } else {
         query = Session.query()
     }
     return query.sort([Session.modified, Session.id])
     ```
 
-    The above can be run for each relevant entity type (e.g. club, courses, sessions), and they can be reassembled by the client.
+
+    ### Incrementing Unique ID
+
+    The content of a [[!JSON]] page could be defined by just one parameter:
+
+    - **afterId**: the ID after which results will be returned (if not specified will return all IDs from the first)
+
+
+    The ID MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The consumer ("System 2") simply maintains the "next page URL", so the detail of the ID is not constrained.
+
+
+    ## Related entities
+
+    This specification can be implemented for each relevant entity type within System 1 (e.g. club, courses, sessions).
+
+    Data from related entities can either be:
+
+    1. Embedded inside the parent entity. This requires the parent "updated" field to reflect the maximum value of all children - achievable via database triggers or similar.
+
+    1. Provided by separate endpoints implementing this specification, the combination of which can be reassembled by System 2.
+
 
 
     ## Response grammar
+
+    It should be noted that although the `<data>` element is open to conformance with [[JSON-LD]], the paging has been deemed too trivial to require the application of any specific serialization.
 
 
     ### `<response>`
@@ -301,11 +368,11 @@
     ```JSON
     <response> => {
           items: [<item>,<item>,<item>,...],
-          next: "/getSessions?from=<date>&after=<id>"
+          next: "/getSessions?afterTimestamp=<date>&afterId=<id>"
        }
     ```
 
-    A suggested generic response standard is included here, the idea being that we standardise the transport encapsulation for the records (paging and polling logic) across entities and systems so that, we can genericise this logic on both sides.
+    A generic response specification is included here, the idea being that we standardise the transport encapsulation for the records (paging and polling logic) across entities and systems so that, we can genericise this logic on both sides.
 
 Key | Description
 --- | ---
@@ -338,20 +405,19 @@ data | Note this key is not included if state is `'deleted'`
 
     ### `<data>`
 
-
-    ```
-    <data> => {
-          lat: 51.5072,
-          lng: -0.1275,
-          name: 'Acrobatics with Dave',
-              groupId: "{0657FD6D-A4AB-43C4-84E5-0933C84B4F4F}" (7)
-          clubId: "{38A52BE4-9352-453E-AF97-5C3B448652F0}"
-       }
-    ```
-
-    The `<data>` part of the response is then open for whatever data structure is most appropriate for the particular entity type ("kind").
-
-    Although IDs are provided for related entities here, this example structure is not part of the standard.
+    The `<data>` part of the response is open for applications for populate with whatever data structure is most appropriate for the entity type ("kind") being exchanged. 
+    
+    Applications SHOULD use a standard data model to increase interoperability of the exchanged data. For example an application may choose to use entities and properties defined in [[SCHEMA-ORG]] to help structure data in a useful way for reusers. 
+    
+    Applications that are exchanging data about entities described in [[Modelling-Opportunity-Data]] SHOULD ensure that their data conforms to that specification. 
+    This includes data on Events, Organisations, Places, etc. [[Publishing-Opportunity-Data]] provides additional examples and guidance on using that data model 
+    in ways that are compatible with the other standards publishing by OpenActive.
+    
+    Applications that publish data using bespoke data models SHOULD provide users with relevant documentation.
+    
+    <div class="note">
+    The remainder of this specification uses simple examples when showing `<data>` elements in responses. However these examples are for illustrative purposes only. For a comprehensive selection of examples of opportunity data, read the [[Publishing-Opportunity-Data]] primer. 
+    </div>
 
 
     ## Example
@@ -359,13 +425,13 @@ data | Note this key is not included if state is `'deleted'`
     A full example REST response from polling:
 
     ```
-    /getSessions?from=Date(a)
+    /getSessions?afterTimestamp=1453931101&afterId={c15814e5-8931-470c-8a16-ef45afedaece}
     -> { items: [
             {
-                state: 'updated',
+                state: "updated",
                 kind: "session",
                 id: "{c15814e5-8931-470c-8a16-ef45afedaece}",
-                modified: Date(a),
+                modified: 1453931101,
                 data: {
                    lat: 51.5072,
                    lng: -0.1275,
@@ -374,18 +440,18 @@ data | Note this key is not included if state is `'deleted'`
                 }
             },
             {
-                state: 'deleted',
+                state: "deleted",
                 kind: "session",
                 id: "{d97f73fb-4718-48ee-a6a9-9c7d717ebd85}",
-                modified: Date(b)
+                modified: 1453931925
             }
           ],
-          next: '/getSessions?from=Date(b)&after={d97f73fb-4718-48ee-a6a9-9c7d717ebd85}'
+          next: '/getSessions?afterTimestamp=1453931925&afterId={d97f73fb-4718-48ee-a6a9-9c7d717ebd85}'
     }
     ```
 
 
-    # Real-time Transport Mechanism
+    # Transport
 
     These transport options cover different levels of complexity and data volume. Note that in all cases polling must be implemented to support a full cache refresh and data download. The real-time transport mechanisms work alongside infrequent polling to keep the data current.
 
@@ -402,7 +468,7 @@ data | Note this key is not included if state is `'deleted'`
 
     ## Polling
 
-    A basic REST endpoint which accepts the from and after parameters is required to allow a full cache refresh / data download on demand (e.g. `/getSessions?from=Date(b)&after={d97f73fb}`).
+    A basic REST endpoint which accepts the from and after parameters is required to allow a full cache refresh / data download on demand (e.g. `/getSessions?afterTimestamp=Date(b)&afterId={d97f73fb}`).
 
     For cases where only a polling endpoint is available, the client will poll the endpoint using heuristic backoff.
 
@@ -449,16 +515,18 @@ data | Note this key is not included if state is `'deleted'`
     Note that the "next" from the response is not required here. Instead, from and after should be stored for each client of the server, in order that the server is able to send the relevant next page to each client.
 
 
-    ## Server-Sent Events
+    ## Server-Sent Events ([[!eventsource]])
 
-    [Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) (over HTTPS) provides a simple and efficient channel through which a high volume of updates can pass. Although an additional library may be required depending on the servers' platform, it is a very light implementation.
+    [Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) ([[!eventsource]]) (over HTTPS) provides a simple and efficient channel through which a high volume of updates can pass. Although an additional library may be required depending on the servers' platform, it is a very light implementation.
+
+    Server-Sent Events require System 1 to implement a system to keep track of events and trigger the sending of data through this channel. This non-trivial implementation, together with the complexities of library support in various languages and frameworks compared with a straightforward [[!JSON]] API implementation used in Polling and Webhooks is the reason that the other transport mechanisms are provided.
 
     The responsibility is on the client to reestablish a connection to the server and inform it of the last retrieved record in order to continue the stream, which is closer to polling than to webhooks.
 
     Response grammar / example:
 
     ```
-    /stream?from=Date(b)&after={d97f73fb-4718-48ee-a6a9-9c7d717ebd85}
+    /stream?afterTimestamp=Date(b)&afterId={d97f73fb-4718-48ee-a6a9-9c7d717ebd85}
     ->
     event: itemupdate
     data: <item>
@@ -474,7 +542,7 @@ data | Note this key is not included if state is `'deleted'`
     An example stream is below:
 
     ```
-    /stream?from=Date(a)&after={a97f73fb-4718-48ee-a6a9-9c7d717ebd85}
+    /stream?afterTimestamp=Date(a)&afterId={a97f73fb-4718-48ee-a6a9-9c7d717ebd85}
     ->
     event: itemupdate
     data: {
@@ -501,13 +569,16 @@ data | Note this key is not included if state is `'deleted'`
 
     ## AMQP
 
-    [AMQP](https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol) (RabbitMQ et. al.) provides a two way channel for events which includes buffering and multiple connections to increase throughput.
+    [[OASIS AMQP]](http://www.amqp.org/) (RabbitMQ et. al.) provides a two way channel for events which includes buffering and multiple connections to increase throughput.
 
     As with Server-sent events, only the `<item>` from the `<response>` is required to be sent in the message, as AMQP makes the explicit paging redundant.
 
-    For very high volumes, this allows the server to send multiple pages in parallel, as it can calculate the "from" and "after" parameter and control the send. The client can also process these in parallel (particularly useful in the case of shared or No-SQL data stores, with scaling queue processors), using the timestamp of each record to ensure records are only updated with newer data.
+    For very high volumes, this allows the server to send multiple pages in parallel, as it can calculate the "afterTimestamp" and "afterId" parameter and control the send. The client can also process these in parallel (particularly useful in the case of shared or No-SQL data stores, with scaling queue processors), using the timestamp of each record to ensure records are only updated with newer data.
     However this requires additional infrastructure and the use of certificates (more complex to configure than HTTPS).
 
+
+
+    <section class="informative">
 
     # Implementation
 
@@ -515,7 +586,7 @@ data | Note this key is not included if state is `'deleted'`
 
     ## Single JSON entity cache table
 
-    Create a cache table which is written to on each entity change (or related entity change, if a calculated field is created), either via an application or database trigger (which can also be used to trigger the webhook). The table contains the rendered JSON `<item>`, along with the modified timestamp and the ID.
+    Create a cache table which is written to on each entity change (or related entity change, if a calculated field is created), either via an application or database trigger (which can also be used to trigger the webhook). The table contains the rendered [[!JSON]] `<item>`, along with the modified timestamp and the ID.
 
     Entries in the table overwrite old items with a newer modified timestamp.
 
@@ -524,14 +595,14 @@ data | Note this key is not included if state is `'deleted'`
 
     ## Multiple table on-demand JSON generation
 
-    The JSON is generated from each table individually at the point that is requested by either the webhook or poll.
+    The [[!JSON]] is generated from each table individually at the point that is requested by either the webhook or poll.
 
     An endpoint will be required for each entity "kind", as the sort cannot efficiently happen across tables. These endpoints would require separate webhook / polling processes to keep them in sync (though the webhooks can all share the same endpoint on the client).
 
 
     ## Hybrid approach: paging table
 
-    A paging table could be created that contains only the Kind, Modified Timestamp and ID. This table is then updated with each entity update, however the JSON is only generated on-demand by getting the next page from the paging table and rendering JSON for each of IDs of the "kinds" returned.
+    A paging table could be created that contains only the Kind, Modified Timestamp and ID. This table is then updated with each entity update, however the [[!JSON]] is only generated on-demand by getting the next page from the paging table and rendering [[!JSON]] for each of IDs of the "kinds" returned.
 
 
     ## Additional notes
@@ -585,6 +656,7 @@ data | Note this key is not included if state is `'deleted'`
     END
 
     ```
+    </section>
 
     <section class='appendix informative'>
     Acknowledgements

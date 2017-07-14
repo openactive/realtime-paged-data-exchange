@@ -23,7 +23,7 @@
           // if there a publicly available Editor's Draft, this is the link
           edDraftURI:           "https://www.openactive.io/realtime-paged-data-exchange/",
           //prevED:  "https://www.openactive.io/spec-template/",
-          previousURI:  "https://www.openactive.io/realtime-paged-data-exchange/0.2.3/",
+          previousURI:  "https://www.openactive.io/realtime-paged-data-exchange/0.3.0/",
           testSuiteURI: "https://www.openactive.io/endpoint-validator/",
           copyrightStart: 2015,
 
@@ -34,10 +34,11 @@
           // only "name" is required
           editors: [
               { name: "Nick Evans", url: "http://nickevans.me/",
-                company: "imin", companyURL: "http://www.imin.co/",
-                w3cid: "nickevans" },
-              { name: "James Smith", url: "http://floppy.org.uk",
-                company: "Open Data Institute", companyURL: "http://opendata.institute/" }
+                company: "Open Data Institute", companyURL: "http://opendata.institute/",
+                w3cid: 87551 },
+              { name: "Leigh Dodds", url: "http://ldodds.com/",
+                company: "Open Data Institute", companyURL: "http://opendata.institute/",
+                w3cid: 55359 }
 
           ],
 
@@ -46,6 +47,13 @@
           // only "name" is required. Same format as editors.
 
           authors: [
+              { name: "Luke Winship", url: "http://lukehesluke.co/",
+                company: "imin", companyURL: "http://www.imin.co/",
+                note: "original concept" },
+              { name: "Nick Evans", url: "http://nickevans.me/",
+                company: "imin", companyURL: "http://www.imin.co/",
+                w3cid: 87551,
+                note: "original concept" }
           ],
 
           otherLinks: [{
@@ -58,14 +66,14 @@
                 href: "https://github.com/openactive/realtime-paged-data-exchange/issues/"
             }, {
                 key: "Version",
-                value: "Editor's Draft"
-            }, {
-                key: "Previous Version",
                 data: [
                     {
-                        value: "0.2.3",
-                        href: "https://www.openactive.io/realtime-paged-data-exchange/0.2.3/"
-                    }
+                        value: "Editor's Draft"
+                    },
+                    {
+                        value: "Previous",
+                        href: "https://www.openactive.io/realtime-paged-data-exchange/0.3.0/"
+                    }             
                 ]
             }
           ],
