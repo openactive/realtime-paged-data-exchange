@@ -93,7 +93,7 @@
           //localBiblio: {},
 
           // name of the WG
-          wg:           "Openactive Community Group",
+          wg:           "OpenActive Community Group",
 
           // URI of the public WG page
           wgURI:        "http://www.w3.org/community/openactive/",
@@ -118,7 +118,7 @@
             "Modelling-Opportunity-Data": {
                 "href": "https://www.openactive.io/modelling-opportunity-data/",
                 "title": "Modelling Opportunity Data",
-                "publisher": "Open Active Community Group",            
+                "publisher": "OpenActive Community Group",            
             },
             "SCHEMA-ORG": {
                 "href": "http://schema.org/",
@@ -128,13 +128,13 @@
             "Publishing-Opportunity-Data": {
                 "href": "https://www.openactive.io/opportunity-data-primer/",
                 "title": "Publishing Opportunity Data: A Primer",
-                "publisher": "Open Active Community Group",            
+                "publisher": "OpenActive Community Group",            
             }                                  
           }
         };
     </script>
 
-    <script src='https://www.openactive.io/respec/builds/respec-w3c-common.js' class='remove'></script>
+    <script src='https://www.OpenActive.io/respec/builds/respec-w3c-common.js' class='remove'></script>
 
     <!-- <script src='/builds/respec-w3c-common.js' class='remove'></script>-->
 
@@ -164,7 +164,7 @@
     body {
       background: white top left fixed no-repeat !important;
       background-size: 25px auto !important;
-      background-image: url('https://www.openactive.io/assets/openactive-label-editorsdraft.png') !important;
+      background-image: url('https://www.OpenActive.io/assets/OpenActive-label-editorsdraft.png') !important;
     }
     body.toc-sidebar #toc {
       background-size: 25px auto !important;
@@ -194,20 +194,18 @@
     </section>
 
     <section id='sotd'>
-      The purpose of the document is to represent an early draft. It is likely to change, so this document should only be used to guide implementations in conversation with the [Openactive](https://www.openactive.io/) community where the quick win of data sharing and shared learning are high priorities.
-
-      Comments on this document are not only welcomed but are actively solicited and should be made on [GitHub Issues](https://github.com/openactive/realtime-paged-data-exchange/issues). The source code is available on [GitHub](https://github.com/openactive/realtime-paged-data-exchange).
+      Contributions to this document are not only welcomed but are actively solicited and should be made via [GitHub Issues](https://github.com/OpenActive/realtime-paged-data-exchange/issues) and pull requests. The source code is available on [GitHub](https://github.com/OpenActive/realtime-paged-data-exchange).
     </section>
 
     <section class="informative">
 
     # Introduction
 
-    ## Openactive
+    ## OpenActive
 
-    The W3C Openactive Community Group was established with the objective of facilitating the sharing and use of physical activity data. The motivation for that is physical activity data is currently largely closed, and sharing and opening up of this data has enormous potential.
+    The W3C OpenActive Community Group was established with the objective of facilitating the sharing and use of physical activity data. This data is currently largely closed, and open publishing of this data has enormous potential to increase participation in physical activities.
 
-    Openactive specifications are modular, each focussing on a specific use cases regarding physical activity data.
+    OpenActive specifications are modular, each focussing on a specific use cases regarding physical activity data.
 
     Other aspects of the Community Group's work includes the collation and specification of test suites to assess conformance to referenced standards, and the specification of a framework within which such conformance testing might be assessed are referenced.
 
@@ -258,7 +256,7 @@
     </section>
     <section id='conformance'>
 
-    This specification describes the conformance criteria for Openactive data synchronisation endpoints.
+    This specification describes the conformance criteria for OpenActive data synchronisation endpoints.
 
     </section>
 
@@ -301,16 +299,10 @@
 
     - If the consumer reaches the end of the list they consider themselves up-to-date at that moment, and can frequently revisit the end of the list in order to retrieve further updates.
 
-    <figure>
-      ![](images/image00.png)
-      <figcaption>Illustration of the deterministic list</figcaption>
-    </figure>
 
+    ## Recommended Implementations
 
-
-    ## Example Implementations
-
-    Two example implementations are described below, both adhere to the specified invariants. One of these two examples SHOULD be used as a basis for any implementation, unless the invariants are well understood and the implementation can be thoroughly tested.
+    Two recommended implementations are described below, both adhere to the specified invariants described in the previous section. One of these two implementations SHOULD be used as a basis for any implementation, unless the invariants are well understood and the implementation can be thoroughly tested.
 
 
     ### Modified Timestamp and ID
@@ -318,15 +310,32 @@
     The content of a [[!JSON]] page which could be defined by two parameters:
 
     - **afterTimestamp**: the modified timestamp, after which results will be returned (if not specified will return from beginning of time)
-    - **afterId**: the ID after which results will be returned (if not specified will return all IDs from the first)
+    - **afterId**: the ID after which results will be returned (if not specified will return all)
 
 
-    In this example, `afterTimestamp=1453931925&afterId=12` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list'></a>. ence the last record of a returned page of results can be used as parameters to retrieve the next page of results. This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client.
+    In this example, `afterTimestamp=1453931925&afterId=12` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list'></a>. hence the last record of a returned page of results can be used as parameters to retrieve the next page of results. This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client.
 
     Note that the timestamp does not need to reflect actual time, as long as it providers a chronological ordering. An integer, string or other representation is sufficient, provided it is sufficiently comparable to support the invariants.
 
+    <figure>
+      ![](images/image00.png)
+      <figcaption>Illustration of the deterministic list</figcaption>
+    </figure>
 
-    For a single entity type (e.g. sessions), the data returned can be defined as follows:
+    #### SQL Query Example
+
+    Where a table exists containing a `changenumber` column.
+
+
+    ```SQL
+    --include WHERE clause only if @afterTimestamp and @afterId provided
+    WHERE (modified = @afterTimestamp AND id > @afterId) OR (modified > @afterTimestamp)
+    ORDER BY modified, id
+    ```
+
+    #### JavaScript Query Example
+
+    Where a table or collection exists containing a `changenumber` column or property.
 
     ```javascript
     var query;
@@ -339,14 +348,47 @@
     ```
 
 
-    ### Incrementing Unique ID
+
+    ### Incrementing Unique Change Number
 
     The content of a [[!JSON]] page could be defined by just one parameter:
 
-    - **afterId**: the ID after which results will be returned (if not specified will return all IDs from the first)
+    - **afterChangeNumber**: an integer after which results will be returned (if not specified will return starting with the first change number).
 
 
-    The ID MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The consumer ("System 2") simply maintains the "next page URL", so the detail of the ID is not constrained.
+    The change number MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The consumer ("System 2") simply maintains the "next page URL", so the detail of the change number is transparent in thier implementation.
+
+    The items `id` (unique idenfier which is distinct from the change number) MUST be included within the item, to allow items to be uniquely idenified for the purposes of update and delete operations.
+
+    The `modified` property MUST still be included, and set to the change number, to allow items with identical `id`s from different pages to be compared to calculate which is newer.
+
+    <figure>
+      ![](images/image03.png)
+      <figcaption>Illustration of the deterministic list via change number</figcaption>
+    </figure>
+
+    #### SQL Query Example
+
+    Where a table exists containing a `changenumber` column.
+
+    ```SQL
+    WHERE changenumber > @afterTimestamp --include WHERE clause only if @afterTimestamp provided
+    ORDER BY changenumber
+    ```
+
+    #### JavaScript Query Example
+
+    Where a table or collection exists containing a `changenumber` column or property.
+
+    ```javascript
+    var query;
+    if (queryParams.from) {
+        query = Session.query().filter(Session.changeNumber > queryParams.afterChangeNumber);
+    } else {
+        query = Session.query()
+    }
+    return query.sort([Session.modified, Session.id])
+    ```
 
 
     ## Related entities
@@ -355,15 +397,22 @@
 
     Data from related entities can either be:
 
-    1. Embedded inside the parent entity. This requires the parent "updated" field to reflect the maximum value of all children - achievable via database triggers or similar.
+    1. **Embedded inside the parent entity**. This requires the parent "updated" field to reflect the maximum value of all children - achievable via database triggers or similar.
 
-    1. Provided by separate endpoints implementing this specification, the combination of which can be reassembled by System 2.
+    1. **Provided by separate endpoints** implementing this specification, the combination of which can be reassembled by System 2.
+
+
+    Entities that have similar update frequency (e.g. Event and Location) MUST be embedded in the same endpoint.
+
+    Entiries with substantially different update frequencies (e.g. Event Description and Availability) SHOULD be provided as separate endpoints. The specification does not advocate embedding of child entities if they change substantially more frequently than the parent. Each entity type endpoint and ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows us to reassemble the data structure on the client side. It also makes the implementation very simple.
 
 
 
     ## Response grammar
 
-    It should be noted that although the `<data>` element is open to conformance with [[JSON-LD]], the paging has been deemed too trivial to require the application of any specific serialization.
+    It should be noted that although the `<data>` element is open to conformance with [[JSON-LD]], the properties in this specification do not use any part of the [[JSON-LD]] specification.
+
+    Endpoints MUST NOT include JSON-LD syntax except for within the `data` property.
 
 
     ### `<response>`
@@ -372,17 +421,17 @@
     ```JSON
     <response> => {
           "next": "/getSessions?afterTimestamp=<date>&afterId=<id>",
-          "items": [<item>,<item>,<item>,......],
+          "items": [<item>,<item>,<item>,...],
           "license": "https://creativecommons.org/licenses/by/4.0/"
        }
     ```
 
-    A generic response specification is included here, the idea being that we standardise the transport encapsulation for the records (paging and polling logic) across entities and systems so that, we can genericise this logic on both sides.
+    A generic response specification is included here, in order to standardise the transport encapsulation for the records across entities and systems - including paging and polling logic, for example.
 
 Property | Status | Notes
 --- | ---
-next | <em class="rfc2119">REQUIRED</em> | For polling, the "next" URL in the response is a precomputed next URL that would be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, this is outside the scope of this standard.
-items | <em class="rfc2119">REQUIRED</em> | An array of `<item>`, which should simply by empty `[]` if no results are returned.
+`next` | <em class="rfc2119">REQUIRED</em> | For polling, the "next" URL in the response is a precomputed next URL that would be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, this is outside the scope of this standard.
+`items` | <em class="rfc2119">REQUIRED</em> | An array of `<item>`, which should simply by empty `[]` if no results are returned.
 [`license`](http://purl.org/dc/terms/license) | <em class="rfc2119">REQUIRED</em> | Reference to the license under which the data has been published
 
 
@@ -391,22 +440,22 @@ items | <em class="rfc2119">REQUIRED</em> | An array of `<item>`, which should s
 
     ```
     <item> => {
-          state: 'updated' | 'deleted', (4)
-          kind: "session", (2)
-          id: "{21EC2020-3AEA-4069-A2DD-08002B303123}", (6)
-          modified: Date(a),
-          data: <data> (4)
+          state: 'updated' | 'deleted',
+          kind: "session",
+          id: <id>, 
+          modified: <modified>,
+          data: <data>
        }
     ```
 
 
-Key | Description
+Property | Status | Notes
 --- | ---
-state | Deleted items are included in the response with a "deleted" state, but no `<data>` associated.
-kind | The "kind" attribute allows for the representation of different entity types. The standard does not advocate embedding of child entities if they change more frequently than the parent. Each entity type ("kind") can be synchronised separately, this allows us to decouple the sync logic from the data structure, and allows us to reassemble the data structure on the client side. It also makes the implementation very simple.
-id | Although IDs shown here are GUIDs, and above are numeric, and although the example above shows Unix timestamps, the standard does not prescribe any specific format of either.
-modified | Modified timestamp of the item. Must be comparable to itself.
-data | Note this key is not included if state is `'deleted'`
+`state` | REQUIRED | MUST be of value `"updated"` or value `"deleted"`. Deleted items are included in the response with a "deleted" state, but no `<data>` associated.
+`kind` | REQUIRED | The "kind" property allows for the representation of different entity types. The specification does not advocate embedding of child entities if they change more frequently than the parent. Each entity type ("kind") can be synchronised separately, this allows us to decouple the sync logic from the data structure, and allows us to reassemble the data structure on the client side. It also makes the implementation very simple.
+`id` | REQUIRED | Although IDs shown here are GUIDs, and above are numeric, and although the example above shows Unix timestamps, the standard does not prescribe any specific format of either.
+`modified` | REQUIRED | Modified timestamp of the item. Must be comparable to itself.
+`data` | REQUIRED | Note this property MUST NOT be included if state is `'deleted'`
 
 
     ### `<data>`
@@ -439,10 +488,7 @@ data | Note this key is not included if state is `'deleted'`
                 id: "{c15814e5-8931-470c-8a16-ef45afedaece}",
                 modified: 1453931101,
                 data: {
-                   lat: 51.5072,
-                   lng: -0.1275,
-                   name: 'Acrobatics with Dave',
-                   clubId: "{fc1f0f87-0538-4b05-96a0-cee88b9c3377}"
+                   ...
                 }
             },
             {
@@ -457,130 +503,19 @@ data | Note this key is not included if state is `'deleted'`
     ```
 
 
-    # Transport
 
-    These transport options cover different levels of complexity and data volume. Note that in all cases polling must be implemented to support a full cache refresh and data download. The real-time transport mechanisms work alongside infrequent polling to keep the data current.
+    ## Expected consumer behaviour
 
-    In the case of real time transport failure, a production client implementation can fall back to polling.
+    ### Initial download
 
-
-    Transport Options              | Advantages                                                                                              | Disadvantages                                                                       | Primary Use Case
-    ------------------------------ | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------
-    Polling (Simple download)      | Simple to implement                                                                                     | Does not provide a real-time feed, and heuristic polling will result in patchy sync | Full cache refresh (also can be used in isolation for prototype implementation).
-    Webhooks (Real-time)           | Less traffic than polling, more server-side control, allows for real-time, uses standard REST interface | Uses many high-latency connections                                                  | Basic production implementation
-    Server-Sent Events (Real-time) | Optimisation over webhooks as uses one connection, so can handle higher volume                          | Requires additional libraries                                                       | High volume production implementation
-    AMQP (Real-time)               | Pages can be handed off to the queue to facilitate even higher volume than Server-Sent Events           | Requires additional infrastructure                                                  | Very high volume production implementation
+    The pages are first downloaded to catchup with the feed.
 
 
-    ## Polling
-
-    A basic REST endpoint which accepts the from and after parameters is required to allow a full cache refresh / data download on demand (e.g. `/getSessions?afterTimestamp=Date(b)&afterId={d97f73fb}`).
+    ### Near real-time updates
 
     For cases where only a polling endpoint is available, the client will poll the endpoint using heuristic backoff.
 
-    Implementation of at least one other type of endpoint is recommended in order to enable real-time updates.
 
-
-    ## Webhooks
-
-    Webhooks use the same mechanism as polling, except that pages are pushed from server to client, rather than requested explicitly by the client from the server.
-
-    The client registers an endpoint with the server, and the server repeatedly sends subsequent pages to the client. Using the same paging features as with polling allows the server to batch items to increase throughput.
-
-    When sending a particular page to the client the server is expected to wait for a successful acknowledgement of the page before sending the next page. If sending of a page fails that page should be continuously retried with an exponential backoff. The server should only proceed to the following page after successfully sending the previous one.
-
-    Note that during a full cache refresh the client will page the server for all data, and may simultaneously be receiving webhook requests from the client. Using the timestamp of each record to ensure records are only updated with newer data, the client is able to perform both the full cache refresh and receive webhook requests simultaneously. Alternatively the client can choose to drop webhook requests until its full cache refresh is complete, which should trigger the exponential backoff behaviour from the server, ensuring a good crossover in items between the end of the cache refresh and the webhook updates resuming.
-
-
-    ### Webhooks Example
-
-    Example payload for the webhook:
-
-    ```
-    /putSessions
-    -> { items: [{
-           state: 'updated',
-           kind: "session",
-           id: "{c15814e5-8931-470c-8a16-ef45afedaece}",
-           modified: Date(a),
-           data: {
-               lat: 51.5072,
-               lng: -0.1275,
-               name: 'Acrobatics with Dave',
-               clubId: "{fc1f0f87-0538-4b05-96a0-cee88b9c3377}"
-           }
-        },{
-           state: 'deleted',
-           kind: "session",
-           id: "{d97f73fb-4718-48ee-a6a9-9c7d717ebd85}",
-           modified: Date(b)
-        }]
-    }
-    ```
-
-    Note that the "next" from the response is not required here. Instead, from and after should be stored for each client of the server, in order that the server is able to send the relevant next page to each client.
-
-
-    ## Server-Sent Events ([[!eventsource]])
-
-    [Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) ([[!eventsource]]) (over HTTPS) provides a simple and efficient channel through which a high volume of updates can pass. Although an additional library may be required depending on the servers' platform, it is a very light implementation.
-
-    Server-Sent Events require System 1 to implement a system to keep track of events and trigger the sending of data through this channel. This non-trivial implementation, together with the complexities of library support in various languages and frameworks compared with a straightforward [[!JSON]] API implementation used in Polling and Webhooks is the reason that the other transport mechanisms are provided.
-
-    The responsibility is on the client to reestablish a connection to the server and inform it of the last retrieved record in order to continue the stream, which is closer to polling than to webhooks.
-
-    Response grammar / example:
-
-    ```
-    /stream?afterTimestamp=Date(b)&afterId={d97f73fb-4718-48ee-a6a9-9c7d717ebd85}
-    ->
-    event: itemupdate
-    data: <item>
-    ```
-
-    Only the `<item>` from the `<response>` is required here, and is passed as "data" (the Server-Sent Event specification of "data", which is different from the "data" part of the item). The explicit paging used with polling and webhooks is made redundant as this is a continuous stream over one connection.
-
-    The event type is always set to "itemupdate", as the state of each item is set with the "state" field consistent with polling.
-
-
-    ### Server-Sent Events Example
-
-    An example stream is below:
-
-    ```
-    /stream?afterTimestamp=Date(a)&afterId={a97f73fb-4718-48ee-a6a9-9c7d717ebd85}
-    ->
-    event: itemupdate
-    data: {
-       state: 'updated',
-       kind: "session",
-       id: "{c15814e5-8931-470c-8a16-ef45afedaece}",
-       modified: Date(a),
-       data: {
-           lat: 51.5072,
-           lng: -0.1275,
-           name: 'Acrobatics with Dave',
-           clubId: "{fc1f0f87-0538-4b05-96a0-cee88b9c3377}"
-       }
-
-    event: itemupdate
-    data: {
-       state: 'deleted',
-       kind: "session",
-       id: "{d97f73fb-4718-48ee-a6a9-9c7d717ebd85}",
-       modified: Date(b)
-    }
-    ```
-
-
-    ## AMQP
-
-    [[OASIS AMQP]](http://www.amqp.org/) (RabbitMQ et. al.) provides a two way channel for events which includes buffering and multiple connections to increase throughput.
-
-    As with Server-sent events, only the `<item>` from the `<response>` is required to be sent in the message, as AMQP makes the explicit paging redundant.
-
-    For very high volumes, this allows the server to send multiple pages in parallel, as it can calculate the "afterTimestamp" and "afterId" parameter and control the send. The client can also process these in parallel (particularly useful in the case of shared or No-SQL data stores, with scaling queue processors), using the timestamp of each record to ensure records are only updated with newer data.
-    However this requires additional infrastructure and the use of certificates (more complex to configure than HTTPS).
 
 
 
@@ -668,7 +603,7 @@ data | Note this key is not included if state is `'deleted'`
     Acknowledgements
     ================
 
-    The editors thank [all members](http://www.w3.org/community/openactive/participants) of the Openactive CG for contributions of various kinds.
+    The editors thank [all members](http://www.w3.org/community/openactive/participants) of the OpenActive CG for contributions of various kinds.
     </section>
   </body>
 </html>
