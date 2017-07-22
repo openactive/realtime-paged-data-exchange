@@ -129,7 +129,12 @@
                 "href": "https://www.openactive.io/opportunity-data-primer/",
                 "title": "Publishing Opportunity Data: A Primer",
                 "publisher": "OpenActive Community Group",            
-            }                                  
+            },
+            "OpenActive-RPDE-Wiki": {
+                "href": "https://github.com/openactive/realtime-paged-data-exchange/wiki",
+                "title": "OpenActive Realtime Paged Data Exchange Beta Wiki",
+                "publisher": "OpenActive Community Group",            
+            },
           }
         };
     </script>
@@ -514,23 +519,31 @@ Property | Status | Notes
 
     # Transport
 
-    ## Paging
+    ## Polling
 
-    Note that although this specification has been built to cater for other types of transport.
-
-    ## Expected consumer behaviour
+    Expected consumer behaviour is defined in this section.
 
     ### Initial download
 
-    The pages are first downloaded to catchup with the feed. This is achieved by following each page (as in this example)
+    The pages are first downloaded to catchup with the current state of System 1. This is achieved by following the `next` property of each page until the last page is reached.
 
+    ### Last page definition
+
+    The last page has the following properties:
+
+    - The `items` property is an empty array.
+    - The `next` property matches the URL of the page.
+
+
+    Note that `items` property being empty is not sufficient to indicate the last page, as in-stream filtering is permitted on items within the page such that a page may appear to contain zero items, but specify a valid `next` URL distinct from the URL of the page.
 
     ### Near real-time updates
 
-    The client will poll the endpoint to check for updates using heuristic backoff.
+    The consumer will poll the endpoint at the "last page" URL to check for updates using exponential backoff. When items are found, it will resume the behavoiur of the initial download: following the `next` property of each page. 
 
+    ## Other transport mechanisms
 
-
+    Note that although this specification has been built to cater for other types of transport, it focusses on polling as the primary transport mechanism. The exploration of other transport mechanisms is encouraged for usecases that require higher throughput. To support additional testing and experimentation of new transport mechanisms, a "beta" wiki has been defined to allow the community to explore such mechanisms collaboratively. For more information on the process supporting that see [[OpenActive-RPDE-Wiki]].
 
 
     <section class="informative">
