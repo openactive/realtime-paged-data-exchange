@@ -299,6 +299,8 @@
 
     - If the consumer reaches the end of the list they consider themselves up-to-date at that moment, and can frequently revisit the end of the list in order to retrieve further updates.
 
+    This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client.
+
 
     ## Recommended Implementations
 
@@ -307,13 +309,16 @@
 
     ### Modified Timestamp and ID
 
-    The content of a [[!JSON]] page which could be defined by two parameters:
+    The content of a [[!JSON]] depends on the supplied parameters, as specified below.
 
-    - **afterTimestamp**: the modified timestamp, after which results will be returned (if not specified will return from beginning of time)
-    - **afterId**: the ID after which results will be returned (if not specified will return all)
+Parameter | Implementation | Notes
+--- | ---
+`afterTimestamp` | REQUIRED | The modified timestamp, after which results will be returned (if not specified will return from beginning of time)
+`afterId` | REQUIRED | The ID after which results will be returned (if not specified will return all).
+`limit` | OPTIONAL | The number of records returned with in the page. A suggested default for most opportunity data sources is 500 records.
 
 
-    In this example, `afterTimestamp=1453931925&afterId=12` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list'></a>. hence the last record of a returned page of results can be used as parameters to retrieve the next page of results. This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client.
+    In this example, `afterTimestamp=1453931925&afterId=12` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list'></a>. hence the last record of a returned page of results can be used as parameters to retrieve the next page of results.
 
     Note that the timestamp does not need to reflect actual time, as long as it providers a chronological ordering. An integer, string or other representation is sufficient, provided it is sufficiently comparable to support the invariants.
 
@@ -324,7 +329,7 @@
 
     #### SQL Query Example
 
-    Where a table exists containing `modified` and 'id' columns.
+    Where a table exists containing `modified` and `id` columns.
 
 
     ```SQL
@@ -335,7 +340,7 @@
 
     #### JavaScript Query Example
 
-    Where a table or collection exists containing `modified` and 'id' columns or properties.
+    Where a table or collection exists containing `modified` and `id` columns or properties.
 
     ```javascript
     var query;
@@ -351,16 +356,20 @@
 
     ### Incrementing Unique Change Number
 
-    The content of a [[!JSON]] page could be defined by just one parameter:
+    The content of a [[!JSON]] page depends on the supplied parameters, as specified below.
 
-    - **afterChangeNumber**: an integer after which results will be returned (if not specified will return starting with the first change number).
-
+Parameter | Implementation | Notes
+--- | ---
+`afterChangeNumber` | REQUIRED | An integer after which results will be returned (if not specified will return starting with the first change number).
+`limit` | OPTIONAL | The number of records returned with in the page. A suggested default for most opportunity data sources is 500 records.
 
     The change number MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The consumer ("System 2") simply maintains the "next page URL", so the detail of the change number is transparent in thier implementation.
 
     The items `id` (unique idenfier which is distinct from the change number) MUST be included within the item, to allow items to be uniquely idenified for the purposes of update and delete operations.
 
     The `modified` property MUST still be included, and set to the change number, to allow items with identical `id`s from different pages to be compared to calculate which is newer.
+
+    In this example, `afterChangeNumber=1453931931` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list-via-change-number'></a>. hence the last record of a returned page of results can be used as parameters to retrieve the next page of results.
 
     <figure>
       ![](images/image03.png)
@@ -387,7 +396,7 @@
     } else {
         query = Session.query()
     }
-    return query.sort([Session.modified, Session.id])
+    return query.sort([Session.changeNumber])
     ```
 
 
@@ -502,6 +511,24 @@ Property | Status | Notes
           next: '/getSessions?afterTimestamp=1453931925&afterId={d97f73fb-4718-48ee-a6a9-9c7d717ebd85}'
     }
     ```
+
+    # Transport
+
+    ## Paging
+
+    Note that although this specification has been built to cater for other types of transport.
+
+    ## Expected consumer behaviour
+
+    ### Initial download
+
+    The pages are first downloaded to catchup with the feed. This is achieved by following each page (as in this example)
+
+
+    ### Near real-time updates
+
+    The client will poll the endpoint to check for updates using heuristic backoff.
+
 
 
 
