@@ -546,7 +546,7 @@ Property | Status | Notes
 
     ### Near real-time updates
 
-    The consumer will poll the endpoint at the "last page" URL to check for updates using exponential backoff. When items are found, it will resume the behavoiur of the initial download: following the `next` property of each page. 
+    The consumer MUST poll the endpoint at the "last page" URL to check for updates using exponential backoff (wait 1 second, 2 seconds, 4 seconds etc) to minimum polling frequency. When items are found, it SHOULD resume the behavoiur of the initial download: following the `next` property of each page. 
 
     ### In-stream filtering
 
