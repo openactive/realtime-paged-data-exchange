@@ -304,12 +304,16 @@
 
     - If the consumer reaches the end of the list they consider themselves up-to-date at that moment, and can frequently revisit the end of the list in order to retrieve further updates.
 
+    - If any record is added to the list, it MUST remain in the list in perpetuity with either an `updated` or a `deleted` state. This ensures that deletions are synchronised to data consumers.
+
     This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client.
 
 
-    ## Recommended Implementations
+    ## Ordering strategies
 
-    Two recommended implementations are described below, both adhere to the specified invariants described in the previous section. One of these two implementations SHOULD be used as a basis for any implementation, unless the invariants are well understood and the implementation can be thoroughly tested.
+    Two recommended ordering strategies are described below, both adhere to the specified invariants described in the previous section. One of these two strategies SHOULD be used as a basis for any implementation, unless the invariants are well understood and the implementation can be thoroughly tested.
+
+    For both these ordering strategies the ordering of the results relative to the parameters MUST be implemented exactly as described here.
 
 
     ### Modified Timestamp and ID
@@ -327,6 +331,7 @@ Parameter | Implementation | Notes
 
     Note that the timestamp does not need to reflect actual time, as long as it providers a chronological ordering. An integer, string or other representation is sufficient, provided it is sufficiently comparable to support the invariants.
 
+
     <figure>
       ![](images/image00.png)
       <figcaption>Illustration of the deterministic list</figcaption>
@@ -336,12 +341,16 @@ Parameter | Implementation | Notes
 
     Where a table exists containing `modified` and `id` columns.
 
-
     ```SQL
     --include WHERE clause only if @afterTimestamp and @afterId provided
     WHERE (modified = @afterTimestamp AND id > @afterId) OR (modified > @afterTimestamp)
     ORDER BY modified, id
     ```
+
+    <div class="note">
+    Misreading this query is the single most common cause of incorrect implementation. Please read it carefully and ensure that brackets and comparitors are used correctly. `>` not `>=` for example.
+    </div>
+
 
     #### JavaScript Query Example
 
@@ -383,16 +392,16 @@ Parameter | Implementation | Notes
 
     #### SQL Query Example
 
-    Where a table exists containing a `changenumber` column.
+    Where a table exists containing a `change_number` column.
 
     ```SQL
-    WHERE changenumber > @afterTimestamp --include WHERE clause only if @afterTimestamp provided
-    ORDER BY changenumber
+    WHERE change_number > @afterTimestamp --include WHERE clause only if @afterTimestamp provided
+    ORDER BY change_number
     ```
 
     #### JavaScript Query Example
 
-    Where a table or collection exists containing a `changenumber` column or property.
+    Where a table or collection exists containing a `changeNumber` column or property.
 
     ```javascript
     var query;
@@ -469,7 +478,7 @@ Property | Status | Notes
 `state` | REQUIRED | MUST be of value `"updated"` or value `"deleted"`. Deleted items are included in the response with a "deleted" state, but no `<data>` associated.
 `kind` | REQUIRED | The "kind" property allows for the representation of different entity types. The specification does not advocate embedding of child entities if they change more frequently than the parent. Each entity type ("kind") can be synchronised separately, this allows us to decouple the sync logic from the data structure, and allows us to reassemble the data structure on the client side. It also makes the implementation very simple.
 `id` | REQUIRED | Although IDs shown here are GUIDs, and above are numeric, and although the example above shows Unix timestamps, the standard does not prescribe any specific format of either.
-`modified` | REQUIRED | Modified timestamp of the item. Must be comparable to itself.
+`modified` | REQUIRED | Modified timestamp or change number of the item. Must be comparable to itself. The value of the relevant item MUST be used in either the `afterTimestamp` or `afterChangeNumber` parameter, in the same format.
 `data` | REQUIRED | Note this property MUST NOT be included if state is `'deleted'`
 
 
@@ -521,7 +530,7 @@ Property | Status | Notes
 
     ## Polling
 
-    Expected consumer behaviour is defined in this section.
+    Polling mechanics and expected consumer behaviour is defined in this section.
 
     ### Initial download
 
@@ -529,17 +538,28 @@ Property | Status | Notes
 
     ### Last page definition
 
-    The last page has the following properties:
+    The last page MUST have the following properties:
 
     - The `items` property is an empty array.
     - The `next` property matches the URL of the page.
 
 
-    Note that `items` property being empty is not sufficient to indicate the last page, as in-stream filtering is permitted on items within the page such that a page may appear to contain zero items, but specify a valid `next` URL distinct from the URL of the page.
-
     ### Near real-time updates
 
     The consumer will poll the endpoint at the "last page" URL to check for updates using exponential backoff. When items are found, it will resume the behavoiur of the initial download: following the `next` property of each page. 
+
+    ### In-stream filtering
+
+    The `items` property being empty is not sufficient to indicate the last page, as in-stream filtering is permitted on items within the page such that a page may appear to contain zero items, but specify a valid `next` URL distinct from the URL of the page.
+
+    <figure>
+      ![](images/image04.png)
+      <figcaption>Illustration of in-stream filtering</figcaption>
+    </figure>
+
+    Although a full page may be presented from System 1 to the filter, the filter may exclude all items within the list, resulting in a zero-item array at System 2.
+
+    Note that any items allowed to pass through the filter once MUST perpetually be allowed to pass through the filter, with a `"deleted"` state for those that would otherwise be filtered out. This is in keeping with the invarient described in the <a href='#core-concept'>core concept</a>, ensuring that System 2 correctly deletes records that have been modified such that they are subsequently filtered out.
 
     ## Other transport mechanisms
 
@@ -550,9 +570,22 @@ Property | Status | Notes
 
     # Implementation
 
+    ## Common implmentation issues
+
+    This specification is simple to implement, however such implmentation requires precision to ensure that it is robust. The most common issues encountered during implementations are enumerated here:
+
+    - The <a href='#last-page-definition'>last page</a> must have zero items, and a correct next URL that matches the current request.
+    - The <a href='#sql-query-example'>query</a> must be correctly implemented with the parentheses in the correct positions.
+    - The <a href='#core-concept'>core concept</a> must be understood, specifically the nature of the list of records where each record appears only once, and each record exists in perpetuity within the feed (with the deleted flag implemented).
+    - The <a href='#-item-'>`modified`</a> value (used for either the `afterTimestamp` or `afterChangeNumber` parameter) must always be updated when any data within the `data` property is updated. This can be achieved through e.g. adding triggers to update the modified date on the primary table for related changes.
+    - The <a href='#-item-'>`modified`</a> value should match the format used in the `afterTimestamp` or `afterChangeNumber`. 
+
+
+    ## Patterns of implementation
+
     Three common patterns of implementation are presented, along with specific advantages and disadvantages of each, together with miscellaneous notes.
 
-    ## Single JSON entity cache table
+    ### Single JSON entity cache table
 
     Create a cache table which is written to on each entity change (or related entity change, if a calculated field is created), either via an application or database trigger (which can also be used to trigger the webhook). The table contains the rendered [[!JSON]] `<item>`, along with the modified timestamp and the ID.
 
@@ -561,14 +594,14 @@ Property | Status | Notes
     This table can be easily parsed into output for the client. This has the advantage of allowing one endpoint and one process to manage the real-time sync by watching this single table, as the table can maintain a sort and page across all entity "kinds".
 
 
-    ## Multiple table on-demand JSON generation
+    ### Multiple table on-demand JSON generation
 
     The [[!JSON]] is generated from each table individually at the point that is requested by either the webhook or poll.
 
     An endpoint will be required for each entity "kind", as the sort cannot efficiently happen across tables. These endpoints would require separate webhook / polling processes to keep them in sync (though the webhooks can all share the same endpoint on the client).
 
 
-    ## Hybrid approach: paging table
+    ### Hybrid approach: paging table
 
     A paging table could be created that contains only the Kind, Modified Timestamp and ID. This table is then updated with each entity update, however the [[!JSON]] is only generated on-demand by getting the next page from the paging table and rendering [[!JSON]] for each of IDs of the "kinds" returned.
 

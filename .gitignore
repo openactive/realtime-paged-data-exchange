@@ -5,3 +5,4 @@ node_modules
 live.html
 deploy_key
 deploy_key.pub
+npm-debug.log
