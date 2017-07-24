@@ -395,7 +395,7 @@ Parameter | Implementation | Notes
     Where a table exists containing a `change_number` column.
 
     ```SQL
-    WHERE change_number > @afterTimestamp --include WHERE clause only if @afterTimestamp provided
+    WHERE change_number > @afterChangeNumber --include WHERE clause only if @afterChangeNumber provided
     ORDER BY change_number
     ```
 
