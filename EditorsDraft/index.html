@@ -460,7 +460,7 @@ Parameter | Implementation | Notes
 
 Property | Status | Notes
 --- | ---
-`next` | REQUIRED | The `next` URL MUST be calculated using the last item in the currently returned page, and use the current page's own URL if no items exist. The `next` URL MUST be an absolute URL, fully qualified with the domain. For polling, the `next` URL in the response is a precomputed next URL to be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, it is outside the scope of this specification.
+`next` | REQUIRED | The `next` URL MUST be calculated using the last item in the current page, and use the current page's own URL if no items exist. Not all items in the current page may be visible in the case of <a href='#in-stream-filtering'>filtering</a> so the last item used may not be contained within `items`. The `next` URL MUST be an absolute URL, fully qualified with the domain. For polling, the `next` URL in the response is a precomputed next URL to be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, it is outside the scope of this specification.
 `items` | REQUIRED | An array of `<item>`, which should simply by empty `[]` if no results are returned. The `items` property being empty is not sufficient to indicate the <a href='#last-page-definition'>last page</a>.
 [`license`](http://purl.org/dc/terms/license) | REQUIRED | Reference to the license under which the data has been published. Any website that links to this endpoint SHOULD also include text such as "This opportunity data is owned by My Company Ltd and is licensed under the Creative Commons Attribution Licence (CC-BY v4.0) for anyone to access, use and share.".
 
@@ -637,7 +637,7 @@ Property | Status | Notes
 
     ## Potential race condition with next URL
 
-    The logic used to generate the `"next"` URL must query the database only once to retrieve the list of items (though subsiquent queries can be made for each item if required). Hence the <a href='#-response-'>`next` URL</a> must be derived from the last item of the original query, or the current page URL, instead of making a second query. If a second query is made, the state of the database may have changed in between the two queries, which can lead to inconsistent behaviour.
+    The logic used to generate the `"next"` URL must query the database only once to retrieve the list of items (though subsiquent queries can be made for each item if required). Hence the <a href='#-response-'>`next` URL</a> must be derived from the last item of the original query, or the current page URL, instead of via a second query. If a second query is made, the state of the database may have changed in between the two queries, which can lead to inconsistent behaviour.
 
 
     ## Patterns of implementation
