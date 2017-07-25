@@ -130,7 +130,7 @@
                 "title": "Publishing Opportunity Data: A Primer",
                 "publisher": "OpenActive Community Group",            
             },
-            "OpenActive-RPDE-Wiki": {
+            "OpenActive-RPDE-Beta-Wiki": {
                 "href": "https://github.com/openactive/realtime-paged-data-exchange/wiki",
                 "title": "OpenActive Realtime Paged Data Exchange Beta Wiki",
                 "publisher": "OpenActive Community Group",            
@@ -460,7 +460,7 @@ Parameter | Implementation | Notes
 
 Property | Status | Notes
 --- | ---
-`next` | REQUIRED | This MUST be an absolute URL, fully qualified with the domain. For polling, the `next` URL in the response is a precomputed next URL to be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, this is outside the scope of this standard. The `next` URL can be calculated using the last item in the currently returned page.
+`next` | REQUIRED | The `next` URL MUST be calculated using the last item in the currently returned page. This MUST be an absolute URL, fully qualified with the domain. For polling, the `next` URL in the response is a precomputed next URL to be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, this is outside the scope of this standard.
 `items` | REQUIRED | An array of `<item>`, which should simply by empty `[]` if no results are returned.
 [`license`](http://purl.org/dc/terms/license) | REQUIRED | Reference to the license under which the data has been published.
 
@@ -578,7 +578,7 @@ Property | Status | Notes
 
     ### Near real-time updates
 
-    The consumer MUST poll the endpoint at the "last page" URL to check for updates using exponential backoff (wait 1 second, 2 seconds, 4 seconds etc until the minimum polling frequency is reached). When items are found, it SHOULD resume the behavoiur of the initial download: following the `next` property of each page. 
+    The consumer MUST poll the endpoint at the "last page" URL to check for updates using exponential backoff (wait 1 second, 2 seconds, 4 seconds etc until a minimum polling frequency is reached). When items are found, it SHOULD resume the behavoiur of the initial download: following the `next` property of each page. 
 
     ### In-stream filtering
 
@@ -591,11 +591,11 @@ Property | Status | Notes
 
     Although a full page may be presented from System 1 to the filter, the filter may exclude all items within the list, resulting in a zero-item array at System 2.
 
-    Note that any items allowed to pass through the filter once MUST, at the point that they no longer meet the filter conditions and would otherwise be filtered out, be allowed to pass through the filter with a "deleted" state for at least 48 hours. This is in keeping with the invarient described in the <a href='#core-concept'>core concept</a>, ensuring that System 2 correctly deletes records that have been modified such that they are subsequently filtered out.
+    Note that any items allowed to pass through the filter once MUST, at the point that they no longer meet the filter conditions and would otherwise be filtered out, be allowed to pass through the filter with a `"deleted"` state for at least 48 hours. This is in keeping with the invarient described in the <a href='#core-concept'>core concept</a>, ensuring that System 2 correctly deletes records that have been modified such that they are subsequently filtered out.
 
     ## Other transport mechanisms
 
-    Note that although this specification has been built to cater for other types of transport, it focusses on polling as the primary transport mechanism. The exploration of other transport mechanisms is encouraged for usecases that require higher throughput. To support additional testing and experimentation of new transport mechanisms, a "beta" wiki has been defined to allow the community to explore such mechanisms collaboratively. For more information on the process supporting that see [[OpenActive-RPDE-Wiki]].
+    Note that although this specification has been built to cater for other types of transport, it focusses on polling as the primary transport mechanism. The exploration of other transport mechanisms is encouraged for usecases that require higher throughput. To support additional testing and experimentation of new transport mechanisms, a "beta" wiki has been defined to allow the community to explore such mechanisms collaboratively. For more information on the process supporting that see [[OpenActive-RPDE-Beta-Wiki]].
 
 
     <section class="informative">
