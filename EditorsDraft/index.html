@@ -328,7 +328,7 @@
 
 Parameter | Implementation | Notes
 --- | ---
-`afterTimestamp` | REQUIRED | The modified timestamp, after which results will be returned (if not specified will return from beginning of time). The timestamp SHOULD be in integer format where possible (e.g. Unix epoch). For non-integer timestamps, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
+`afterTimestamp` | REQUIRED | The modified timestamp, after or at which results will be returned (if not specified will return from beginning of time). The timestamp SHOULD be in integer format where possible (e.g. Unix epoch). For non-integer timestamps, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
 `afterId` | REQUIRED | Where multiple records have the same `modified` value, this parameter specifies the ID after which results will be returned (if not specified will return all). For non-integer IDs, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
 `limit` | OPTIONAL | The number of records returned within the page. A suggested default for most opportunity data sources is 500 records.
 
