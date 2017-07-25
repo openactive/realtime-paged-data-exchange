@@ -295,7 +295,7 @@
 
     ## Core concept
 
-    Consider an ordered list as shown in <a href='#fig-illustration-of-the-deterministic-list'></a>, with the following invariants:
+    Consider an ordered list of records (termed "items" thoughout this specification) as shown in <a href='#fig-illustration-of-the-deterministic-list'></a>, with the following invariants:
 
     - A continuous list of records that MUST be sorted deterministically and chronological (in the order they were updated). Either (i) ordered first by modified timestamp, and second by ID or (ii) ordered by an incrementing counter where records are assigned a new unique value on each update.
 
@@ -435,6 +435,8 @@ Parameter | Implementation | Notes
 
     Entities with substantially different update frequencies (e.g. Event Description and Availability) MAY be provided as separate endpoints. Each entity type endpoint and ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the client side (in System 2).
 
+    The `modified` property of an item MUST be updated when any embedded child entities are updated.
+
 
 
 
@@ -450,7 +452,7 @@ Parameter | Implementation | Notes
 
     ```JSON
     <response> => {
-          "next": "/getSessions?afterTimestamp=<date>&afterId=<id>",
+          "next": "/getSessions?afterTimestamp=<modified>&afterId=<id>",
           "items": [<item>,<item>,<item>,...],
           "license": "https://creativecommons.org/licenses/by/4.0/"
        }
@@ -484,7 +486,7 @@ Property | Status | Notes
 `state` | REQUIRED | MUST be of value `"updated"` or value `"deleted"`. Deleted items are included in the response with a `"deleted"` state, but no `<data>` associated.
 `kind` | REQUIRED | The "kind" property allows for the representation of different entity types, though where possible referenced entities should be embedded into the primary entity. Each entity type ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the client side (at System 2).
 `id` | REQUIRED | Although IDs shown here are GUIDs, and above are numeric, and although the example above shows Unix timestamps, this specification does not prescribe any specific format of either.
-`modified` | REQUIRED | Modified timestamp or change number of the item. This MUST be comparable to itself. The value of the relevant item MUST be used in either the `afterTimestamp` or `afterChangeNumber` parameter; the format of the `modified` value and the relevant parameter must be identical.
+`modified` | REQUIRED | Modified timestamp or change number of the item. This MUST be comparable to itself. This MUST always be updated when *any* data within `<data>` is updated. The `modified` property of the last item MUST be used in either the `afterTimestamp` or `afterChangeNumber` parameter of the `"next"` URL; the format of the `modified` value and the relevant parameter must be identical.
 `data` | REQUIRED | Note this property MUST NOT be included if state is `"deleted"`
 
 
@@ -499,7 +501,7 @@ Property | Status | Notes
 
     - All dates within `<data>` MUST be represented as **UTC** using [[!ISO8601]] e.g. `"2014-08-12T18:50:00Z"`, including the trailing `Z` where relevant for clarity of timezone. Dates SHOULD be represented without offset from UTC (e.g. `"2014-08-12T18:50:00Z"` instead of `"2016-07-13T20:00:00-05:00"`). Note `modified` dates outside of `<data>` SHOULD be represented as an integer where possible.
     - All URLs within `<data>` MUST be absolute.
-    - HTML or Markdown encoded fields MUST be included in plain text, as well as raw form, as separate properties within `<data>`. 
+    - HTML or Markdown encoded properties MUST be included in plain text, as well as raw form, as separate properties within `<data>`. 
 
 
     #### Related entities
