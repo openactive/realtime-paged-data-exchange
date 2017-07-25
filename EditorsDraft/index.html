@@ -312,7 +312,7 @@
     - If any record is added to the list, it MUST remain in the list in perpetuity with either an `"updated"` or a `"deleted"` state, except for records that have been set to `"deleted"`, which MUST remain in the list for at least 48 hours from the point in time when they became `"deleted"`. This ensures that deletions are synchronised to data consumers.
 
 
-    This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client.
+    This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client (System 2).
 
 
     ## Ordering strategies
@@ -433,7 +433,7 @@ Parameter | Implementation | Notes
 
     Entities that have similar update frequency (e.g. Event and Location) MUST be embedded in the same endpoint.
 
-    Entities with substantially different update frequencies (e.g. Event Description and Availability) MAY be provided as separate endpoints. Each entity type endpoint and ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the client side.
+    Entities with substantially different update frequencies (e.g. Event Description and Availability) MAY be provided as separate endpoints. Each entity type endpoint and ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the client side (in System 2).
 
 
 
@@ -460,7 +460,7 @@ Parameter | Implementation | Notes
 
 Property | Status | Notes
 --- | ---
-`next` | REQUIRED | The `next` URL MUST be calculated using the last item in the current page, and use the current page's own URL if no items exist. Not all items in the current page may be visible in the case of <a href='#in-stream-filtering'>filtering</a> so the last item used may not be contained within `items`. The `next` URL MUST be an absolute URL, fully qualified with the domain. For polling, the `next` URL in the response is a precomputed next URL to be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, it is outside the scope of this specification.
+`next` | REQUIRED | The `next` URL MUST be calculated using the last item in the current page, and use the current page's own URL if no items exist. Not all items in the current page may be visible in the case of <a href='#in-stream-filtering'>filtering</a> so the last item used may not be contained within `items`. The `next` URL MUST be an absolute URL, fully qualified with the domain. For polling, the `next` URL in the response is a precomputed next URL to be called by the client (System 2) to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, it is outside the scope of this specification.
 `items` | REQUIRED | An array of `<item>`, which should simply by empty `[]` if no results are returned. The `items` property being empty is not sufficient to indicate the <a href='#last-page-definition'>last page</a>.
 [`license`](http://purl.org/dc/terms/license) | REQUIRED | Reference to the license under which the data has been published. Any website that links to this endpoint SHOULD also include text such as "This opportunity data is owned by My Company Ltd and is licensed under the Creative Commons Attribution Licence (CC-BY v4.0) for anyone to access, use and share.".
 
@@ -482,7 +482,7 @@ Property | Status | Notes
 Property | Status | Notes
 --- | ---
 `state` | REQUIRED | MUST be of value `"updated"` or value `"deleted"`. Deleted items are included in the response with a `"deleted"` state, but no `<data>` associated.
-`kind` | REQUIRED | The "kind" property allows for the representation of different entity types, though where possible referenced entities should be embedded into the primary entity. Each entity type ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the client side.
+`kind` | REQUIRED | The "kind" property allows for the representation of different entity types, though where possible referenced entities should be embedded into the primary entity. Each entity type ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the client side (at System 2).
 `id` | REQUIRED | Although IDs shown here are GUIDs, and above are numeric, and although the example above shows Unix timestamps, this specification does not prescribe any specific format of either.
 `modified` | REQUIRED | Modified timestamp or change number of the item. This MUST be comparable to itself. The value of the relevant item MUST be used in either the `afterTimestamp` or `afterChangeNumber` parameter; the format of the `modified` value and the relevant parameter must be identical.
 `data` | REQUIRED | Note this property MUST NOT be included if state is `"deleted"`
@@ -651,14 +651,14 @@ Property | Status | Notes
 
     Entries in the table overwrite old items with a newer modified timestamp.
 
-    This table can be easily parsed into output for the client. This has the advantage of allowing one endpoint and one process to manage the real-time sync by watching this single table, as the table can maintain a sort and page across all entity "kinds".
+    This table can be easily parsed into output for the client (System 2). This has the advantage of allowing one endpoint and one process to manage the real-time sync by watching this single table, as the table can maintain a sort and page across all entity "kinds".
 
 
     ### Multiple table on-demand JSON generation
 
     The [[!JSON]] is generated from each table individually at the point that is requested by either the webhook or poll.
 
-    An endpoint will be required for each entity "kind", as the sort cannot efficiently happen across tables. These endpoints would require separate webhook / polling processes to keep them in sync (though the webhooks can all share the same endpoint on the client).
+    An endpoint will be required for each entity "kind", as the sort cannot efficiently happen across tables. These endpoints would require separate webhook / polling processes to keep them in sync (though the webhooks can all share the same endpoint on the client i.e. System 2).
 
 
     ### Hybrid approach: paging table
@@ -670,7 +670,7 @@ Property | Status | Notes
 
     ### Calculated fields (e.g. available spaces or available tickets for a session)
 
-    As some entities will not need to be synchronised, but fields calculated from them will need to be known to the client (e.g. the "tickets" table may not need to be synchronised, but the "available tickets" calculated field on the "sessions" table will be required).
+    As some entities will not need to be synchronised, but fields calculated from them will need to be known to the client i.e. System 2 (e.g. the "tickets" table may not need to be synchronised, but the "available tickets" calculated field on the "sessions" table will be required).
 
     The suggested approach is to calculate the field "available tickets" and store it in the "sessions" table on each ticket sale. This has three advantages:
 
@@ -683,7 +683,7 @@ Property | Status | Notes
 
     ### Strict ordering of items
 
-    For high-throughput AMQP, when updating data in the client's index, the timestamp of each record will be used to ensure records are only updated with newest data. Although this technique can be used specifically for AMQP, all other methods of transport must adhere to a strict ordering of items by modified timestamp and ID (per kind) in order to ensure data consistency. Ordering between kinds is not important.
+    For high-throughput, when updating data in the client's state (System 2), the timestamp of each record will be used to ensure records are only updated with newest data. Although this technique can be used specifically for parallel processing scenarios, all methods of transport must adhere to a strict ordering of items by modified timestamp and ID (per kind) in order to ensure data consistency. Ordering across kinds is not important.
 
 
     ### Database Triggers (MS SQL Server example)
