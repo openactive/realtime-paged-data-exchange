@@ -550,6 +550,11 @@ Property | Status | Notes
 
     </section>
 
+    ### Content type
+
+    The polling endpoint MUST declare the correct content type:
+    `Content-Type: application/json` 
+
     ### Initial download
 
     When consuming the data, pages are first downloaded sequentially to catchup with the current state of System 1. This is achieved by following the `next` property of each page until the last page is reached.
