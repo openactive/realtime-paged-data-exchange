@@ -309,7 +309,7 @@
 
     - If the consumer reaches the end of the list they consider themselves up-to-date at that moment, and can frequently revisit the end of the list in order to retrieve further updates.
 
-    - If any record is added to the list, it MUST remain in the list in perpetuity with either an `updated` or a `deleted` state. This ensures that deletions are synchronised to data consumers. 
+    - If any record is added to the list, it MUST remain in the list in perpetuity with either an `"updated"` or a `"deleted"` state, except for records that have been set to `"deleted"`, which MUST remain in the list for at least 48 hours from the point in time when they became `"deleted"`. This ensures that deletions are synchronised to data consumers.
 
 
     This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client.
@@ -329,11 +329,11 @@
 Parameter | Implementation | Notes
 --- | ---
 `afterTimestamp` | REQUIRED | The modified timestamp, after which results will be returned (if not specified will return from beginning of time). The timestamp SHOULD be in integer format where possible (e.g. Unix epoch). For non-integer timestamps, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
-`afterId` | REQUIRED | Where multiple records have the same modified value, this parameter specifies the ID after which results will be returned (if not specified will return all). For non-integer IDs, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
+`afterId` | REQUIRED | Where multiple records have the same `modified` value, this parameter specifies the ID after which results will be returned (if not specified will return all). For non-integer IDs, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
 `limit` | OPTIONAL | The number of records returned within the page. A suggested default for most opportunity data sources is 500 records.
 
 
-    In this example, `afterTimestamp=1453931925&afterId=12` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list'></a>. hence the last record of a returned page of results can be used as parameters to retrieve the next page of results.
+    In this example, `afterTimestamp=1453931925&afterId=12` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list'></a>, hence the last record of a returned page of results can be used as parameters to retrieve the next page of results,  and thus the last record can be used to generate the "next page URL".
 
     Note that the timestamp does not need to reflect actual time, as long as it providers a chronological ordering. An integer, string or other representation is sufficient, provided it is sufficiently comparable to support the invariants.
 
@@ -389,7 +389,7 @@ Parameter | Implementation | Notes
 
     The `modified` property MUST still be included, and set to the change number, to allow items with identical `id`s from different pages to be compared to calculate which is newer.
 
-    In this example, `afterChangeNumber=1453931931` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list-via-change-number'></a>. hence the last record of a returned page of results can be used as parameters to retrieve the next page of results.
+    In this example, `afterChangeNumber=1453931931` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list-via-change-number'></a>. hence the last record of a returned page of results can be used as parameters to retrieve the next page of results, and thus the last record can be used to generate the "next page URL".
 
     <figure>
       ![](images/image03.png)
@@ -460,7 +460,7 @@ Parameter | Implementation | Notes
 
 Property | Status | Notes
 --- | ---
-`next` | REQUIRED | This MUST be an absolute URL, fully qualified with the domain. For polling, the `next` URL in the response is a precomputed next URL to be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, this is outside the scope of this standard.
+`next` | REQUIRED | This MUST be an absolute URL, fully qualified with the domain. For polling, the `next` URL in the response is a precomputed next URL to be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, this is outside the scope of this standard. The `next` URL can be calculated using the last item in the currently returned page.
 `items` | REQUIRED | An array of `<item>`, which should simply by empty `[]` if no results are returned.
 [`license`](http://purl.org/dc/terms/license) | REQUIRED | Reference to the license under which the data has been published.
 
@@ -481,11 +481,11 @@ Property | Status | Notes
 
 Property | Status | Notes
 --- | ---
-`state` | REQUIRED | MUST be of value `"updated"` or value `"deleted"`. Deleted items are included in the response with a "deleted" state, but no `<data>` associated.
-`kind` | REQUIRED | The "kind" property allows for the representation of different entity types, though were possible referenced entities should be embedded into the primary entity. Each entity type ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the client side.
+`state` | REQUIRED | MUST be of value `"updated"` or value `"deleted"`. Deleted items are included in the response with a `"deleted"` state, but no `<data>` associated.
+`kind` | REQUIRED | The "kind" property allows for the representation of different entity types, though where possible referenced entities should be embedded into the primary entity. Each entity type ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the client side.
 `id` | REQUIRED | Although IDs shown here are GUIDs, and above are numeric, and although the example above shows Unix timestamps, the standard does not prescribe any specific format of either.
 `modified` | REQUIRED | Modified timestamp or change number of the item. This MUST be comparable to itself. The value of the relevant item MUST be used in either the `afterTimestamp` or `afterChangeNumber` parameter; the format of the `modified` value and the relevant parameter must be identical.
-`data` | REQUIRED | Note this property MUST NOT be included if state is `'deleted'`
+`data` | REQUIRED | Note this property MUST NOT be included if state is `"deleted"`
 
 
     ### `<data>`
@@ -507,7 +507,7 @@ Property | Status | Notes
     - Embedded entities within `<data>` MUST include their IDs, to allow for efficient processing by the consuming application (System 2).
 
 
-    ### Use of standard date model
+    ### Use of standard data model
     
     Applications SHOULD use a standard data model to increase interoperability of the exchanged data. For example an application may choose to use entities and properties defined in [[SCHEMA-ORG]] to help structure data in a useful way for reusers. 
     
@@ -520,6 +520,15 @@ Property | Status | Notes
     <div class="note">
     The remainder of this specification uses simple examples when showing `<data>` elements in responses. However these examples are for illustrative purposes only. For a comprehensive selection of examples of opportunity data, read the [[Publishing-Opportunity-Data]] primer. 
     </div>
+
+
+    ## Deleted items
+
+    If any record is added to the feed, it MUST remain in the feed in perpetuity with either an `"updated"` or a `"deleted"` state, except for records that have been set to `"deleted"`, which MUST remain in the feed for at least 48 hours from the point in time when they became `"deleted"`. This ensures that deletions are synchronised to data consumers.
+
+    Deleted items are included in the response with a `"deleted"` state, but no `<data>` associated.
+
+    In order to implement this correctly, records in System 1 must have a "deleted" flag that is set instead of deleting the record permanently.
 
 
     ## Example
@@ -564,7 +573,7 @@ Property | Status | Notes
     The last page MUST have the following properties:
 
     - The `items` property is an empty array.
-    - The `next` property matches the URL of the page.
+    - The `next` property matches the URL of the current page.
 
 
     ### Near real-time updates
@@ -582,7 +591,7 @@ Property | Status | Notes
 
     Although a full page may be presented from System 1 to the filter, the filter may exclude all items within the list, resulting in a zero-item array at System 2.
 
-    Note that any items allowed to pass through the filter once MUST perpetually be allowed to pass through the filter, with a `"deleted"` state for those that would otherwise be filtered out. This is in keeping with the invarient described in the <a href='#core-concept'>core concept</a>, ensuring that System 2 correctly deletes records that have been modified such that they are subsequently filtered out.
+    Note that any items allowed to pass through the filter once MUST, at the point that they no longer meet the filter conditions and would otherwise be filtered out, be allowed to pass through the filter with a "deleted" state for at least 48 hours. This is in keeping with the invarient described in the <a href='#core-concept'>core concept</a>, ensuring that System 2 correctly deletes records that have been modified such that they are subsequently filtered out.
 
     ## Other transport mechanisms
 
