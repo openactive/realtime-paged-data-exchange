@@ -389,7 +389,7 @@ Parameter | Implementation | Notes
 
     The `modified` property MUST still be included, and set to the change number, to allow items with identical `id`s from different pages to be compared to calculate which is newer.
 
-    In this example, `afterChangeNumber=1453931931` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list-via-change-number'></a>. hence the last record of a returned page of results can be used as parameters to retrieve the next page of results, and thus the last record can be used to generate the "next page URL".
+    In this example, `afterChangeNumber=1453931931` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list-via-change-number'></a>, hence the last record of a returned page of results can be used as parameters to retrieve the next page of results, and thus the last record can be used to generate the "next page URL".
 
     <figure>
       ![](images/image03.png)
@@ -560,7 +560,7 @@ Property | Status | Notes
 
     - The `items` property is an empty array.
     - The `next` property matches the URL of the current page.
-    
+
 
     This allows for in-stream filtering and other usecases where the number of items in each page may vary.
 
