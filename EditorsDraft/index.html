@@ -364,7 +364,7 @@ Parameter | Implementation | Notes
 
     ```javascript
     var query;
-    if (queryParams.from) {
+    if (queryParams.afterTimestamp && queryParams.afterId) {
         query = Session.query().filter((Session.modified == queryParams.afterTimestamp && Session.id > queryParams.afterId) || (Session.modified > queryParams.afterTimestamp));
     } else {
         query = Session.query()
@@ -411,7 +411,7 @@ Parameter | Implementation | Notes
 
     ```javascript
     var query;
-    if (queryParams.from) {
+    if (queryParams.afterChangeNumber) {
         query = Session.query().filter(Session.changeNumber > queryParams.afterChangeNumber);
     } else {
         query = Session.query()
