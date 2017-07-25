@@ -497,7 +497,7 @@ Property | Status | Notes
 
     #### Value formats
 
-    - All dates within `<data>` MUST be represented as **UTC** using [[!ISO8601]] e.g. `"2014-08-12T18:50:00Z"`, including the trailing `Z` where relevant for clarity of timezone. Dates SHOULD be represented without offset from UTC (`"2014-08-12T18:50:00Z"` instead of `"2016-07-13T20:00:00-05:00"`). Note `modified` dates outside of `<data>` SHOULD be represented as an integer where possible.
+    - All dates within `<data>` MUST be represented as **UTC** using [[!ISO8601]] e.g. `"2014-08-12T18:50:00Z"`, including the trailing `Z` where relevant for clarity of timezone. Dates SHOULD be represented without offset from UTC (e.g. `"2014-08-12T18:50:00Z"` instead of `"2016-07-13T20:00:00-05:00"`). Note `modified` dates outside of `<data>` SHOULD be represented as an integer where possible.
     - All URLs within `<data>` MUST be absolute.
     - HTML or Markdown encoded fields MUST be included in plain text, as well as raw form, as separate properties within `<data>`. 
 
