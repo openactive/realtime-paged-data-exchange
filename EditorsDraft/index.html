@@ -553,14 +553,35 @@ Property | Status | Notes
 
     </section>
 
+
+    ### Expected consumer behaviour
+
+    #### Initial download
+
+    When consuming the data, pages are first downloaded sequentially to catchup with the current state of System 1. This is achieved by following the `next` property of each page until the <a href='#last-page-definition'>last page</a> is reached.
+
+
+    #### Polling for near real-time updates
+
+    The consumer MUST poll the endpoint at the <a href='#last-page-definition'>last page</a> URL to check for updates using exponential backoff. When items are found, it SHOULD resume the behavoiur of the initial download: following the `next` property of each page.
+
+
     ### Content type
 
     The polling endpoint MUST declare the correct content type:
     `Content-Type: application/json` 
 
-    ### Initial download
 
-    When consuming the data, pages are first downloaded sequentially to catchup with the current state of System 1. This is achieved by following the `next` property of each page until the last page is reached.
+    ### HTTP status codes
+
+    The polling endpoint MUST return the following status codes, and consuming applications MUST respect these:
+
+| HTTP Status Code | Interpretation | Expected consumer (System 2) behaviour |
+|------------------|----------------|-----------------------------|
+| `200` | Normal response | Continue polling using exponential backoff |
+| `503` | Temporary overloading or maintenance of the server | Retry after a random interval between 60 and 120 minutes, to ease load from multiple consumers |
+| `404` or `410` | Endpoint not found at this location | Consider this endpoint in an error state and do not retry |
+
 
     ### Last page definition
 
@@ -572,10 +593,6 @@ Property | Status | Notes
 
     This allows for in-stream filtering and other usecases where the number of items in each page may vary.
 
-
-    ### Near real-time updates
-
-    The consumer MUST poll the endpoint at the "last page" URL to check for updates using exponential backoff (wait 1 second, 2 seconds, 4 seconds etc until a minimum polling frequency is reached). When items are found, it SHOULD resume the behavoiur of the initial download: following the `next` property of each page. 
 
     ### In-stream filtering
 
