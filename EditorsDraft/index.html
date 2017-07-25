@@ -135,6 +135,11 @@
                 "title": "OpenActive Realtime Paged Data Exchange Beta Wiki",
                 "publisher": "OpenActive Community Group",            
             },
+            "URI-Handling-Function-Properties": {
+                "href": "https://www.ecma-international.org/ecma-262/5.1/#sec-15.1.3",
+                "title": "URI Handling Function Properties",
+                "publisher": "Ecma International",            
+            },            
           }
         };
     </script>
@@ -304,7 +309,8 @@
 
     - If the consumer reaches the end of the list they consider themselves up-to-date at that moment, and can frequently revisit the end of the list in order to retrieve further updates.
 
-    - If any record is added to the list, it MUST remain in the list in perpetuity with either an `updated` or a `deleted` state. This ensures that deletions are synchronised to data consumers.
+    - If any record is added to the list, it MUST remain in the list in perpetuity with either an `updated` or a `deleted` state. This ensures that deletions are synchronised to data consumers. 
+
 
     This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client.
 
@@ -318,13 +324,13 @@
 
     ### Modified Timestamp and ID
 
-    The content of a [[!JSON]] depends on the supplied parameters, as specified below.
+    The items are ordered first by modified timestamp, and second by ID. The content of a [[!JSON]] depends on the supplied parameters, as specified below.
 
 Parameter | Implementation | Notes
 --- | ---
-`afterTimestamp` | REQUIRED | The modified timestamp, after which results will be returned (if not specified will return from beginning of time)
-`afterId` | REQUIRED | The ID after which results will be returned (if not specified will return all).
-`limit` | OPTIONAL | The number of records returned with in the page. A suggested default for most opportunity data sources is 500 records.
+`afterTimestamp` | REQUIRED | The modified timestamp, after which results will be returned (if not specified will return from beginning of time). The timestamp SHOULD be in integer format where possible (e.g. Unix epoch). For non-integer timestamps, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
+`afterId` | REQUIRED | Where multiple records have the same modified value, this parameter specifies the ID after which results will be returned (if not specified will return all). For non-integer IDs, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
+`limit` | OPTIONAL | The number of records returned within the page. A suggested default for most opportunity data sources is 500 records.
 
 
     In this example, `afterTimestamp=1453931925&afterId=12` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list'></a>. hence the last record of a returned page of results can be used as parameters to retrieve the next page of results.
@@ -370,12 +376,12 @@ Parameter | Implementation | Notes
 
     ### Incrementing Unique Change Number
 
-    The content of a [[!JSON]] page depends on the supplied parameters, as specified below.
+    The items are ordered by an incrementing counter where records are assigned a new unique value on each update. The content of a [[!JSON]] page depends on the supplied parameters, as specified below.
 
 Parameter | Implementation | Notes
 --- | ---
 `afterChangeNumber` | REQUIRED | An integer after which results will be returned (if not specified will return starting with the first change number).
-`limit` | OPTIONAL | The number of records returned with in the page. A suggested default for most opportunity data sources is 500 records.
+`limit` | OPTIONAL | The number of records returned within the page. A suggested default for most opportunity data sources is 500 records.
 
     The change number MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The consumer ("System 2") simply maintains the "next page URL", so the detail of the change number is transparent in thier implementation.
 
@@ -427,16 +433,16 @@ Parameter | Implementation | Notes
 
     Entities that have similar update frequency (e.g. Event and Location) MUST be embedded in the same endpoint.
 
-    Entiries with substantially different update frequencies (e.g. Event Description and Availability) SHOULD be provided as separate endpoints. The specification does not advocate embedding of child entities if they change substantially more frequently than the parent. Each entity type endpoint and ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows us to reassemble the data structure on the client side. It also makes the implementation very simple.
+    Entities with substantially different update frequencies (e.g. Event Description and Availability) MAY be provided as separate endpoints. Each entity type endpoint and ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the client side.
 
 
 
 
     ## Response grammar
 
-    It should be noted that although the `<data>` element is open to conformance with [[JSON-LD]], the properties in this specification do not use any part of the [[JSON-LD]] specification.
+    It should be noted that although the `<data>` element is open to conformance with [[!JSON-LD]], the properties in this specification do not use any part of the [[!JSON-LD]] specification.
 
-    Endpoints MUST NOT include JSON-LD syntax except for within the `data` property.
+    Endpoints MUST NOT include [[!JSON-LD]] syntax except for within the `data` property.
 
 
     ### `<response>`
@@ -454,9 +460,9 @@ Parameter | Implementation | Notes
 
 Property | Status | Notes
 --- | ---
-`next` | <em class="rfc2119">REQUIRED</em> | This MUST be an absolute URL, fully qualified with the domain. For polling, the "next" URL in the response is a precomputed next URL that would be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, this is outside the scope of this standard.
-`items` | <em class="rfc2119">REQUIRED</em> | An array of `<item>`, which should simply by empty `[]` if no results are returned.
-[`license`](http://purl.org/dc/terms/license) | <em class="rfc2119">REQUIRED</em> | Reference to the license under which the data has been published
+`next` | REQUIRED | This MUST be an absolute URL, fully qualified with the domain. For polling, the `next` URL in the response is a precomputed next URL to be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, this is outside the scope of this standard.
+`items` | REQUIRED | An array of `<item>`, which should simply by empty `[]` if no results are returned.
+[`license`](http://purl.org/dc/terms/license) | REQUIRED | Reference to the license under which the data has been published.
 
 
     ### `<item>`
@@ -476,15 +482,22 @@ Property | Status | Notes
 Property | Status | Notes
 --- | ---
 `state` | REQUIRED | MUST be of value `"updated"` or value `"deleted"`. Deleted items are included in the response with a "deleted" state, but no `<data>` associated.
-`kind` | REQUIRED | The "kind" property allows for the representation of different entity types. The specification does not advocate embedding of child entities if they change more frequently than the parent. Each entity type ("kind") can be synchronised separately, this allows us to decouple the sync logic from the data structure, and allows us to reassemble the data structure on the client side. It also makes the implementation very simple.
+`kind` | REQUIRED | The "kind" property allows for the representation of different entity types, though were possible referenced entities should be embedded into the primary entity. Each entity type ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the client side.
 `id` | REQUIRED | Although IDs shown here are GUIDs, and above are numeric, and although the example above shows Unix timestamps, the standard does not prescribe any specific format of either.
-`modified` | REQUIRED | Modified timestamp or change number of the item. Must be comparable to itself. The value of the relevant item MUST be used in either the `afterTimestamp` or `afterChangeNumber` parameter, in the same format.
+`modified` | REQUIRED | Modified timestamp or change number of the item. This MUST be comparable to itself. The value of the relevant item MUST be used in either the `afterTimestamp` or `afterChangeNumber` parameter; the format of the `modified` value and the relevant parameter must be identical.
 `data` | REQUIRED | Note this property MUST NOT be included if state is `'deleted'`
 
 
     ### `<data>`
 
-    The `<data>` part of the response is open for applications for populate with whatever data structure is most appropriate for the entity type ("kind") being exchanged. 
+    The `<data>` part of the response is open for applications to populate with whatever data structure is most appropriate for the entity type ("kind") being exchanged. 
+
+    ### Value formats
+
+    - All dates within `<data>` MUST be represented as **UTC** using [[!ISO8601]] e.g. `2014-08-12T18:50:00Z`. Dates SHOULD be represented without offset from UTC (`2014-08-12T18:50:00Z` instead of `2016-07-13T20:00:00-05:00`). Note `modified` dates outside of `<data>` SHOULD be represented as an integer where possible.
+
+
+    ### Use of standard date model
     
     Applications SHOULD use a standard data model to increase interoperability of the exchanged data. For example an application may choose to use entities and properties defined in [[SCHEMA-ORG]] to help structure data in a useful way for reusers. 
     
@@ -534,7 +547,7 @@ Property | Status | Notes
 
     ### Initial download
 
-    The pages are first downloaded to catchup with the current state of System 1. This is achieved by following the `next` property of each page until the last page is reached.
+    When consuming the data, pages are first downloaded sequentially to catchup with the current state of System 1. This is achieved by following the `next` property of each page until the last page is reached.
 
     ### Last page definition
 
@@ -546,7 +559,7 @@ Property | Status | Notes
 
     ### Near real-time updates
 
-    The consumer MUST poll the endpoint at the "last page" URL to check for updates using exponential backoff (wait 1 second, 2 seconds, 4 seconds etc) to minimum polling frequency. When items are found, it SHOULD resume the behavoiur of the initial download: following the `next` property of each page. 
+    The consumer MUST poll the endpoint at the "last page" URL to check for updates using exponential backoff (wait 1 second, 2 seconds, 4 seconds etc until the minimum polling frequency is reached). When items are found, it SHOULD resume the behavoiur of the initial download: following the `next` property of each page. 
 
     ### In-stream filtering
 
