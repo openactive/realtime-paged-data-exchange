@@ -291,7 +291,7 @@
 
     ## Simplicity
 
-    The paged [[!JSON]] data exchange standard is incredibly simple to implement, but conceptually requires some explanation.
+    The paged [[!JSON]] data exchange specification is incredibly simple to implement, but conceptually requires some explanation.
 
     ## Core concept
 
@@ -460,7 +460,7 @@ Parameter | Implementation | Notes
 
 Property | Status | Notes
 --- | ---
-`next` | REQUIRED | The `next` URL MUST be calculated using the last item in the currently returned page. This MUST be an absolute URL, fully qualified with the domain. For polling, the `next` URL in the response is a precomputed next URL to be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, this is outside the scope of this standard.
+`next` | REQUIRED | The `next` URL MUST be calculated using the last item in the currently returned page. This MUST be an absolute URL, fully qualified with the domain. For polling, the `next` URL in the response is a precomputed next URL to be called by the client to get the next page (which would be polled after a delay if the previous page had returned no data). Note "polling" and "paging" are differentiated only by the duration between requests. Although an example endpoint name is provided, it is outside the scope of this specification.
 `items` | REQUIRED | An array of `<item>`, which should simply by empty `[]` if no results are returned.
 [`license`](http://purl.org/dc/terms/license) | REQUIRED | Reference to the license under which the data has been published.
 
@@ -483,7 +483,7 @@ Property | Status | Notes
 --- | ---
 `state` | REQUIRED | MUST be of value `"updated"` or value `"deleted"`. Deleted items are included in the response with a `"deleted"` state, but no `<data>` associated.
 `kind` | REQUIRED | The "kind" property allows for the representation of different entity types, though where possible referenced entities should be embedded into the primary entity. Each entity type ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the client side.
-`id` | REQUIRED | Although IDs shown here are GUIDs, and above are numeric, and although the example above shows Unix timestamps, the standard does not prescribe any specific format of either.
+`id` | REQUIRED | Although IDs shown here are GUIDs, and above are numeric, and although the example above shows Unix timestamps, this specification does not prescribe any specific format of either.
 `modified` | REQUIRED | Modified timestamp or change number of the item. This MUST be comparable to itself. The value of the relevant item MUST be used in either the `afterTimestamp` or `afterChangeNumber` parameter; the format of the `modified` value and the relevant parameter must be identical.
 `data` | REQUIRED | Note this property MUST NOT be included if state is `"deleted"`
 
@@ -531,38 +531,24 @@ Property | Status | Notes
     In order to implement this correctly, records in System 1 must have a "deleted" flag that is set instead of deleting the record permanently.
 
 
-    ## Example
-
-    A full example REST response from polling:
-
-    ```
-    /getSessions?afterTimestamp=1453931101&afterId={c15814e5-8931-470c-8a16-ef45afedaece}
-    -> { items: [
-            {
-                state: "updated",
-                kind: "session",
-                id: "{c15814e5-8931-470c-8a16-ef45afedaece}",
-                modified: 1453931101,
-                data: {
-                   ...
-                }
-            },
-            {
-                state: "deleted",
-                kind: "session",
-                id: "{d97f73fb-4718-48ee-a6a9-9c7d717ebd85}",
-                modified: 1453931925
-            }
-          ],
-          next: '/getSessions?afterTimestamp=1453931925&afterId={d97f73fb-4718-48ee-a6a9-9c7d717ebd85}'
-    }
-    ```
-
     # Transport
 
     ## Polling
 
-    Polling mechanics and expected consumer behaviour is defined in this section.
+    Polling mechanics and expected consumer behaviour are defined in this section.
+
+    <section class="informative">
+
+    ### Polling endpoint specification
+
+    Although the parameters for the endpoint are defined within the scope of this specification, the name and path of the endpoint are outside of the scope.
+
+    An illustrative example of an endpoint with parameters conforming to this specification is below:
+
+    - Without parameters (first page): `/getSessions`
+    - With parameters (subsiquent pages): `/getSessions?afterTimestamp=1453931101&afterId={c15814e5-8931-470c-8a16-ef45afedaece}`
+
+    </section>
 
     ### Initial download
 
@@ -596,6 +582,34 @@ Property | Status | Notes
     ## Other transport mechanisms
 
     Note that although this specification has been built to cater for other types of transport, it focusses on polling as the primary transport mechanism. The exploration of other transport mechanisms is encouraged for usecases that require higher throughput. To support additional testing and experimentation of new transport mechanisms, a "beta" wiki has been defined to allow the community to explore such mechanisms collaboratively. For more information on the process supporting that see [[OpenActive-RPDE-Beta-Wiki]].
+
+
+    ## Example
+
+    A full example REST response from polling:
+
+    ```
+    /getSessions?afterTimestamp=1453931101&afterId={c15814e5-8931-470c-8a16-ef45afedaece}
+    -> { items: [
+            {
+                state: "updated",
+                kind: "session",
+                id: "{c15814e5-8931-470c-8a16-ef45afedaece}",
+                modified: 1453931101,
+                data: {
+                   ...
+                }
+            },
+            {
+                state: "deleted",
+                kind: "session",
+                id: "{d97f73fb-4718-48ee-a6a9-9c7d717ebd85}",
+                modified: 1453931925
+            }
+          ],
+          next: '/getSessions?afterTimestamp=1453931925&afterId={d97f73fb-4718-48ee-a6a9-9c7d717ebd85}'
+    }
+    ```
 
 
     <section class="informative">
