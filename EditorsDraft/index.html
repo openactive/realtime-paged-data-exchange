@@ -383,7 +383,7 @@ Parameter | Implementation | Notes
 `afterChangeNumber` | REQUIRED | An integer after which results will be returned (if not specified will return starting with the first change number).
 `limit` | OPTIONAL | The number of records returned within the page. A suggested default for most opportunity data sources is 500 records.
 
-    The change number MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The consumer ("System 2") simply maintains the "next page URL", so the detail of the change number is transparent in thier implementation.
+    The change number MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The consumer (System 2) simply maintains the "next page URL", so the detail of the change number is transparent in thier implementation.
 
     The items `id` (unique idenfier which is distinct from the change number) MUST be included within the item, to allow items to be uniquely idenified for the purposes of update and delete operations.
 
@@ -490,11 +490,21 @@ Property | Status | Notes
 
     ### `<data>`
 
-    The `<data>` part of the response is open for applications to populate with whatever data structure is most appropriate for the entity type ("kind") being exchanged. 
+    The `<data>` part of the response is open for applications to populate with whatever data structure is most appropriate for the entity type ("kind") being exchanged.
 
-    ### Value formats
+    This specification includes generic constraints when representing values and entities, to ensure consistency across implementations.
 
-    - All dates within `<data>` MUST be represented as **UTC** using [[!ISO8601]] e.g. `2014-08-12T18:50:00Z`. Dates SHOULD be represented without offset from UTC (`2014-08-12T18:50:00Z` instead of `2016-07-13T20:00:00-05:00`). Note `modified` dates outside of `<data>` SHOULD be represented as an integer where possible.
+
+    #### Value formats
+
+    - All dates within `<data>` MUST be represented as **UTC** using [[!ISO8601]] e.g. `"2014-08-12T18:50:00Z"`, including the trailing `Z` where relevant for clarity of timezone. Dates SHOULD be represented without offset from UTC (`"2014-08-12T18:50:00Z"` instead of `"2016-07-13T20:00:00-05:00"`). Note `modified` dates outside of `<data>` SHOULD be represented as an integer where possible.
+    - All URLs within `<data>` MUST be absolute.
+    - HTML or Markdown encoded fields MUST be included in plain text, as well as raw form, as separate properties within `<data>`. 
+
+
+    #### Related entities
+
+    - Embedded entities within `<data>` MUST include their IDs, to allow for efficient processing by the consuming application (System 2).
 
 
     ### Use of standard date model
@@ -644,7 +654,7 @@ Property | Status | Notes
     If using a
      [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx)/[rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx) field on the parent table as the "modified timestamp", using the trigger below for each child table will update the rowversion field in the relevant rows on the parent table when the child table is updated.
 
-    The `SET SomeColumn = SomeColumn` part of this trigger could easily be replaced with setting materialised calculated fields (e.g. "total number of tickets sold") which contain the summary data required by "System 2". This reduces the need to join the child table during the API endpoint response, which helps to optimise the endpoint.
+    The `SET SomeColumn = SomeColumn` part of this trigger could easily be replaced with setting materialised calculated fields (e.g. "total number of tickets sold") which contain the summary data required by System 2. This reduces the need to join the child table during the API endpoint response, which helps to optimise the endpoint.
 
     The example below has been adapted from [here](http://stackoverflow.com/questions/2165333/how-to-update-sql-server-timestamp-column-without-changing-record-data), see [here](https://msdn.microsoft.com/en-us/library/ms191300.aspx) for an explanation of the mechanics.
 
