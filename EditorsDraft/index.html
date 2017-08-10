@@ -347,14 +347,17 @@ Parameter | Implementation | Notes
       <figcaption>Illustration of the deterministic list</figcaption>
     </figure>
 
-    #### SQL Query Example
+    #### SQL Query Example for Timestamp/ID
 
     Where a table exists containing `modified` and `id` columns.
 
     ```SQL
     --include WHERE clause only if @afterTimestamp and @afterId provided
-    WHERE (modified = @afterTimestamp AND id > @afterId) OR (modified > @afterTimestamp)
-    ORDER BY modified, id
+       WHERE (modified = @afterTimestamp
+                AND id > @afterId)
+          OR (modified > @afterTimestamp)
+    ORDER BY modified,
+             id
     ```
 
     <div class="note">
@@ -362,7 +365,7 @@ Parameter | Implementation | Notes
     </div>
 
 
-    #### JavaScript Query Example
+    #### JavaScript Query Example for Timestamp/ID
 
     Where a table or collection exists containing `modified` and `id` columns or properties.
 
@@ -400,16 +403,17 @@ Parameter | Implementation | Notes
       <figcaption>Illustration of the deterministic list via change number</figcaption>
     </figure>
 
-    #### SQL Query Example
+    #### SQL Query Example for Change Number
 
     Where a table exists containing a `change_number` column.
 
     ```SQL
-    WHERE change_number > @afterChangeNumber --include WHERE clause only if @afterChangeNumber provided
+    --include WHERE clause only if @afterChangeNumber provided
+       WHERE change_number > @afterChangeNumber 
     ORDER BY change_number
     ```
 
-    #### JavaScript Query Example
+    #### JavaScript Query Example for Change Number
 
     Where a table or collection exists containing a `changeNumber` column or property.
 
