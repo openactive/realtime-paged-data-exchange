@@ -303,7 +303,7 @@
 
     - A continuous list of records that MUST be sorted deterministically and chronological (in the order they were updated). Either (i) ordered first by modified timestamp, and second by ID or (ii) ordered by an incrementing counter where records are assigned a new unique value on each update.
 
-    - Every record MUST only be represented *once* in this list at a given moment, with its position in the list depending on when it was last updated. Records can freely move position in the list as they are updated.
+    - Every record MUST only be represented *once* in this list at a given moment, distinguished by its unique ID, with its position in the list depending on when it was last updated. Records can freely move position in the list as they are updated.
 
     - This deterministic ordering based on timestamp allows for pages of arbitrary size to be sent without concern for race conditions; if a record is updated during the transfer of a page it MUST appear on a subsequent page (i.e. simply reappear further down the list).
 
@@ -313,7 +313,7 @@
 
     - If the consumer reaches the end of the list they consider themselves up-to-date at that moment, and can frequently revisit the end of the list in order to retrieve further updates.
 
-    - If any record is added to the list or updated it MUST remain in the list in perpetuity while it is in an `"updated"` state, or remain in the list for at least 7 days from the point at time at which it transitioned to a `"deleted"` state. This ensures that deletions are synchronised to data consumers.
+    - If any record is added to the list or updated it MUST remain in the list in perpetuity while it is in an `"updated"` state, or remain in the list for at least 7 days from the point at time at which it transitioned to a `"deleted"` state. This ensures that deletions are synchronised to data consumers (System 2).
 
 
     This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client (System 2).
@@ -333,11 +333,11 @@
 Parameter | Implementation | Notes
 --- | ---
 `afterTimestamp` | REQUIRED | The modified timestamp, after or at which results will be returned (if not specified will return from beginning of time). The timestamp SHOULD be in integer format where possible (e.g. Unix epoch). For non-integer timestamps, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
-`afterId` | REQUIRED | Where multiple records have the same `modified` value, this parameter specifies the ID after which results will be returned (if not specified will return all). For non-integer IDs, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
-`limit` | OPTIONAL | The number of records returned within the page. A suggested default for most opportunity data sources is 500 records.
+`afterId` | REQUIRED | Where multiple items have the same `modified` value, this parameter specifies the ID after which results will be returned (if not specified will return all). For non-integer IDs, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
+`limit` | OPTIONAL | The number of items returned within the page. A suggested default for most opportunity data sources is 500 items.
 
 
-    In this example, `afterTimestamp=1453931925&afterId=12` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list'></a>, hence the last record of a returned page of results can be used as parameters to retrieve the next page of results,  and thus the last record can be used to generate the "next page URL".
+    In this example, `afterTimestamp=1453931925&afterId=12` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list'></a>, hence the last item of a returned page of results can be used as parameters to retrieve the next page of results, and thus the last item can be used to generate the "next page URL".
 
     Note that the timestamp does not need to reflect actual time, as long as it providers a chronological ordering. Any integer or string representation is sufficient, provided it is sufficiently comparable to support the invariants.
 
@@ -384,12 +384,12 @@ Parameter | Implementation | Notes
 
     ### Incrementing Unique Change Number
 
-    The items are ordered by an incrementing counter where records are assigned a new unique value on each update. The content of a [[!JSON]] page depends on the supplied parameters, as specified below.
+    The items are ordered by an incrementing counter, and are assigned a new unique value on each update. The content of a [[!JSON]] page depends on the supplied parameters, as specified below.
 
 Parameter | Implementation | Notes
 --- | ---
 `afterChangeNumber` | REQUIRED | An integer after which results will be returned (if not specified will return starting with the first change number).
-`limit` | OPTIONAL | The number of records returned within the page. A suggested default for most opportunity data sources is 500 records.
+`limit` | OPTIONAL | The number of items returned within the page. A suggested default for most opportunity data sources is 500 items.
 
     The change number MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The consumer (System 2) simply maintains the "next page URL", so the detail of the change number is transparent in their implementation.
 
@@ -397,7 +397,7 @@ Parameter | Implementation | Notes
 
     The `modified` property MUST still be included, and set to the change number, to allow items with identical `id`s from different pages to be compared to calculate which is newer.
 
-    In this example, `afterChangeNumber=1453931931` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list-via-change-number'></a>, hence the last record of a returned page of results can be used as parameters to retrieve the next page of results, and thus the last record can be used to generate the "next page URL".
+    In this example, `afterChangeNumber=1453931931` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list-via-change-number'></a>, hence the last item of a returned page of results can be used as parameters to retrieve the next page of results, and thus the last item can be used to generate the "next page URL".
 
     <figure>
       ![](images/image03.png)
@@ -579,7 +579,7 @@ Property | Status | Notes
 
     ## Deleted items
 
-    If any record is added to the list or updated it MUST remain in the list in perpetuity while it is in an `"updated"` state, or remain in the list for at least 7 days from the point at time at which it transitioned to a `"deleted"` state. This ensures that deletions are synchronised to data consumers.
+    If any item is added to the list or updated it MUST remain in the list in perpetuity while it is in an `"updated"` state, or remain in the list for at least 7 days from the point at time at which it transitioned to a `"deleted"` state. This ensures that deletions are synchronised to data consumers.
 
     Deleted items are included in the response with a `"deleted"` state, but no `<data>` associated.
 
@@ -657,7 +657,7 @@ Property | Status | Notes
 
     Although a full page may be presented from System 1 to the filter, the filter may exclude all items within the list, resulting in a zero-item array at System 2.
 
-    Note that any items allowed to pass through the filter once MUST, at the point that they no longer meet the filter conditions and would otherwise be filtered out, be allowed to pass through the filter with a `"deleted"` state for at least 48 hours. This is in keeping with the invarient described in the <a href='#core-concept'>core concept</a>, ensuring that System 2 correctly deletes records that have been modified such that they are subsequently filtered out.
+    Note that any items allowed to pass through the filter once MUST, at the point that they no longer meet the filter conditions and would otherwise be filtered out, be allowed to pass through the filter with a `"deleted"` state for at least 48 hours. This is in keeping with the invarient described in the <a href='#core-concept'>core concept</a>, ensuring that System 2 correctly deletes items that have been modified such that they are subsequently filtered out.
 
     ## Other transport mechanisms
 
@@ -702,7 +702,7 @@ Property | Status | Notes
 
     - The <a href='#last-page-definition'>last page</a> must have zero items, and a correct next URL that matches the current request.
     - The <a href='#sql-query-example'>query</a> must be correctly implemented with the parentheses in the correct positions.
-    - The <a href='#core-concept'>core concept</a> must be understood, specifically the nature of the list of records where each record appears only once, and each record exists in perpetuity unless deleted as specified in <a href='#deleted-items'>deleted items</a>.
+    - The <a href='#core-concept'>core concept</a> must be understood, specifically the nature of the list of items where each item appears only once, and each item exists in perpetuity unless deleted as specified in <a href='#deleted-items'>deleted items</a>.
     - The <a href='#-item-'>`modified`</a> value (used for either the `afterTimestamp` or `afterChangeNumber` parameter) must always be updated when any data within the `data` property is updated. This can be achieved through e.g. adding triggers to update the modified date on the primary table for related changes.
     - The <a href='#-item-'>`modified`</a> value should match the format used in the `afterTimestamp` or `afterChangeNumber`. 
 
@@ -754,7 +754,7 @@ Property | Status | Notes
 
     ### Strict ordering of items
 
-    For high-throughput, when updating data in the client's state (System 2), the timestamp of each record will be used to ensure records are only updated with newest data. Although this technique can be used specifically for parallel processing scenarios, all methods of transport must adhere to a strict ordering of items by modified timestamp and ID (per kind) in order to ensure data consistency. Ordering across kinds is not important.
+    For high-throughput, when updating data in the client's state (System 2), the timestamp of each item will be used to ensure items are only updated with newest data. Although this technique can be used specifically for parallel processing scenarios, all methods of transport must adhere to a strict ordering of items by modified timestamp and ID (per kind) in order to ensure data consistency. Ordering across kinds is not important.
 
 
     ### Database Triggers (MS SQL Server example)
