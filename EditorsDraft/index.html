@@ -393,7 +393,7 @@ Parameter | Implementation | Notes
 
     The change number MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The consumer (System 2) simply maintains the "next page URL", so the detail of the change number is transparent in their implementation.
 
-    The items `id` (unique identifier which is distinct from the change number) MUST be included within the item, to allow items to be uniquely idenified for the purposes of update and delete operations.
+    The items `id` (unique identifier which is distinct from the change number) MUST be included within the item, to allow items to be uniquely identified for the purposes of update and delete operations.
 
     The `modified` property MUST still be included, and set to the change number, to allow items with identical `id`s from different pages to be compared to calculate which is newer.
 
