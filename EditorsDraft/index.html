@@ -766,15 +766,13 @@ Property | Status | Notes
 
     The example below has been adapted from [here](http://stackoverflow.com/questions/2165333/how-to-update-sql-server-timestamp-column-without-changing-record-data), see [here](https://msdn.microsoft.com/en-us/library/ms191300.aspx) for an explanation of the mechanics.
 
-    ```
+    ```SQL
     CREATE TRIGGER tgUpdateParentRowVersion ON ChildTable FOR INSERT, DELETE, UPDATE
     AS
     BEGIN
-       /*
-        * The updates below force the update of the parent table rowversion
-        */
+       -- The updates below force the update of the parent table rowversion
 
-       /* Materialised field calculation goes here*/
+       -- Materialised field calculation goes here
 
        UPDATE ParentTable
           SET SomeColumn = SomeColumn
