@@ -615,7 +615,7 @@ Property | Status | Notes
 
     #### Polling for near real-time updates
 
-    The consumer MUST poll the endpoint at the <a href='#last-page-definition'>last page</a> URL to check for updates using exponential backoff. When items are found, it SHOULD resume the behavoiur of the initial download: following the `next` property of each page.
+    The consumer MAY poll the endpoint infrequently at the <a href='#last-page-definition'>last page</a> URL to check for updates. When items are found, it SHOULD resume the behavoiur of the initial download: following the `next` property of each page.
 
 
     ### Content type
@@ -630,7 +630,7 @@ Property | Status | Notes
 
 | HTTP Status Code | Interpretation | Expected consumer (System 2) behaviour |
 |------------------|----------------|-----------------------------|
-| `200` | Normal response | Continue polling using exponential backoff |
+| `200` | Normal response | Continue download / infrequent polling  |
 | `503` | Temporary overloading or maintenance of the server | Retry after a random interval between 60 and 120 minutes, to ease load from multiple consumers |
 | `404` or `410` | Endpoint not found at this location | Consider this endpoint in an error state and do not retry |
 
