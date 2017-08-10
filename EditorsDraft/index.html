@@ -13,7 +13,7 @@
           shortName:            "realtime-paged-data-exchange",
 
           // if you wish the publication date to be other than today, set this
-          // publishDate:  "2009-08-06",
+          publishDate:  "2017-08-10",
 
           // if there is a previously published draft, uncomment this and set its YYYY-MM-DD date
           // and its maturity status
@@ -566,7 +566,7 @@ Property | Status | Notes
     
     Applications SHOULD use a standard data model to increase interoperability of the exchanged data. For example an application may choose to use entities and properties defined in [[SCHEMA-ORG]] to help structure data in a useful way for reusers. 
     
-    Applications that are exchanging data about entities described in [[Modelling-Opportunity-Data]] SHOULD ensure that their data conforms to that specification. 
+    Applications that are exchanging data about entities described in [[!Modelling-Opportunity-Data]] SHOULD ensure that their data conforms to that specification. 
     This includes data on Events, Organisations, Places, etc. [[Publishing-Opportunity-Data]] provides additional examples and guidance on using that data model 
     in ways that are compatible with the other standards publishing by OpenActive.
     
@@ -657,7 +657,7 @@ Property | Status | Notes
 
     Although a full page may be presented from System 1 to the filter, the filter may exclude all items within the list, resulting in a zero-item array at System 2.
 
-    Note that any items allowed to pass through the filter once MUST, at the point that they no longer meet the filter conditions and would otherwise be filtered out, be allowed to pass through the filter with a `"deleted"` state for at least 48 hours. This is in keeping with the invarient described in the <a href='#core-concept'>core concept</a>, ensuring that System 2 correctly deletes items that have been modified such that they are subsequently filtered out.
+    Note that any items allowed to pass through the filter once MUST, at the point that they no longer meet the filter conditions and would otherwise be filtered out, be allowed to pass through the filter with a `"deleted"` state for at least 7 days. This is in keeping with the invarient described in the <a href='#core-concept'>core concept</a>, ensuring that System 2 correctly deletes items that have been modified such that they are subsequently filtered out.
 
     ## Other transport mechanisms
 
