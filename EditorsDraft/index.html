@@ -125,6 +125,10 @@
                 "title": "Schema.org"
                 
             },
+            "NOTE-datetime": {
+                "href": "https://www.w3.org/TR/1998/NOTE-datetime-19980827",
+                "title": "Date and Time Formats"
+            },
             "Publishing-Opportunity-Data": {
                 "href": "https://www.openactive.io/opportunity-data-primer/",
                 "title": "Publishing Opportunity Data: A Primer",
@@ -144,7 +148,7 @@
         };
     </script>
 
-    <script src='https://www.OpenActive.io/respec/builds/respec-w3c-common.js' class='remove'></script>
+    <script src='https://www.openactive.io/respec/builds/respec-w3c-common.js' class='remove'></script>
 
     <!-- <script src='/builds/respec-w3c-common.js' class='remove'></script>-->
 
@@ -497,11 +501,52 @@ Property | Status | Notes
     This specification includes generic constraints when representing values and entities, to ensure consistency across implementations.
 
 
-    #### Value formats
+    #### Date and time formats
 
-    - All dates within `<data>` MUST be represented as **UTC** using [[!ISO8601]] e.g. `"2014-08-12T18:50:00Z"`, including the trailing `Z` where relevant for clarity of timezone. Dates SHOULD be represented without offset from UTC (e.g. `"2014-08-12T18:50:00Z"` instead of `"2016-07-13T20:00:00-05:00"`). Note `modified` dates outside of `<data>` SHOULD be represented as an integer where possible.
+    All dates/times within `<data>` MUST be represented using the [[!NOTE-datetime]] profile of [[!ISO8601]] with the two additional time-only formats described below.
+
+    Note the `modified` property outside of `<data>` SHOULD be represented as an integer where possible.
+
+    Both ways of handling time zone offsets defined in [[!NOTE-datetime]] are permissible: times MUST be expressed either in UTC or in local time with a time zone offset, and MUST include the trailing UTC designator ("`Z`") where times are expressed in UTC.
+
+    Times SHOULD be expressed in UTC instead of local time (e.g. `"2014-08-12T18:50:00Z"` instead of `"2016-07-13T20:00:00-05:00"`).
+
+    Dates/times MUST conform to one of the following formats:
+
+    ```markdown
+     Year:
+        YYYY (eg 1997)
+     Year and month:
+        YYYY-MM (eg 1997-07)
+     Complete date:
+        YYYY-MM-DD (eg 1997-07-16)
+     Complete date plus hours and minutes:
+        YYYY-MM-DDThh:mmTZD (e.g 1997-07-16T19:20Z or 1997-07-16T19:20+01:00)
+     Complete date plus hours, minutes and seconds:
+        YYYY-MM-DDThh:mm:ssTZD (e.g. 1997-07-16T19:20:30Z or 1997-07-16T19:20:30+01:00)
+     Hours and minutes:
+        hh:mmTZD (e.g 19:20Z or 19:20+01:00)
+     Hours, minutes and seconds:
+        hh:mm:ssTZD (e.g. 19:20:30Z or 19:20:30+01:00)
+    ```
+
+    where:
+
+    ```markdown
+     YYYY = four-digit year
+     MM   = two-digit month (01=January, etc.)
+     DD   = two-digit day of month (01 through 31)
+     hh   = two digits of hour (00 through 23) (am/pm NOT allowed)
+     mm   = two digits of minute (00 through 59)
+     ss   = two digits of second (00 through 59)
+     TZD  = time zone designator (Z or +hh:mm or -hh:mm)
+    ```
+
+    #### Other value formats
+
     - All URLs within `<data>` MUST be absolute.
     - HTML or Markdown encoded properties MUST be included in plain text, as well as raw form, as separate properties within `<data>`. 
+    - Integer properties MUST be represented as integers, not strings.
 
 
     #### Related entities
