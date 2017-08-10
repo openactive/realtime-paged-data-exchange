@@ -225,7 +225,7 @@
 
     ## Use case and requirements
 
-    Booking systems contains session data (a specific event at a time in a location). Examples include bookable squash courts, Yoga classes, and running groups.
+    Booking systems contain session data (a specific event at a time in a location). Examples include bookable squash courts, Yoga classes, and running groups.
 
     ### Realtime
     This session data is frequently updated, as sessions are booked, descriptions changed. The data must be available as close to real-time as possible.
@@ -305,7 +305,7 @@
 
     - Every record MUST only be represented *once* in this list at a given moment, with its position in the list depending on when it was last updated. Records can freely move position in the list as they are updated.
 
-    - This deterministic ordering based on timestamp allows for pages of arbitrary size to be sent without concern for race conditions; if a record is updated during the transfer of a page it MUST appear on a subsiquent page (i.e. simply reappear further down the list).
+    - This deterministic ordering based on timestamp allows for pages of arbitrary size to be sent without concern for race conditions; if a record is updated during the transfer of a page it MUST appear on a subsequent page (i.e. simply reappear further down the list).
 
     - Pages are defined using a "next page URL", which MUST contain enough information to identify a position in the list (e.g. by a "timestamp" and "ID" combination). It MUST NOT reference a specific record, as that record can change position in the list.
 
@@ -313,7 +313,7 @@
 
     - If the consumer reaches the end of the list they consider themselves up-to-date at that moment, and can frequently revisit the end of the list in order to retrieve further updates.
 
-    - If any record is added to the list, it MUST remain in the list in perpetuity with either an `"updated"` or a `"deleted"` state, except for records that have been set to `"deleted"`, which MUST remain in the list for at least 48 hours from the point in time when they became `"deleted"`. This ensures that deletions are synchronised to data consumers.
+    - If any record is added to the list or updated it MUST remain in the list in perpetuity while it is in an `"updated"` state, or remain in the list for at least 7 days from the point at time at which it transitioned to a `"deleted"` state. This ensures that deletions are synchronised to data consumers.
 
 
     This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client (System 2).
@@ -387,9 +387,9 @@ Parameter | Implementation | Notes
 `afterChangeNumber` | REQUIRED | An integer after which results will be returned (if not specified will return starting with the first change number).
 `limit` | OPTIONAL | The number of records returned within the page. A suggested default for most opportunity data sources is 500 records.
 
-    The change number MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The consumer (System 2) simply maintains the "next page URL", so the detail of the change number is transparent in thier implementation.
+    The change number MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The consumer (System 2) simply maintains the "next page URL", so the detail of the change number is transparent in their implementation.
 
-    The items `id` (unique idenfier which is distinct from the change number) MUST be included within the item, to allow items to be uniquely idenified for the purposes of update and delete operations.
+    The items `id` (unique identifier which is distinct from the change number) MUST be included within the item, to allow items to be uniquely idenified for the purposes of update and delete operations.
 
     The `modified` property MUST still be included, and set to the change number, to allow items with identical `id`s from different pages to be compared to calculate which is newer.
 
@@ -572,7 +572,7 @@ Property | Status | Notes
 
     ## Deleted items
 
-    If any record is added to the feed, it MUST remain in the feed in perpetuity with either an `"updated"` or a `"deleted"` state, except for records that have been set to `"deleted"`, which MUST remain in the feed for at least 48 hours from the point in time when they became `"deleted"`. This ensures that deletions are synchronised to data consumers.
+    If any record is added to the list or updated it MUST remain in the list in perpetuity while it is in an `"updated"` state, or remain in the list for at least 7 days from the point at time at which it transitioned to a `"deleted"` state. This ensures that deletions are synchronised to data consumers.
 
     Deleted items are included in the response with a `"deleted"` state, but no `<data>` associated.
 
@@ -594,7 +594,7 @@ Property | Status | Notes
     An illustrative example of an endpoint with parameters conforming to this specification is below:
 
     - Without parameters (first page): `/getSessions`
-    - With parameters (subsiquent pages): `/getSessions?afterTimestamp=1453931101&afterId={c15814e5-8931-470c-8a16-ef45afedaece}`
+    - With parameters (subsequent pages): `/getSessions?afterTimestamp=1453931101&afterId={c15814e5-8931-470c-8a16-ef45afedaece}`
 
     </section>
 
@@ -654,7 +654,7 @@ Property | Status | Notes
 
     ## Other transport mechanisms
 
-    Note that although this specification has been built to cater for other types of transport, it focusses on polling as the primary transport mechanism. The exploration of other transport mechanisms is encouraged for usecases that require higher throughput. To support additional testing and experimentation of new transport mechanisms, a "beta" wiki has been defined to allow the community to explore such mechanisms collaboratively. For more information on the process supporting that see [[OpenActive-RPDE-Beta-Wiki]].
+    Note that although this specification has been built to cater for other types of transport, it focuses on polling as the primary transport mechanism. The exploration of other transport mechanisms is encouraged for usecases that require higher throughput. To support additional testing and experimentation of new transport mechanisms, a "beta" wiki has been defined to allow the community to explore such mechanisms collaboratively. For more information on the process supporting that see [[OpenActive-RPDE-Beta-Wiki]].
 
 
     ## Example
@@ -689,20 +689,20 @@ Property | Status | Notes
 
     # Implementation
 
-    ## Common implmentation issues
+    ## Common implementation issues
 
-    This specification is simple to implement, however such implmentation requires precision to ensure that it is robust. The most common issues encountered during implementations are enumerated here:
+    This specification is simple to implement, however such implementation requires precision to ensure that it is robust. The most common issues encountered during implementations are enumerated here:
 
     - The <a href='#last-page-definition'>last page</a> must have zero items, and a correct next URL that matches the current request.
     - The <a href='#sql-query-example'>query</a> must be correctly implemented with the parentheses in the correct positions.
-    - The <a href='#core-concept'>core concept</a> must be understood, specifically the nature of the list of records where each record appears only once, and each record exists in perpetuity within the feed (with the deleted flag implemented).
+    - The <a href='#core-concept'>core concept</a> must be understood, specifically the nature of the list of records where each record appears only once, and each record exists in perpetuity unless deleted as specified in <a href='#deleted-items'>deleted items</a>.
     - The <a href='#-item-'>`modified`</a> value (used for either the `afterTimestamp` or `afterChangeNumber` parameter) must always be updated when any data within the `data` property is updated. This can be achieved through e.g. adding triggers to update the modified date on the primary table for related changes.
     - The <a href='#-item-'>`modified`</a> value should match the format used in the `afterTimestamp` or `afterChangeNumber`. 
 
 
     ## Potential race condition with next URL
 
-    The logic used to generate the `"next"` URL must query the database only once to retrieve the list of items (though subsiquent queries can be made for each item if required). Hence the <a href='#-response-'>`next` URL</a> must be derived from the last item of the original query, or the current page URL, instead of via a second query. If a second query is made, the state of the database may have changed in between the two queries, which can lead to inconsistent behaviour.
+    The logic used to generate the `"next"` URL must query the database only once to retrieve the list of items (though subsequent queries can be made for each item if required). Hence the <a href='#-response-'>`next` URL</a> must be derived from the last item of the original query, or the current page URL, instead of via a second query. If a second query is made, the state of the database may have changed in between the two queries, which can lead to inconsistent behaviour.
 
 
     ## Patterns of implementation
