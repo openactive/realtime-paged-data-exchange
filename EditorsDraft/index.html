@@ -601,7 +601,7 @@ Property | Status | Notes
     An illustrative example of an endpoint with parameters conforming to this specification is below:
 
     - Without parameters (first page): `/getSessions`
-    - With parameters (subsequent pages): `/getSessions?afterTimestamp=1453931101&afterId={c15814e5-8931-470c-8a16-ef45afedaece}`
+    - With parameters (subsequent pages): `/getSessions?afterTimestamp=1453931101&afterId=%7Bc15814e5-8931-470c-8a16-ef45afedaece%7D`
 
     </section>
 
@@ -669,7 +669,7 @@ Property | Status | Notes
     A full example REST response from polling:
 
     ```
-    /getSessions?afterTimestamp=1453931101&afterId={c15814e5-8931-470c-8a16-ef45afedaece}
+    /getSessions?afterTimestamp=1453931101&afterId=%7Bc15814e5-8931-470c-8a16-ef45afedaece%7D
     -> { items: [
             {
                 state: "updated",
@@ -687,7 +687,7 @@ Property | Status | Notes
                 modified: 1453931925
             }
           ],
-          next: '/getSessions?afterTimestamp=1453931925&afterId={d97f73fb-4718-48ee-a6a9-9c7d717ebd85}'
+          next: '/getSessions?afterTimestamp=1453931925&afterId=%7Bd97f73fb-4718-48ee-a6a9-9c7d717ebd85%7D'
     }
     ```
 
