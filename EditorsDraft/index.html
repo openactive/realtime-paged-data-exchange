@@ -474,7 +474,7 @@ Parameter | Implementation | Notes
 Property | Status | Notes
 --- | ---
 `next` | REQUIRED | The `next` URL is a precomputed URL to be called by the data consumer (System 2) to get the next page of data. The `next` URL MUST be calculated from the last item used to generate the current page, and use the current page's own URL if no items exist. Not all items in the current page may be visible in the case of <a href='#in-stream-filtering'>filtering</a> so the last item used may not be contained within `items`. The `next` URL MUST be an absolute URL. Note "polling" and "paging" are differentiated only by the <a href='#expected-consumer-behaviour'>duration between requests</a>. Although an example endpoint path is provided (`/getSessions`), it is outside the scope of this specification.
-`items` | REQUIRED | An array of `<item>`, which should simply by empty `[]` if no results are returned. The `items` property being empty is not sufficient to indicate the <a href='#last-page-definition'>last page</a>.
+`items` | REQUIRED | An array of `<item>`. This should simply by empty `[]` if no results are returned. The `items` property being empty is not sufficient to indicate the <a href='#last-page-definition'>last page</a>.
 [`license`](http://purl.org/dc/terms/license) | REQUIRED | Reference to the license under which the data has been published. Any website that links to this endpoint SHOULD also include text such as "This opportunity data is owned by My Company Ltd and is licensed under the Creative Commons Attribution Licence (CC-BY v4.0) for anyone to access, use and share.".
 
 
