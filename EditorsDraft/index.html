@@ -483,7 +483,7 @@ Property | Status | Notes
 
     ```
     <item> => {
-          state: 'updated' | 'deleted',
+          state: "updated" | "deleted",
           kind: "session",
           id: <id>, 
           modified: <modified>,
@@ -718,7 +718,7 @@ Property | Status | Notes
 
     ### Single JSON entity cache table
 
-    A cache table is created which is written to on each entity change (or related entity change, if a calculated field is created), either via an application or database trigger (which can also be used to trigger a webhook for more advanced transport mechanisms). The table contains the rendered [[!JSON]] `<item>`, along with the Modified Timestamp or Change Number, the ID, and a deleted flag.
+    A cache table is created which is written to on each entity/table change (or related entity change, if a calculated field is created), either via an application or database trigger. The table contains the rendered [[!JSON]] `<item>`, along with the Modified Timestamp or Change Number, the ID, and a deleted flag.
 
     Entries in the table overwrite old items with a newer modified timestamp.
 
@@ -729,14 +729,14 @@ Property | Status | Notes
 
     The primary table is amended to include a new timestamp field (Modified Timestamp or Change Number), and application or database triggers are added to update this timestamp every time an embedded entity is updated.
 
-    The [[!JSON]] is generated on-demand by getting the next page from a query which joins together the various embedded entities from the primary table, ordering by the new timestamp field and existing ID field of the primary table.
+    The [[!JSON]] is generated on-demand by getting the next page from a query which joins together the various embedded entities (related tables) with the primary table, and ordering by the new timestamp field and existing ID field of the primary table.
 
     A deleted flag will need to be added to the primary table if it does not already exist.
 
 
     ### Table join with existing timestamp fields
 
-    The [[!JSON]] is generated on-demand by getting the next page from a query which joins together the various embedded entities from the primary table, ordering by a `max()` of the timestamp fields in each table and the existing ID field of the primary table.
+    The [[!JSON]] is generated on-demand by getting the next page from a query which joins together the various embedded entities (related tables) from the primary table, ordering by a `max()` of the timestamp fields in each table and the existing ID field of the primary table.
 
     This is the most inefficient of the four patterns for most use cases, but the easiest to implement without database schema changes (assuming a deleted flag already exists on the primary table, otherwise it must be created).
 
@@ -745,9 +745,9 @@ Property | Status | Notes
 
     A denormalised paging table is created that contains the fields required for the related entities along with a Modified Timestamp or Change Number, ID and deleted flag.
 
-    This table is then updated with each entity update by application or database triggers, however the [[!JSON]] is only generated on-demand by getting the next page from the paging table and rendering [[!JSON]] accordingly.
+    This table is then updated during each entity (related table) update via application or database triggers, and the [[!JSON]] is generated on-demand by getting the next page from a simple query of the newly created denormalised paging table.
 
-    The advantage of this approach is the field mapping to any specification used for `<data>` can be separated from the trigger logic for the paging table, while reducing the load on the database for each query.
+    The advantage of this approach is that the field mapping to any specification used for `<data>` can be separated from the trigger logic for the paging table, while reducing the load on the database for each query.
 
 
     ## Additional notes
