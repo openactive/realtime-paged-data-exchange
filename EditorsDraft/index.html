@@ -444,7 +444,7 @@ Parameter | Implementation | Notes
 
     Entities that have similar update frequency (e.g. Event and Location) MUST be embedded in the same endpoint.
 
-    Entities with substantially different update frequencies (e.g. Event Description and Availability) MAY be provided as separate endpoints. Each entity type endpoint and ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (in System 2).
+    Entities with substantially different update frequencies (e.g. Event Description and Availability) MAY be provided as separate endpoints with distinct `kind`s, or as distinct `kind`s within the same endpoint. Each entity type MUST have a distinct `kind` to allow it to can be considered separately. This allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (in System 2).
 
     The `modified` property of an item MUST be updated when any embedded child entities are updated.
 
@@ -495,7 +495,7 @@ Property | Status | Notes
 Property | Status | Notes
 --- | ---
 `state` | REQUIRED | MUST be of value `"updated"` or value `"deleted"`. Deleted items are included in the response with a `"deleted"` state, but no `<data>` associated.
-`kind` | REQUIRED | The "kind" property allows for the representation of different entity types, though where possible referenced entities should be embedded into the primary entity. Each entity type ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (at System 2).
+`kind` | REQUIRED | The "kind" property allows for the representation of different entity types, though where possible referenced entities should be embedded into the primary entity. Each entity type ("kind") can be <a href='#related-entities'>synchronised separately</a>, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (at System 2).
 `id` | REQUIRED | Unique identifier of the item. Two items MUST NOT share the same `id`. Although the IDs shown here are GUIDs, and other examples are numeric, this specification does not prescribe any specific format.
 `modified` | REQUIRED | Modified timestamp or change number of the item. This MUST be appropriately comparable to itself as either a string or integer. This MUST always be updated when *any* data within `<data>` is updated. This MAY be any format, but SHOULD be an integer where possible. Integer values MUST be represented as integers, not strings. The value of the `modified` property of the last item MUST be used in either the `afterTimestamp` or `afterChangeNumber` parameter of the `"next"` URL, unless the item is <a href='#in-stream-filtering'>filtered</a> out. The format of the `modified` value and the relevant parameter must be identical.
 `data` | REQUIRED | Note this property MUST NOT be included if state is `"deleted"`
