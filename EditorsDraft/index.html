@@ -727,7 +727,7 @@ Property | Status | Notes
 
     ### Table join with new timestamp field
 
-    The primary table is amended to include a new timestamp field (Modified Timestamp or Change Number), and application or database triggers are added to update this timestamp every time an embedded entity is updated.
+    The primary table is amended to include a new timestamp field (Modified Timestamp or Change Number), and application or database triggers are added to update this timestamp each time an embedded entity is updated.
 
     The [[!JSON]] is generated on-demand by getting the next page from a query which joins together the various embedded entities (related tables) with the primary table, and ordering by the new timestamp field and existing ID field of the primary table.
 
