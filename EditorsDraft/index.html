@@ -749,7 +749,7 @@ Property | Status | Notes
 
     A denormalised paging table is created that contains the fields required for the related entities along with a Modified Timestamp or Change Number, ID and deleted flag.
 
-    This table is then updated during each entity (related table) update via application or database triggers, and the [[!JSON]] is generated on-demand by getting the next page from a simple query of the newly created denormalised paging table.
+    This table is then updated during each entity (related table) update via application or database triggers, and the [[!JSON]] is generated on-demand by getting the next page from a simple query of the denormalised paging table.
 
     The advantage of this approach is that the field mapping to any specification used for `<data>` can be separated from the trigger logic for the paging table, while reducing the load on the database for each query.
 
