@@ -221,20 +221,20 @@
 
     OpenActive specifications are modular, each focussing on a specific use case regarding physical activity data.
 
-    Other aspects of the Community Group's work includes the collation and specification of test suites to assess conformance to referenced standards, and the specification of a framework within which such conformance testing might be assessed are referenced.
+    Other aspects of the Community Group's work includes the collation and specification of test suites to assess conformance to referenced standards, and the specification of a framework within which such conformance testing might be assessed.
 
     ## Use case and requirements
 
     Booking systems contain session data (a specific event at a time in a location). Examples include bookable squash courts, Yoga classes, and running groups.
 
     ### Realtime
-    This session data is frequently updated, as sessions are booked, descriptions changed. The data must be available as close to real-time as possible.
+    This session data is frequently updated as sessions are booked and descriptions changed. Such data must be available as close to real-time as possible.
 
     ### Simplicity of implementation
-    Many booking systems are maintained by an agency or supplier, and changes are funded by organisations with a small budgets. Hence simplicity and speed of implementation is paramount.
+    Many booking systems are maintained by an agency or supplier, and changes are funded by organisations with small budgets. Hence simplicity and speed of implementation are paramount.
 
     ### Flexibility of interface
-    Due to the cost of work on the booking system side, this interface must not be a constraint to innovation. Innovators should be able to easily implement novel solutions on top of the data without additional effort on the booking system side. This means ideally pushing all query complexity out of the booking system in order to maximise flexibility, and providing a simple sync.
+    Due to the cost of implementing any feature on the booking system side, and the number of systems involved, any specified interface must not contain inherent constraints to innovation. For example it should not impose restrictions that limit retrieval of data. Innovators should be able to easily implement novel solutions to increase physical activity using the data however they see fit. This means pushing all query complexity out of the booking system in order to maximise flexibility, and providing a simple solution that enables raw data synchronisation.
 
     ## Scope
 
@@ -244,7 +244,7 @@
 
     - Sharing of session data, including related metadata (clubs, courses, membership requirements, skill level, cost), and events (e.g. open days).
     - Paging and synchronisation to ensure robust incremental transport of data.
-    - Allows a data consumer to "refresh its cache", by providing the facility to download all data.
+    - Allow a data consumer to "refresh its cache", by providing the facility to download all data.
     - (Stretch goal) Extendable to support real-time, high volume data transfer, to satisfy peak load requirements.
 
 
@@ -301,7 +301,7 @@
 
     Consider an ordered list of records (termed "items" throughout this specification) as shown in <a href='#fig-illustration-of-the-deterministic-list'></a>, with the following invariants:
 
-    - A continuous list of records that MUST be sorted deterministically and chronological (in the order they were updated). Either (i) ordered first by modified timestamp, and second by ID or (ii) ordered by an incrementing counter where records are assigned a new unique value on each update.
+    - A continuous list of records that MUST be sorted deterministically and chronologically (in the order they were updated). Either (i) ordered first by modified timestamp, and second by ID or (ii) ordered by an incrementing counter where records are assigned a new unique value on each update.
 
     - Every record MUST only be represented *once* in this list at a given moment, distinguished by its unique ID, with its position in the list depending on when it was last updated. Records can freely move position in the list as they are updated.
 
@@ -311,9 +311,9 @@
 
     - If a "next page URL" is not used to access the list, the first page MUST be returned.
 
-    - If the consumer reaches the end of the list they consider themselves up-to-date at that moment, and can frequently revisit the end of the list in order to retrieve further updates.
+    - If the consumer reaches the end of the list they consider themselves up-to-date at that moment, and can infrequently revisit the end of the list in order to retrieve further updates.
 
-    - If any record is added to the list or updated it MUST remain in the list in perpetuity while it is in an `"updated"` state, or remain in the list for at least 7 days from the point at time at which it transitioned to a `"deleted"` state. This ensures that deletions are synchronised to data consumers (System 2).
+    - If any record is added to the list or updated it MUST remain in the list in perpetuity while it is in an `"updated"` state, or remain in the list for at least 7 days from the point in time at which it transitioned to a `"deleted"` state. This ensures that deletions are synchronised to data consumers (System 2).
 
 
     This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the data consumer (System 2).
@@ -328,18 +328,18 @@
 
     ### Modified Timestamp and ID
 
-    The items are ordered first by modified timestamp, and second by ID. The content of a [[!JSON]] depends on the supplied parameters, as specified below.
+    The items are ordered first by modified timestamp, and second by ID. The content of the [[!JSON]] response depends on the supplied parameters, as specified below.
 
 Parameter | Implementation | Notes
 --- | ---
-`afterTimestamp` | REQUIRED | The modified timestamp, after or at which results will be returned (if not specified will return from beginning of time). The timestamp SHOULD be in integer format where possible (e.g. Unix epoch). For non-integer timestamps, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
-`afterId` | REQUIRED | Where multiple items have the same `modified` value, this parameter specifies the ID after which results will be returned (if not specified will return all). For non-integer IDs, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
+`afterTimestamp` | REQUIRED | The modified timestamp, after or at which results will be returned. If not specified, the request MUST return results from the beginning of time. The timestamp SHOULD be in integer format where possible (e.g. Unix epoch). For non-integer timestamps, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
+`afterId` | REQUIRED | Where multiple items have the same `modified` value, this parameter specifies the ID after which results will be returned. If not specified, the request MUST return results from the beginning of time. For non-integer IDs, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
 `limit` | OPTIONAL | The number of items returned within the page. A suggested default for most opportunity data sources is 500 items.
 
 
-    In this example, `afterTimestamp=1453931925&afterId=12` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list'></a>, hence the last item of a returned page of results can be used as parameters to retrieve the next page of results, and thus the last item can be used to generate the "next page URL".
+    In this example, `afterTimestamp=1453931925&afterId=12` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list'></a>, hence the last item of a returned page of results can be used to get parameters to retrieve the next page of results, and thus the last item can be used to generate the "next page URL".
 
-    Note that the timestamp does not need to reflect actual time, as long as it providers a chronological ordering. Any integer or string representation is sufficient, provided it is sufficiently comparable to support the invariants.
+    Note that the timestamp does not need to reflect actual time, as long as it provides a chronological ordering. Any integer or string representation is sufficient, provided it is sufficiently comparable to support the <a href='#core-concept'>invariants</a>.
 
 
     <figure>
@@ -384,20 +384,20 @@ Parameter | Implementation | Notes
 
     ### Incrementing Unique Change Number
 
-    The items are ordered by an incrementing counter, and are assigned a new unique value on each update. The content of a [[!JSON]] page depends on the supplied parameters, as specified below.
+    The items are ordered by an incrementing counter, and are assigned a new unique value on each update. The content of the [[!JSON]] response depends on the supplied parameters, as specified below.
 
 Parameter | Implementation | Notes
 --- | ---
-`afterChangeNumber` | REQUIRED | An integer after which results will be returned (if not specified will return starting with the first change number).
+`afterChangeNumber` | REQUIRED | An integer after which results will be returned. If not specified, the request MUST return results from the beginning of time.
 `limit` | OPTIONAL | The number of items returned within the page. A suggested default for most opportunity data sources is 500 items.
 
-    The change number MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The consumer (System 2) simply maintains the "next page URL", so the detail of the change number is transparent in their implementation.
+    The change number MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The data consumer (System 2) simply maintains the "next page URL", and hence the detail of the change number is transparent in their implementation.
 
     The items `id` (unique identifier which is distinct from the change number) MUST be included within the item, to allow items to be uniquely identified for the purposes of update and delete operations.
 
-    The `modified` property MUST still be included, and set to the change number, to allow items with identical `id`s from different pages to be compared to calculate which is newer.
+    The `modified` property MUST still be included, and set to the change number, to allow items with identical `id`s from different pages to be compared chronologically.
 
-    In this example, `afterChangeNumber=1453931931` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list-via-change-number'></a>, hence the last item of a returned page of results can be used as parameters to retrieve the next page of results, and thus the last item can be used to generate the "next page URL".
+    In this example, `afterChangeNumber=1453931931` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list-via-change-number'></a>, hence the last item of a returned page of results can be used to get parameters to retrieve the next page of results, and thus the last item can be used to generate the "next page URL".
 
     <figure>
       ![](images/image03.png)
@@ -429,29 +429,6 @@ Parameter | Implementation | Notes
     ```
 
     Note the example above is a hypothetical JavaScript ORM, for illustration.
-
-
-    ## Related entities
-
-    This specification can be implemented for each relevant entity type within System 1 (e.g. club, courses, sessions).
-
-    Data from related entities can either be:
-
-    1. **Embedded inside the parent entity**. This requires the parent `"updated"` field to reflect the maximum value of all children - achievable via <a href='#patterns-of-implementation'>database triggers or similar</a>.
-
-    1. **Provided by separate endpoints with distinct kinds** implementing this specification, the combination of which can be reassembled by System 2.
-
-    1. **Provided as distinct kinds within the same endpoint** implementing this specification, the combination of which can be reassembled by System 2.
-
-
-    Entities that have similar update frequency (e.g. Event and Location) MUST be embedded in the same endpoint.
-
-    Entities with substantially different update frequencies (e.g. Event Description and Availability) MAY be provided as separate endpoints with distinct `kind`s, or as distinct `kind`s within the same endpoint. Each entity type MUST have a distinct `kind` to allow it to can be considered separately. This allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (in System 2).
-
-    When distinct `kind`s are provided for different entity types, an ID within the `<data>` of one must reference an ID within the `<data>` of another.
-
-    The `modified` property of an item MUST be updated when any embedded child entities are updated.
-
 
 
 
@@ -579,6 +556,29 @@ Property | Status | Notes
     <div class="note">
     The remainder of this specification uses simple examples when showing `<data>` in responses. However these examples are for illustrative purposes only. For a comprehensive selection of examples of opportunity data, read the [[Publishing-Opportunity-Data]] primer. 
     </div>
+
+
+    ## Related entities
+
+    This specification can be implemented for each relevant entity type within System 1 (e.g. club, courses, sessions).
+
+    Data from related entities can either be:
+
+    1. **Embedded inside the parent entity**. This requires the parent `"updated"` field to reflect the maximum value of all children - achievable via <a href='#patterns-of-implementation'>database triggers or similar</a>.
+
+    1. **Provided by separate endpoints with distinct "kinds"** implementing this specification, the combination of which can be reassembled by System 2.
+
+    1. **Provided as distinct "kinds" within the same endpoint** implementing this specification, the combination of which can be reassembled by System 2.
+
+
+    Entities that have similar update frequencies (e.g. Event and Location) MUST be embedded in the same endpoint.
+
+    Entities with substantially different update frequencies (e.g. Event Description and Availability) MAY be provided as separate endpoints with distinct `kind`s, or as distinct `kind`s within the same endpoint. Each entity type MUST have a distinct `kind` to allow it to be considered separately. This allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (in System 2).
+
+    When distinct `kind`s are provided for different entity types, an ID within the `<data>` of one must reference an ID within the `<data>` of another.
+
+    The `modified` property of an item MUST be updated when any embedded child entities are updated.
+
 
 
     ## Deleted items
