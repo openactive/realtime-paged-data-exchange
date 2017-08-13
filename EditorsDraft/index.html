@@ -450,11 +450,11 @@ Parameter | Implementation | Notes
        }
     ```
 
-    A generic response specification is included here, in order to standardise the transport encapsulation for the records across entities and systems - including paging and polling logic, for example.
+    A generic response specification is included here, in order to standardise the transport encapsulation for the records across entities and systems - including paging and polling logic.
 
 Property | Status | Notes
 --- | ---
-`next` | REQUIRED | The `next` URL is a precomputed URL to be called by the data consumer (System 2) to get the next page of data. The `next` URL MUST be calculated from the last item used to generate the current page, and use the current page's own URL if no items exist. Not all items in the current page may be visible in the case of <a href='#in-stream-filtering'>filtering</a> so the last item used may not be contained within `items`. The `next` URL MUST be an absolute URL. Note "polling" and "paging" are differentiated only by the <a href='#expected-consumer-behaviour'>duration between requests</a>. Although an example endpoint path is provided (`/getSessions`), it is outside the scope of this specification.
+`next` | REQUIRED | The `next` URL is a precomputed URL to be called by the data consumer (System 2) to get the next page of data. The `next` URL MUST be calculated from the last item used to generate the current page, and use the current page's own URL if no items exist. Not all items in the current page may be visible in the case of <a href='#in-stream-filtering'>filtering</a> so the last item used may not be contained within `items`. The `next` URL MUST be an absolute URL. Note "polling" and "paging" are differentiated only by the <a href='#expected-consumer-behaviour'>duration between requests</a>. Although an example endpoint path is provided (`"/getSessions"`), it is outside the scope of this specification.
 `items` | REQUIRED | An array of `<item>`. This should simply by empty `[]` if no results are returned. The `items` property being empty is not sufficient to indicate the <a href='#last-page-definition'>last page</a>.
 [`license`](http://purl.org/dc/terms/license) | REQUIRED | Reference to the license under which the data has been published. Any website that links to this endpoint SHOULD also include text such as "This opportunity data is owned by My Company Ltd and is licensed under the Creative Commons Attribution Licence (CC-BY v4.0) for anyone to access, use and share.".
 
@@ -464,71 +464,78 @@ Property | Status | Notes
 
     ```JSON
     <item> => {
-          state: "updated" | "deleted",
-          kind: "session",
-          id: <id>, 
-          modified: <modified>,
-          data: <data>
+          "state": "updated" | "deleted",
+          "kind": "session",
+          "id": <id>, 
+          "modified": <modified>,
+          "data": <data>
        }
     ```
 
 
 Property | Status | Notes
 --- | ---
-`state` | REQUIRED | MUST be of value `"updated"` or value `"deleted"`. Deleted items are included in the response with a `"deleted"` state, but no `<data>` associated.
-`kind` | REQUIRED | The `kind` property allows for the representation of different entity types, though where possible referenced entities should be embedded into the primary entity. Each entity type (`kind`) can be <a href='#related-entities'>synchronised separately</a>, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (at System 2).
-`id` | REQUIRED | Unique identifier of the item. Two items MUST NOT share the same `id`. Although the IDs shown here are GUIDs, and other examples are numeric, this specification does not prescribe any specific format.
-`modified` | REQUIRED | Modified timestamp or change number of the item. This MUST be appropriately comparable to itself as either a string or integer. This MUST always be updated when *any* data within `<data>` is updated. This MAY be any format, but SHOULD be an integer where possible. Integer values MUST be represented as integers, not strings. The value of the `modified` property of the last item MUST be used in either the `afterTimestamp` or `afterChangeNumber` parameter of the `"next"` URL, unless the item is <a href='#in-stream-filtering'>filtered</a> out. The format of the `modified` property and the relevant URL parameter must be identical.
-`data` | REQUIRED | Note this property MUST NOT be included if state is `"deleted"`
+`state` | REQUIRED | The `state` property MUST be of value `"updated"` or value `"deleted"`. <a href='#deleted-items'>Deleted items</a> are included in the response with a `"deleted"` state, but no `<data>` associated.
+`kind` | REQUIRED | The `kind` property allows for the representation of different entity types, though where possible referenced entities should be embedded into the primary entity. Each entity type (`kind`) can be synchronised separately</a>, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (at System 2).
+`id` | REQUIRED | The `id` property is the unique identifier of the item. Two items MUST NOT share the same `id`. Although the IDs shown here are GUIDs, and other examples are numeric, this specification does not prescribe any specific format.
+`modified` | REQUIRED | The `modified` property should contain either the modified timestamp or change number of the item, depending on the <a href='#ordering-strategies'>ordering strategy</a> used. It MUST be appropriately comparable to itself as either a string or integer, representing a chronological ordering. It MUST always be updated when *any* data within `<data>` is updated, and such an update MUST set the value of the property to be greater than or equal to (`>=`) all existing `modified` values. It MAY be any format, but SHOULD be an integer where possible. Integer values MUST be represented as integers, not strings. The value of the `modified` property of the last item MUST be used in either the `afterTimestamp` or `afterChangeNumber` parameter of the `"next"` URL (though such an item may not be included in `<items>` if it is <a href='#in-stream-filtering'>filtered</a> out). The format of the `modified` property and the relevant URL parameter MUST be identical.
+`data` | REQUIRED | Note this property MUST NOT be included if state is `"deleted"`.
 
 
     ### `<data>`
 
     The `<data>` part of the response is open for applications to populate with whatever data structure is most appropriate for the entity type ("kind") being exchanged.
 
-    This specification includes generic constraints when representing values and entities, to ensure consistency across implementations.
+    This specification includes generic constraints for representing values and entities, to ensure consistency across implementations.
 
 
     #### Date and time formats
 
-    All dates/times within `<data>` MUST be represented using the [[!NOTE-datetime]] profile of [[!ISO8601]] with the two additional time-only formats described below.
+    Dates and times within `<data>` MUST respect the specific profile of [[!ISO8601]] specified here, derived from [[!NOTE-datetime]], in order to ensure that event start times and other vital properties within `<data>` are interpreted correctly by data consumers.
 
-    Note the `modified` property outside of `<data>` SHOULD be represented as an integer where possible.
+    Note that the `modified` property outside of `<data>` SHOULD be represented as an integer where possible.
 
-    Both ways of handling time zone offsets defined in [[!NOTE-datetime]] are permissible: times MUST include a time zone designator, times MUST be expressed either in UTC or in local time with a time zone offset, and MUST include the trailing UTC time zone designator ("`Z`") where times are expressed in UTC.
+    Times within `<data>` MUST:
+    - be expressed either in UTC or in local time with a time zone offset (i.e. both approaches to handling time zone offsets defined in [[!NOTE-datetime]] are permissible)
+    - include a time zone designator
+    - include the trailing UTC time zone designator ("`Z`") where times are expressed in UTC
+    
 
-    Times SHOULD be expressed in UTC instead of local time (e.g. `"2014-08-12T18:50:00Z"` instead of `"2016-07-13T20:00:00-05:00"`).
+    Times within `<data>` SHOULD:
+    - be expressed in UTC instead of local time (e.g. `"2014-08-12T18:50:00Z"` instead of `"2016-07-13T20:00:00-05:00"`).
 
-    Dates/times MUST conform to one of the following formats:
 
-    ```markdown
-     Year:
-        YYYY (eg 1997)
-     Year and month:
-        YYYY-MM (eg 1997-07)
-     Complete date:
-        YYYY-MM-DD (eg 1997-07-16)
-     Complete date plus hours and minutes:
-        YYYY-MM-DDThh:mmTZD (e.g 1997-07-16T19:20Z or 1997-07-16T19:20+01:00)
-     Complete date plus hours, minutes and seconds:
-        YYYY-MM-DDThh:mm:ssTZD (e.g. 1997-07-16T19:20:30Z or 1997-07-16T19:20:30+01:00)
-     Hours and minutes:
-        hh:mmTZD (e.g 19:20Z or 19:20+01:00)
-     Hours, minutes and seconds:
-        hh:mm:ssTZD (e.g. 19:20:30Z or 19:20:30+01:00)
-    ```
+    Dates and times within `<data>` MUST:
+    - be represented using the [[!NOTE-datetime]] profile of [[!ISO8601]], with the addition of two time-only formats, and hence conform to one of the following formats:
+      ```markdown
+       Year:
+          YYYY (eg 1997)
+       Year and month:
+          YYYY-MM (eg 1997-07)
+       Complete date:
+          YYYY-MM-DD (eg 1997-07-16)
+       Complete date plus hours and minutes:
+          YYYY-MM-DDThh:mmTZD (e.g 1997-07-16T19:20Z or 1997-07-16T19:20+01:00)
+       Complete date plus hours, minutes and seconds:
+          YYYY-MM-DDThh:mm:ssTZD (e.g. 1997-07-16T19:20:30Z or 1997-07-16T19:20:30+01:00)
+       Hours and minutes:
+          hh:mmTZD (e.g 19:20Z or 19:20+01:00)
+       Hours, minutes and seconds:
+          hh:mm:ssTZD (e.g. 19:20:30Z or 19:20:30+01:00)
+      ```
 
-    where:
+      where:
 
-    ```markdown
-     YYYY = four-digit year
-     MM   = two-digit month (01=January, etc.)
-     DD   = two-digit day of month (01 through 31)
-     hh   = two digits of hour (00 through 23) (am/pm NOT allowed)
-     mm   = two digits of minute (00 through 59)
-     ss   = two digits of second (00 through 59)
-     TZD  = time zone designator (Z or +hh:mm or -hh:mm)
-    ```
+      ```markdown
+       YYYY = four-digit year
+       MM   = two-digit month (01=January, etc.)
+       DD   = two-digit day of month (01 through 31)
+       hh   = two digits of hour (00 through 23) (am/pm NOT allowed)
+       mm   = two digits of minute (00 through 59)
+       ss   = two digits of second (00 through 59)
+       TZD  = time zone designator (Z or +hh:mm or -hh:mm)
+      ```
+
 
     #### Other value formats
 
@@ -537,19 +544,19 @@ Property | Status | Notes
     - Integer properties MUST be represented as integers, not strings.
 
 
-    #### Related entities
+    #### Entity properties
 
-    - Embedded entities within `<data>` MUST include their IDs, to allow for efficient processing by the consuming application (System 2).
+    - <a href='#related-entities'>Embedded entities</a> within `<data>` MUST include their IDs, to allow for efficient processing by the consuming application (System 2).
     - Where an embedded entity has a URL that represents it on a public facing website (e.g. a page for the location), this URL MUST be included, to allow it to be referenced by data consumers.
 
 
-    ### Use of standard data model
+    #### Use of standard data model
     
-    Applications SHOULD use a standard data model to increase interoperability of the exchanged data. For example an application may choose to use entities and properties defined in [[SCHEMA-ORG]] to help structure data in a useful way for reusers. 
+    Applications SHOULD use a standard data model to increase interoperability of the exchanged data. For example an application may choose to use entities and properties defined in [[SCHEMA-ORG]] to help structure data in a useful way for data consumers. 
     
-    Applications that are exchanging data about entities described in [[!Modelling-Opportunity-Data]] SHOULD ensure that their data conforms to that specification. 
+    Applications that are exchanging data about entities described in [[!Modelling-Opportunity-Data]] MUST ensure that their data conforms to that specification. 
     This includes data on Events, Organisations, Places, etc. [[Publishing-Opportunity-Data]] provides additional examples and guidance on using that data model 
-    in ways that are compatible with the other standards publishing by OpenActive.
+    in ways that are compatible with the other standards published by OpenActive.
     
     Applications that publish data using bespoke data models SHOULD provide users with relevant documentation.
     
@@ -583,11 +590,68 @@ Property | Status | Notes
 
     ## Deleted items
 
-    If any item is added to the list or updated it MUST remain in the list in perpetuity while it is in an `"updated"` state, or remain in the list for at least 7 days from the point at time at which it transitioned to a `"deleted"` state. This ensures that deletions are synchronised to data consumers.
+    If any item is added to the list or updated it MUST remain in the list in perpetuity while it is in an `"updated"` state, or remain in the list for at least 7 days from the point in time at which it transitioned to a `"deleted"` state. This ensures that deletions are synchronised to data consumers.
 
     Deleted items are included in the response with a `"deleted"` state, but no `<data>` associated.
 
-    In order to implement this correctly, records in System 1 need to have a "deleted" flag that is set instead of deleting the record permanently.
+    In order to implement this correctly, it is advisable for records in System 1 to have a "deleted" flag that is set instead of deleting the record permanently.
+
+
+
+    ## Example
+
+    A full example REST response from polling is included below. Note that the shape of the data within the `data` property is largely outside of the scope of this specification, however the dates/times, embedded entity identifiers, URLs, and integer values in the example below all demonstrate conformance to the relevant <a href='#-data-'>generic constraints</a> that are within the scope of this specification.
+
+```
+/getSessions?afterTimestamp=1453931101&afterId=%7Bc15814e5-8931-470c-8a16-ef45afedaece%7D
+-> 
+  { 
+      "next": "/getSessions?afterTimestamp=1453931925&afterId=%7Bd97f73fb-4718-48ee-a6a9-9c7d717ebd85%7D",
+      "items": [
+          {
+              "state": "updated",
+              "kind": "session",
+              "id": "{c15814e5-8931-470c-8a16-ef45afedaece}",
+              "modified": 1453931101,
+              "data": {
+                  "@context": "https://www.openactive.io/ns/oa.jsonld",
+                  "type": "Event",
+                  "identifier": "session-01jz93i3k1p3",
+                  "superEvent": {
+                      "identifier": "eventType-ak6zw8ntsiqq"
+                  },
+                  "startDate": "2016-05-09T18:15:00Z",
+                  "endDate": "2016-05-09T19:15:00Z",
+                  "remainingAttendeeCapacity": 0,
+                  "url": "https://bookingsystem.com/hulahoop/e/ev-ssyp-20160509191500?r=oa",
+                  "attendanceCount": 29,
+                  "location": {
+                      "type": "Place",
+                      "identifier": "location-jbnentuhxsnp",
+                      "url": "https://leisurecentre.org.uk/leisure-centre/camden/kentish-town-sports-centre",
+                      "name": "Kentish Town Sports Centre",
+                      "address": {
+                          "type": "PostalAddress",
+                          "addressLocality": "Camden",
+                          "addressRegion": "London West",
+                          "postalCode": "NW5 3DU",
+                          "streetAddress": "Kentish Town Sports Centre"
+                      }
+                  }
+              }
+          },
+          {
+              "state": "deleted",
+              "kind": "session",
+              "id": "{d97f73fb-4718-48ee-a6a9-9c7d717ebd85}",
+              "modified": 1453931925
+          }
+      ],
+      "license": "https://creativecommons.org/licenses/by/4.0/"
+  }
+```
+
+
 
 
     # Transport
@@ -619,13 +683,13 @@ Property | Status | Notes
 
     #### Polling for near real-time updates
 
-    The consumer MAY poll the endpoint infrequently at the <a href='#last-page-definition'>last page</a> URL to check for updates. When items are found, it SHOULD resume the behavoiur of the initial download: following the `next` property of each page.
+    The consumer MAY poll the endpoint infrequently at the <a href='#last-page-definition'>last page</a> URL to check for updates. When items are found, it SHOULD resume the behaviour of the initial download: following the `next` property of each page.
 
 
     ### Content type
 
-    The polling endpoint MUST declare the correct content type:
-    `Content-Type: application/json` 
+    The polling endpoint MUST declare the correct content type 
+    `Content-Type: application/json`.
 
 
     ### HTTP status codes
@@ -659,41 +723,20 @@ Property | Status | Notes
       <figcaption>Illustration of in-stream filtering</figcaption>
     </figure>
 
-    Although a full page may be presented from System 1 to the filter, the filter may exclude all items within the list, resulting in a zero-item array at System 2.
+    Although a full page may be presented from System 1 to the filter, the filter may exclude any and all items within the list, resulting in a zero-item array at System 2.
 
     Note that any items allowed to pass through the filter once MUST, at the point that they no longer meet the filter conditions and would otherwise be filtered out, be allowed to pass through the filter with a `"deleted"` state for at least 7 days. This is in keeping with the invarient described in the <a href='#core-concept'>core concept</a>, ensuring that System 2 correctly deletes items that have been modified such that they are subsequently filtered out.
 
+
+    ## Strict chronological ordering of items
+
+    For high-throughput, when updating data in the data consumer's state (System 2), the `modified` property of each item is available to ensure items are only updated with the most recent data, and that old data is ignored. Although this technique is intended to be used specifically for parallel processing scenarios, all methods of transport MUST respect a strict chronological ordering of items by modified timestamp and ID, or change number, for each kind in order to ensure data consistency. Ordering across kinds is not important.
+
+
     ## Other transport mechanisms
 
-    Note that although this specification has been built to cater for other types of transport, it focuses on polling as the primary transport mechanism. The exploration of other transport mechanisms is encouraged for usecases that require higher throughput. To support additional testing and experimentation of new transport mechanisms, a "beta" wiki has been defined to allow the community to explore such mechanisms collaboratively. For more information on the process supporting that see [[OpenActive-RPDE-Beta-Wiki]].
+    Note that although this specification has been built to cater for other types of transport, it focuses on polling as the primary transport mechanism. The exploration of other transport mechanisms is encouraged for usecases that require higher throughput. To support additional testing and experimentation of new transport mechanisms, a "beta" wiki has been defined to allow the community to explore such mechanisms collaboratively. For more information on the process supporting this, see [[OpenActive-RPDE-Beta-Wiki]].
 
-
-    ## Example
-
-    A full example REST response from polling:
-
-    ```
-    /getSessions?afterTimestamp=1453931101&afterId=%7Bc15814e5-8931-470c-8a16-ef45afedaece%7D
-    -> { items: [
-            {
-                state: "updated",
-                kind: "session",
-                id: "{c15814e5-8931-470c-8a16-ef45afedaece}",
-                modified: 1453931101,
-                data: {
-                   ...
-                }
-            },
-            {
-                state: "deleted",
-                kind: "session",
-                id: "{d97f73fb-4718-48ee-a6a9-9c7d717ebd85}",
-                modified: 1453931925
-            }
-          ],
-          next: '/getSessions?afterTimestamp=1453931925&afterId=%7Bd97f73fb-4718-48ee-a6a9-9c7d717ebd85%7D'
-    }
-    ```
 
 
     <section class="informative">
@@ -702,18 +745,18 @@ Property | Status | Notes
 
     ## Common implementation issues
 
-    This specification is simple to implement, however such implementation requires precision to ensure that it is robust. The most common issues encountered during implementations are enumerated here:
+    This specification is simple to implement, however such implementation requires precision to ensure that it is robust. The most common issues encountered during implementation are enumerated here:
 
-    - The <a href='#last-page-definition'>last page</a> must have zero items, and a correct next URL that matches the current request.
-    - The <a href='#sql-query-example'>query</a> must be correctly implemented with the parentheses in the correct positions.
+    - The <a href='#last-page-definition'>last page</a> must have zero items, and a correct next URL that matches the current page's URL.
+    - The <a href='#sql-query-example-for-timestamp-id'>query</a> must be correctly implemented with the parentheses in the correct positions.
     - The <a href='#core-concept'>core concept</a> must be understood, specifically the nature of the list of items where each item appears only once, and each item exists in perpetuity unless deleted as specified in <a href='#deleted-items'>deleted items</a>.
-    - The <a href='#-item-'>`modified`</a> value (used for either the `afterTimestamp` or `afterChangeNumber` parameter) must always be updated when any data within the `data` property is updated. This can be achieved through e.g. adding triggers to update the modified date on the primary table for related changes.
-    - The <a href='#-item-'>`modified`</a> value should match the format used in the `afterTimestamp` or `afterChangeNumber`. 
+    - The <a href='#-item-'>`modified`</a> value (used for either the `afterTimestamp` or `afterChangeNumber` parameter) must always be updated when any data within the `data` property is updated. This can be achieved through e.g. <a href='#patterns-of-implementation'> adding triggers</a> for related changes to update the modified value on the primary table.
+    - The <a href='#-item-'>`modified`</a> value should match the format used in the `afterTimestamp` or `afterChangeNumber` parameters. 
 
 
     ## Potential race condition with next URL
 
-    The logic used to generate the `"next"` URL must query the database only once to retrieve the list of items (though subsequent queries can be made for each item if required). Hence the <a href='#-response-'>`next` URL</a> must be derived from the last item of the original query, or the current page URL, instead of via a second query. If a second query is made, the state of the database may have changed in between the two queries, which can lead to inconsistent behaviour.
+    The logic used to generate the `"next"` URL must query the database only once to retrieve the list of items (though subsequent queries can be made for each item if required). Hence the <a href='#-response-'>`next` URL</a> must be derived from the last item of the original query, or the current page URL, instead of via a second query specifically for the next URL. If a second query is made, the state of the database may have changed in between the two queries, which can lead to inconsistent behaviour.
 
 
     ## Patterns of implementation
@@ -722,25 +765,25 @@ Property | Status | Notes
 
     ### Single JSON entity cache table
 
-    A cache table is created which is written to on each entity/table change (or related entity change, if a calculated field is created), either via an application or database trigger. The table contains the rendered [[!JSON]] `<item>`, along with the Modified Timestamp or Change Number, the ID, and a deleted flag.
+    A cache table is created which is updated on each related entity/table change, either via an application or database trigger. The table contains the rendered [[!JSON]] `<item>`, along with the Modified Timestamp or Change Number, the ID, and a deleted flag.
 
-    Entries in the table overwrite old items with a newer modified timestamp.
+    Updates to the table overwrite old items with a newer modified timestamp.
 
-    This table can be easily parsed into output for the data consumer (System 2).
+    The [[!JSON]] response is generated from the cached [[!JSON]] fragements within the table.
 
 
     ### Table join with new timestamp field
 
     The primary table is amended to include a new timestamp field (Modified Timestamp or Change Number), and application or database triggers are added to update this timestamp each time an embedded entity is updated.
 
-    The [[!JSON]] is generated on-demand by getting the next page from a query which joins together the various embedded entities (related tables) with the primary table, and ordering by the new timestamp field and existing ID field of the primary table.
+    The [[!JSON]] response is generated on-demand from a query which joins together the various embedded entities (related tables) with the primary table, and ordering by the new timestamp field and existing ID field of the primary table.
 
     A deleted flag will need to be added to the primary table if it does not already exist.
 
 
     ### Table join with existing timestamp fields
 
-    The [[!JSON]] is generated on-demand by getting the next page from a query which joins together the various embedded entities (related tables) from the primary table, ordering by a `max()` of the timestamp fields in each table and the existing ID field of the primary table.
+    The [[!JSON]] response is generated on-demand from a query which joins together the various embedded entities (related tables) from the primary table, ordering by a `max()` of the timestamp fields in each table and the existing ID field of the primary table.
 
     This is the most inefficient of the four patterns for most use cases, but the easiest to implement without database schema changes (assuming a deleted flag already exists on the primary table, otherwise it must be created).
 
@@ -749,7 +792,7 @@ Property | Status | Notes
 
     A denormalised paging table is created that contains the fields required for the related entities along with a Modified Timestamp or Change Number, ID and deleted flag.
 
-    This table is then updated during each entity (related table) update via application or database triggers, and the [[!JSON]] is generated on-demand by getting the next page from a simple query of the denormalised paging table.
+    This table is then updated during each entity (related table) update via application or database triggers, and the [[!JSON]] is generated on-demand from a simple query of the denormalised paging table.
 
     The advantage of this approach is that the field mapping to any specification used for `<data>` can be separated from the trigger logic for the paging table, while reducing the load on the database for each query.
 
@@ -758,28 +801,24 @@ Property | Status | Notes
 
     ### Calculated fields (e.g. available spaces or available tickets for a session)
 
-    As some entities will not need to be synchronised, but fields calculated from them will need to be known to the data consumer i.e. System 2 (e.g. the "tickets" table may not need to be synchronised, but the "available tickets" calculated field on the "sessions" table will be required).
+    Some entities will not need to be synchronised, but fields calculated from them will need to be known to the data consumer (System 2). For example, the "tickets" table may not need to be synchronised, but the "available tickets" calculated field on the "sessions" table will be required.
 
     The suggested approach is to calculate the field "available tickets" and store it in the "sessions" table on each ticket sale. This has three advantages:
 
-    - It keeps the application logic for such calculation together with the original action.
+    - It keeps the application logic for such a calculation together with the original action.
     - It creates a cached value that can be used in other parts of the application to increase performance.
     - It prevents the creation of complex calculations which are used only on-demand for the purposes of data synchronisation.
 
     An alternative could be to calculate it on each synchronisation, however this will slow down the sync. Assuming that reads will occur on this calculated data more frequently than writes, caching the calculated field is recommended.
 
 
-    ### Strict ordering of items
 
-    For high-throughput, when updating data in the data consumer's state (System 2), the timestamp of each item will be used to ensure items are only updated with newest data. Although this technique can be used specifically for parallel processing scenarios, all methods of transport must adhere to a strict ordering of items by modified timestamp and ID (per kind) in order to ensure data consistency. Ordering across kinds is not important.
+    ### Database Triggers (Microsoft SQL Server example)
 
+    For implementations using a
+     [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx)/[rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx) field on the parent table as the "change number", using the trigger below for each child table will update the rowversion field in the relevant rows on the parent table when the child table is updated.
 
-    ### Database Triggers (MS SQL Server example)
-
-    If using a
-     [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx)/[rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx) field on the parent table as the "modified timestamp", using the trigger below for each child table will update the rowversion field in the relevant rows on the parent table when the child table is updated.
-
-    The `SET SomeColumn = SomeColumn` part of this trigger could easily be replaced with setting materialised calculated fields (e.g. "total number of tickets sold") which contain the summary data required by System 2. This reduces the need to join the child table during the API endpoint response, which helps to optimise the endpoint.
+    The `SET SomeColumn = SomeColumn` part of this trigger could easily be replaced with setting materialised calculated fields (e.g. "total number of tickets sold") which contain the summary data required by System 2.
 
     The example below has been adapted from [here](http://stackoverflow.com/questions/2165333/how-to-update-sql-server-timestamp-column-without-changing-record-data), see [here](https://msdn.microsoft.com/en-us/library/ms191300.aspx) for an explanation of the mechanics.
 
