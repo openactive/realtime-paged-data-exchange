@@ -437,14 +437,18 @@ Parameter | Implementation | Notes
 
     Data from related entities can either be:
 
-    1. **Embedded inside the parent entity**. This requires the parent "updated" field to reflect the maximum value of all children - achievable via database triggers or similar.
+    1. **Embedded inside the parent entity**. This requires the parent `"updated"` field to reflect the maximum value of all children - achievable via <a href='#patterns-of-implementation'>database triggers or similar</a>.
 
-    1. **Provided by separate endpoints** implementing this specification, the combination of which can be reassembled by System 2.
+    1. **Provided by separate endpoints with distinct kinds** implementing this specification, the combination of which can be reassembled by System 2.
+
+    1. **Provided as distinct kinds within the same endpoint** implementing this specification, the combination of which can be reassembled by System 2.
 
 
     Entities that have similar update frequency (e.g. Event and Location) MUST be embedded in the same endpoint.
 
     Entities with substantially different update frequencies (e.g. Event Description and Availability) MAY be provided as separate endpoints with distinct `kind`s, or as distinct `kind`s within the same endpoint. Each entity type MUST have a distinct `kind` to allow it to can be considered separately. This allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (in System 2).
+
+    When distinct `kind`s are provided for different entity types, an ID within the `<data>` of one must reference an ID within the `<data>` of another.
 
     The `modified` property of an item MUST be updated when any embedded child entities are updated.
 
