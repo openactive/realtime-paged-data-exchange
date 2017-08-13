@@ -244,7 +244,7 @@
 
     - Sharing of session data, including related metadata (clubs, courses, membership requirements, skill level, cost), and events (e.g. open days).
     - Paging and synchronisation to ensure robust incremental transport of data.
-    - Allows a client to "refresh its cache", by providing the facility to download all data.
+    - Allows a data consumer to "refresh its cache", by providing the facility to download all data.
     - (Stretch goal) Extendable to support real-time, high volume data transfer, to satisfy peak load requirements.
 
 
@@ -316,7 +316,7 @@
     - If any record is added to the list or updated it MUST remain in the list in perpetuity while it is in an `"updated"` state, or remain in the list for at least 7 days from the point at time at which it transitioned to a `"deleted"` state. This ensures that deletions are synchronised to data consumers (System 2).
 
 
-    This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the client (System 2).
+    This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the data consumer (System 2).
 
 
     ## Ordering strategies
@@ -444,7 +444,7 @@ Parameter | Implementation | Notes
 
     Entities that have similar update frequency (e.g. Event and Location) MUST be embedded in the same endpoint.
 
-    Entities with substantially different update frequencies (e.g. Event Description and Availability) MAY be provided as separate endpoints. Each entity type endpoint and ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the client side (in System 2).
+    Entities with substantially different update frequencies (e.g. Event Description and Availability) MAY be provided as separate endpoints. Each entity type endpoint and ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (in System 2).
 
     The `modified` property of an item MUST be updated when any embedded child entities are updated.
 
@@ -473,7 +473,7 @@ Parameter | Implementation | Notes
 
 Property | Status | Notes
 --- | ---
-`next` | REQUIRED | The `next` URL is a precomputed URL to be called by the client (System 2) to get the next page of data. The `next` URL MUST be calculated from the last item used to generate the current page, and use the current page's own URL if no items exist. Not all items in the current page may be visible in the case of <a href='#in-stream-filtering'>filtering</a> so the last item used may not be contained within `items`. The `next` URL MUST be an absolute URL. Note "polling" and "paging" are differentiated only by the <a href='#expected-consumer-behaviour'>duration between requests</a>. Although an example endpoint path is provided (`/getSessions`), it is outside the scope of this specification.
+`next` | REQUIRED | The `next` URL is a precomputed URL to be called by the data consumer (System 2) to get the next page of data. The `next` URL MUST be calculated from the last item used to generate the current page, and use the current page's own URL if no items exist. Not all items in the current page may be visible in the case of <a href='#in-stream-filtering'>filtering</a> so the last item used may not be contained within `items`. The `next` URL MUST be an absolute URL. Note "polling" and "paging" are differentiated only by the <a href='#expected-consumer-behaviour'>duration between requests</a>. Although an example endpoint path is provided (`/getSessions`), it is outside the scope of this specification.
 `items` | REQUIRED | An array of `<item>`, which should simply by empty `[]` if no results are returned. The `items` property being empty is not sufficient to indicate the <a href='#last-page-definition'>last page</a>.
 [`license`](http://purl.org/dc/terms/license) | REQUIRED | Reference to the license under which the data has been published. Any website that links to this endpoint SHOULD also include text such as "This opportunity data is owned by My Company Ltd and is licensed under the Creative Commons Attribution Licence (CC-BY v4.0) for anyone to access, use and share.".
 
@@ -495,7 +495,7 @@ Property | Status | Notes
 Property | Status | Notes
 --- | ---
 `state` | REQUIRED | MUST be of value `"updated"` or value `"deleted"`. Deleted items are included in the response with a `"deleted"` state, but no `<data>` associated.
-`kind` | REQUIRED | The "kind" property allows for the representation of different entity types, though where possible referenced entities should be embedded into the primary entity. Each entity type ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the client side (at System 2).
+`kind` | REQUIRED | The "kind" property allows for the representation of different entity types, though where possible referenced entities should be embedded into the primary entity. Each entity type ("kind") can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (at System 2).
 `id` | REQUIRED | Unique identifier of the item. Two items MUST NOT share the same `id`. Although the IDs shown here are GUIDs, and other examples are numeric, this specification does not prescribe any specific format.
 `modified` | REQUIRED | Modified timestamp or change number of the item. This MUST be appropriately comparable to itself as either a string or integer. This MUST always be updated when *any* data within `<data>` is updated. This MAY be any format, but SHOULD be an integer where possible. Integer values MUST be represented as integers, not strings. The value of the `modified` property of the last item MUST be used in either the `afterTimestamp` or `afterChangeNumber` parameter of the `"next"` URL, unless the item is <a href='#in-stream-filtering'>filtered</a> out. The format of the `modified` value and the relevant parameter must be identical.
 `data` | REQUIRED | Note this property MUST NOT be included if state is `"deleted"`
@@ -722,7 +722,7 @@ Property | Status | Notes
 
     Entries in the table overwrite old items with a newer modified timestamp.
 
-    This table can be easily parsed into output for the client (System 2).
+    This table can be easily parsed into output for the data consumer (System 2).
 
 
     ### Table join with new timestamp field
@@ -754,7 +754,7 @@ Property | Status | Notes
 
     ### Calculated fields (e.g. available spaces or available tickets for a session)
 
-    As some entities will not need to be synchronised, but fields calculated from them will need to be known to the client i.e. System 2 (e.g. the "tickets" table may not need to be synchronised, but the "available tickets" calculated field on the "sessions" table will be required).
+    As some entities will not need to be synchronised, but fields calculated from them will need to be known to the data consumer i.e. System 2 (e.g. the "tickets" table may not need to be synchronised, but the "available tickets" calculated field on the "sessions" table will be required).
 
     The suggested approach is to calculate the field "available tickets" and store it in the "sessions" table on each ticket sale. This has three advantages:
 
@@ -767,7 +767,7 @@ Property | Status | Notes
 
     ### Strict ordering of items
 
-    For high-throughput, when updating data in the client's state (System 2), the timestamp of each item will be used to ensure items are only updated with newest data. Although this technique can be used specifically for parallel processing scenarios, all methods of transport must adhere to a strict ordering of items by modified timestamp and ID (per kind) in order to ensure data consistency. Ordering across kinds is not important.
+    For high-throughput, when updating data in the data consumer's state (System 2), the timestamp of each item will be used to ensure items are only updated with newest data. Although this technique can be used specifically for parallel processing scenarios, all methods of transport must adhere to a strict ordering of items by modified timestamp and ID (per kind) in order to ensure data consistency. Ordering across kinds is not important.
 
 
     ### Database Triggers (MS SQL Server example)
