@@ -248,7 +248,7 @@
     - (Stretch goal) Extendable to support real-time, high volume data transfer, to satisfy peak load requirements.
 
 
-    ### Non-Goals
+    ### Non-goals
 
     - User Authentication.
     - Booking and payment.
@@ -813,7 +813,7 @@ Property | Status | Notes
 
 
 
-    ### Database Triggers (Microsoft SQL Server example)
+    ### Database triggers (Microsoft SQL Server example)
 
     For implementations using a
      [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx)/[rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx) field on the parent table as the "change number", using the trigger below for each child table will update the rowversion field in the relevant rows on the parent table when the child table is updated.
