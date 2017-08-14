@@ -361,7 +361,7 @@ Parameter | Implementation | Notes
     ```
 
     <div class="note">
-    Misreading this query is the single most common cause of incorrect implementation. Please read it carefully and ensure that brackets and comparitors are used correctly. `>` not `>=` for example.
+    Misreading this query is the single most common cause of incorrect implementation. Please read it carefully and ensure that brackets and comparators are used correctly. `>` not `>=` for example.
     </div>
 
 
@@ -730,7 +730,7 @@ Response:
 
     Although a full page may be presented from System 1 to the filter, the filter may exclude any and all items within the list, resulting in a zero-item array at System 2.
 
-    Note that any items allowed to pass through the filter once MUST, at the point that they no longer meet the filter conditions and would otherwise be filtered out, be allowed to pass through the filter with a `"deleted"` state for at least 7 days. This is in keeping with the invarient described in the <a href='#core-concept'>core concept</a>, ensuring that System 2 correctly deletes items that have been modified such that they are subsequently filtered out.
+    Note that any items allowed to pass through the filter once MUST, at the point that they no longer meet the filter conditions and would otherwise be filtered out, be allowed to pass through the filter with a `"deleted"` state for at least 7 days. This is in keeping with the invariant described in the <a href='#core-concept'>core concept</a>, ensuring that System 2 correctly deletes items that have been modified such that they are subsequently filtered out.
 
 
     ## Strict chronological ordering of items
