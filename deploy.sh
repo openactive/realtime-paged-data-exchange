@@ -68,6 +68,7 @@ cp -r ../0.2.3 .
 cp -r ../0.2.4 .
 cp -r ../0.3.0 .
 cp -r ../EditorsDraft .
+cp -r ../1.0 .
 cp -r ../1.0/* .
 
 cd ..
