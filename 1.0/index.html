@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml' lang='en'>
+  <head>
+    <meta charset='utf-8'/>
+    <title>Realtime Paged Data Exchange 1.0</title>
+
+    <script type="text/javascript" class='remove'>
+        var respecConfig = {
+          // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
+          specStatus:           "CG-FINAL",
+
+          // the specification's short name, as in http://www.w3.org/TR/short-name/
+          shortName:            "realtime-paged-data-exchange",
+
+          // if you wish the publication date to be other than today, set this
+          publishDate:  "2017-08-14",
+
+          // if there is a previously published draft, uncomment this and set its YYYY-MM-DD date
+          // and its maturity status
+          // previousPublishDate:  "1977-03-15",
+          // previousMaturity:  "WD",
+
+          // if there a publicly available Editor's Draft, this is the link
+          edDraftURI:           "https://www.openactive.io/realtime-paged-data-exchange/",
+          //prevED:  "https://www.openactive.io/spec-template/",
+          previousURI:  "https://www.openactive.io/realtime-paged-data-exchange/0.3.0/",
+          testSuiteURI: "https://www.openactive.io/endpoint-validator/",
+          copyrightStart: 2015,
+
+          // if this is a LCWD, uncomment and set the end of its review period
+          // lcEnd: "2009-08-05",
+
+          // editors, add as many as you like
+          // only "name" is required
+          editors: [
+              { name: "Nick Evans", url: "http://nickevans.me/",
+                company: "Open Data Institute", companyURL: "http://opendata.institute/",
+                w3cid: 87551 },
+              { name: "Leigh Dodds", url: "http://ldodds.com/",
+                company: "Open Data Institute", companyURL: "http://opendata.institute/",
+                w3cid: 55359 }
+
+          ],
+
+          // authors, add as many as you like.
+          // This is optional, uncomment if you have authors as well as editors.
+          // only "name" is required. Same format as editors.
+
+          authors: [
+              { name: "Luke Winship", url: "http://lukehesluke.co/",
+                company: "imin", companyURL: "http://www.imin.co/",
+                note: "original concept" },
+              { name: "Nick Evans", url: "http://nickevans.me/",
+                company: "imin", companyURL: "http://www.imin.co/",
+                w3cid: 87551,
+                note: "original concept" }
+          ],
+
+          otherLinks: [{
+                key: "Repo",
+                value: "We are on Github",
+                href: "https://github.com/openactive/realtime-paged-data-exchange/",
+                class: "repo"
+            }, {
+                key: "Issues",
+                href: "https://github.com/openactive/realtime-paged-data-exchange/issues/"
+            }, {
+                key: "Version",
+                data: [
+                    {
+                        value: "1.0"
+                    },
+                    {
+                        value: "Previous",
+                        href: "https://www.openactive.io/realtime-paged-data-exchange/0.3.0/"
+                    }             
+                ]
+            }
+          ],
+
+          logos: [
+            {
+              src: 'https://www.openactive.io/assets/openactive-logo-large.png',
+              href: "https://www.openactive.io",
+              alt: "openactive.io",
+              width: 255, //170
+              height: 43, //22
+              id: 'logo'
+            }
+          ],
+
+          // extend the bibliography entries
+          //localBiblio: {},
+
+          // name of the WG
+          wg:           "OpenActive Community Group",
+
+          // URI of the public WG page
+          wgURI:        "http://www.w3.org/community/openactive/",
+
+          // name (with the @w3c.org) of the public mailing to which comments are due
+          wgPublicList: "public-openactive",
+
+          // URI of the patent status for this WG, for Rec-track documents
+          // !!!! IMPORTANT !!!!
+          // This is important for Rec-track documents, do not copy a patent URI from a random
+          // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
+          // Team Contact.
+          wgPatentURI:  "",
+          maxTocLevel: 4,
+          preProcess: [ ] ,
+          alternateFormats: [ {uri: "diff-previous.html", label: "diff to previous version"} ],
+          isRecTrack:   true,
+          isNoTrack:    true,
+          issueBase:    "https://github.com/openactive/realtime-paged-data-exchange/issues/",
+          format: "markdown",
+          localBiblio: {
+            "Modelling-Opportunity-Data": {
+                "href": "https://www.openactive.io/modelling-opportunity-data/",
+                "title": "Modelling Opportunity Data",
+                "publisher": "OpenActive Community Group",            
+            },
+            "SCHEMA-ORG": {
+                "href": "http://schema.org/",
+                "title": "Schema.org"
+                
+            },
+            "NOTE-datetime": {
+                "href": "https://www.w3.org/TR/1998/NOTE-datetime-19980827",
+                "title": "Date and Time Formats"
+            },
+            "Publishing-Opportunity-Data": {
+                "href": "https://www.openactive.io/opportunity-data-primer/",
+                "title": "Publishing Opportunity Data: A Primer",
+                "publisher": "OpenActive Community Group",            
+            },
+            "OpenActive-RPDE-Beta-Wiki": {
+                "href": "https://github.com/openactive/realtime-paged-data-exchange/wiki",
+                "title": "OpenActive Realtime Paged Data Exchange Beta Wiki",
+                "publisher": "OpenActive Community Group",            
+            },
+            "URI-Handling-Function-Properties": {
+                "href": "https://www.ecma-international.org/ecma-262/5.1/#sec-15.1.3",
+                "title": "URI Handling Function Properties",
+                "publisher": "Ecma International",            
+            },            
+          }
+        };
+    </script>
+
+    <script src='https://www.openactive.io/respec/builds/respec-w3c-common.js' class='remove'></script>
+
+    <!-- <script src='/builds/respec-w3c-common.js' class='remove'></script>-->
+
+    <!-- <script src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common' async class='remove'></script> -->
+
+    <style>
+    table {border-collapse: collapse; border: 1px solid #bec9d9}
+    td, th {padding: 3px 0.5em; border-left:1px solid black; border-right: 1px solid black; border-bottom:1px solid #E2EDFE;}
+    tr th[colspan] {color: #005A9C; background-color: #FEEDE2; text-align: center}
+    th {color: #005A9C; background-color: #E2EDFE; font-weight: normal;border-bottom:1px solid #BEC9D9;}
+    tbody tr th {text-align: left;}
+    td.nb { font-size: smaller;}
+    .rec, .pr {color: #005A9C; background-color: #99EE99}
+    .ext {background-color: #FFFFFF}
+    .cr, .lcwd {color: #005A9C; background-color: #EEEE99}
+    .wd {color: #005A9C; background-color: #EE9999}
+    .ed, .fpwd  {color: #005A9C; background-color: #FF7777}
+    code {white-space: pre;}
+    </style>
+
+  </head>
+  <body >
+    <style>
+    html {
+      background-image: none !important;
+    }
+    body {
+      background: white top left fixed no-repeat !important;
+      background-size: 25px auto !important;
+      background-image: url('https://www.openactive.io/assets/openactive-label-specification.png') !important;
+    }
+    body.toc-sidebar #toc {
+      background-size: 25px auto !important;
+      background-attachment: fixed !important;
+    }
+    h1 {
+      font-family: 'Open Sans',sans-serif !important;
+      font-weight: 300 !important;
+      color: #69b9ff !important;
+      font-size: 220%;
+    }
+    #toc {
+      padding-top: 0px !important;
+    }
+    .remove {
+      background-colour: yellow;
+    }
+    code {
+        color: #C83500;
+    }
+    </style>
+
+    <section id='abstract'>
+
+        This specification tackles the generic use-case of unidirectional real-time data synchronisation between two systems, where the receiving system requires only summary data from the origin system.
+
+    </section>
+
+    <section id='sotd'>
+      Contributions to this document are not only welcomed but are actively solicited and should be made via [GitHub Issues](https://github.com/OpenActive/realtime-paged-data-exchange/issues) and pull requests. The source code is available on [GitHub](https://github.com/OpenActive/realtime-paged-data-exchange).
+    </section>
+
+    <section class="informative">
+
+    # Introduction
+
+    ## OpenActive
+
+    The W3C OpenActive Community Group was established with the objective of facilitating the sharing and use of physical activity data. Open publishing of this data has enormous potential to increase participation in physical activities.
+
+    OpenActive specifications are modular, each focussing on a specific use case regarding physical activity data.
+
+    Other aspects of the Community Group's work includes the collation and specification of test suites to assess conformance to referenced standards, and the specification of a framework within which such conformance testing might be assessed.
+
+    ## Use case and requirements
+
+    Booking systems contain session data (a specific event at a time in a location). Examples include bookable squash courts, Yoga classes, and running groups.
+
+    ### Realtime
+    This session data is frequently updated as sessions are booked and descriptions changed. Such data must be available as close to real-time as possible.
+
+    ### Simplicity of implementation
+    Many booking systems are maintained by an agency or supplier, and changes are funded by organisations with small budgets. Hence simplicity and speed of implementation are paramount.
+
+    ### Flexibility of interface
+    Due to the cost of implementing any feature within a booking system, and the number of systems involved, any specified interface must not contain inherent constraints to innovation. For example, it should not impose restrictions that limit retrieval of data. Innovators should be able to easily implement novel solutions to increase physical activity using the data however they see fit. This means minimising query complexity within the booking system in order to maximise flexibility, and providing a simple solution that enables raw data synchronisation.
+
+    ## Scope
+
+    This specification is tightly defined to cover data exchange and synchronisation itself; to cover the real-time exchange of generic entities between two systems.
+
+    ### Goals
+
+    - Sharing of session data, including related metadata (clubs, courses, membership requirements, skill level, cost), and events (e.g. open days).
+    - Paging and synchronisation to ensure robust incremental transport of data.
+    - Allow a data consumer to "refresh its cache", by providing the facility to download all data.
+    - (Stretch goal) Extendable to support real-time, high volume data transfer, to satisfy peak load requirements.
+
+
+    ### Non-goals
+
+    - User Authentication.
+    - Booking and payment.
+    - Availability of courts and facilities.
+    - Membership packages.
+    - Standardisation of content (e.g. "Football" = "Soccer").
+
+
+    ## Objectives
+
+    - Easy to understand
+    - Simple to implement (does not require complex libraries)
+    - Based on existing standards where possible
+    - Minimalistic (focus on removing complexity)
+    - Minimise traffic between services
+    - Robust to errors and failed requests
+    - Capable of scaling to handle high volumes
+
+    </section>
+    <section id='conformance'>
+
+    This specification describes the conformance criteria for OpenActive data synchronisation endpoints.
+
+    </section>
+
+    # Overall approach
+
+    In order to create a simple specification that is robust and scalable, the transport mechanism is separated from the paged exchange specifics. By applying paging to all transport alternatives, the approach is inherently scalable.
+
+    The specification is split into the three labelled elements of <a href='#fig-elements-of-this-specification'></a>.
+
+
+    <figure>
+      ![](images/image02.png)
+      <figcaption>Elements of this specification</figcaption>
+    </figure>
+
+
+
+    # Paging
+
+    A paged approach to [[!JSON]] data exchange is used, requiring minimum traffic for real-time or near-real-time synchronisation.
+
+
+    ## Simplicity
+
+    The paged [[!JSON]] data exchange specification is incredibly simple to implement, but conceptually requires some explanation.
+
+    ## Core concept
+
+    Consider an ordered list of records (termed "items" throughout this specification) as shown in <a href='#fig-illustration-of-the-deterministic-list'></a>, with the following invariants:
+
+    - A continuous list of records that MUST be sorted deterministically and chronologically (in the order they were updated). Either (i) ordered first by modified timestamp, and second by ID or (ii) ordered by an incrementing counter where records are assigned a new unique value on each update.
+
+    - Every record MUST only be represented *once* in this list at a given moment, distinguished by its unique ID, with its position in the list depending on when it was last updated. Records can freely move position in the list as they are updated.
+
+    - This deterministic ordering based on timestamp allows for pages of arbitrary size to be sent without concern for race conditions; if a record is updated during the transfer of a page it MUST appear on a subsequent page (i.e. simply reappear further down the list).
+
+    - Pages are defined using a "next page URL", which MUST contain enough information to identify a position in the list (e.g. by a "timestamp" and "ID" combination). It MUST NOT reference a specific record, as that record can change position in the list.
+
+    - If a "next page URL" is not used to access the list, the first page MUST be returned.
+
+    - If the consumer reaches the end of the list they consider themselves up-to-date at that moment, and can infrequently revisit the end of the list in order to retrieve further updates.
+
+    - If any record is added to the list or updated it MUST remain in the list in perpetuity while it is in an `"updated"` state, or remain in the list for at least 7 days from the point in time at which it transitioned to a `"deleted"` state. This ensures that deletions are synchronised to data consumers (System 2).
+
+
+    This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the data consumer (System 2).
+
+
+    ## Ordering strategies
+
+    Two recommended ordering strategies are described below, both adhere to the specified invariants described in the previous section. One of these two strategies MUST be used as a basis for any implementation, unless the invariants are well understood and the implementation can be thoroughly tested.
+
+    For both these ordering strategies the ordering of the results relative to the parameters MUST be implemented exactly as described here.
+
+
+    ### Modified Timestamp and ID
+
+    The items are ordered first by modified timestamp, and second by ID. The content of the [[!JSON]] response depends on the supplied parameters, as specified below.
+
+Parameter | Implementation | Notes
+--- | ---
+`afterTimestamp` | REQUIRED | The modified timestamp, after or at which results will be returned. If not specified, the request MUST return results from the beginning of time. The timestamp SHOULD be in integer format where possible (e.g. Unix epoch). For non-integer timestamps, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
+`afterId` | REQUIRED | Where multiple items have the same `modified` value, this parameter specifies the ID after which results will be returned. If not specified, the request MUST return results from the beginning of time. For non-integer IDs, this parameter MUST be URI encoded using e.g. [[URI-Handling-Function-Properties]].
+`limit` | OPTIONAL | The number of items returned within the page. A suggested default for most opportunity data sources is 500 items.
+
+
+    In this example, `afterTimestamp=1453931925&afterId=12` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list'></a>, hence the last item of a returned page of results can be used to get parameters to retrieve the next page of results, and thus the last item can be used to generate the "next page URL".
+
+    Note that the timestamp does not need to reflect actual time, as long as it provides a chronological ordering. Any integer or string representation is sufficient, provided it is sufficiently comparable to support the <a href='#core-concept'>invariants</a>.
+
+
+    <figure>
+      ![](images/image00.png)
+      <figcaption>Illustration of the deterministic list</figcaption>
+    </figure>
+
+    #### SQL Query Example for Timestamp/ID
+
+    Where a table exists containing `modified` and `id` columns.
+
+    ```SQL
+    --include WHERE clause only if @afterTimestamp and @afterId provided
+       WHERE (modified = @afterTimestamp
+                AND id > @afterId)
+          OR (modified > @afterTimestamp)
+    ORDER BY modified,
+             id
+    ```
+
+    <div class="note">
+    Misreading this query is the single most common cause of incorrect implementation. Please read it carefully and ensure that brackets and comparators are used correctly. `>` not `>=` for example.
+    </div>
+
+
+    #### JavaScript Query Example for Timestamp/ID
+
+    Where a table or collection exists containing `modified` and `id` columns or properties.
+
+    ```javascript
+    var query;
+    if (queryParams.afterTimestamp && queryParams.afterId) {
+        query = Session.query().filter((Session.modified == queryParams.afterTimestamp && Session.id > queryParams.afterId) || (Session.modified > queryParams.afterTimestamp));
+    } else {
+        query = Session.query()
+    }
+    return query.sort([Session.modified, Session.id])
+    ```
+
+    Note the example above is a hypothetical JavaScript ORM, for illustration.
+
+
+    ### Incrementing Unique Change Number
+
+    The items are ordered by an incrementing counter, and are assigned a new unique value on each update. The content of the [[!JSON]] response depends on the supplied parameters, as specified below.
+
+Parameter | Implementation | Notes
+--- | ---
+`afterChangeNumber` | REQUIRED | An integer after which results will be returned. If not specified, the request MUST return results from the beginning of time.
+`limit` | OPTIONAL | The number of items returned within the page. A suggested default for most opportunity data sources is 500 items.
+
+    The change number MUST provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx) or [rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx)). The data consumer (System 2) simply maintains the "next page URL", and hence the detail of the change number is transparent in their implementation.
+
+    The `id` (unique identifier which is distinct from the change number) MUST be included within the item, to allow items to be uniquely identified for the purposes of update and delete operations.
+
+    The `modified` property MUST be included within the item, and set to the change number, to allow items with identical `id`s from different pages to be compared chronologically.
+
+    In this example, `afterChangeNumber=1453931931` would return **Page 2** labelled in <a href='#fig-illustration-of-the-deterministic-list-via-change-number'></a>, hence the last item of a returned page of results can be used to get parameters to retrieve the next page of results, and thus the last item can be used to generate the "next page URL".
+
+    <figure>
+      ![](images/image03.png)
+      <figcaption>Illustration of the deterministic list via change number</figcaption>
+    </figure>
+
+    #### SQL Query Example for Change Number
+
+    Where a table exists containing a `change_number` column.
+
+    ```SQL
+    --include WHERE clause only if @afterChangeNumber provided
+       WHERE change_number > @afterChangeNumber 
+    ORDER BY change_number
+    ```
+
+    #### JavaScript Query Example for Change Number
+
+    Where a table or collection exists containing a `changeNumber` column or property.
+
+    ```javascript
+    var query;
+    if (queryParams.afterChangeNumber) {
+        query = Session.query().filter(Session.changeNumber > queryParams.afterChangeNumber);
+    } else {
+        query = Session.query()
+    }
+    return query.sort([Session.changeNumber])
+    ```
+
+    Note the example above is a hypothetical JavaScript ORM, for illustration.
+
+
+
+    ## Response grammar
+
+    It should be noted that although `<data>` is open to conformance with [[!JSON-LD]], the properties in this specification do not use any part of the [[!JSON-LD]] specification.
+
+    Endpoints MUST NOT include [[!JSON-LD]] syntax except for within the `data` property.
+
+
+    ### `<response>`
+
+
+    ```JSON
+    <response> => {
+          "next": "http://www.example.com/api/rpde/sessions?afterTimestamp=<modified>&afterId=<id>",
+          "items": [<item>,<item>,<item>,...],
+          "license": "https://creativecommons.org/licenses/by/4.0/"
+       }
+    ```
+
+    A generic response specification is included here, in order to standardise the transport encapsulation for the records across entities and systems - including paging and polling logic.
+
+Property | Status | Notes
+--- | ---
+`next` | REQUIRED | The `next` URL is a precomputed URL to be called by the data consumer (System 2) to get the next page of data. The `next` URL MUST be calculated from the last item used to generate the current page, and use the current page's own URL if no items exist. Not all items in the current page may be visible in the case of <a href='#in-stream-filtering'>filtering</a> so the last item used may not be contained within `items`. The `next` URL MUST be an absolute URL. Note "polling" and "paging" are differentiated only by the <a href='#expected-consumer-behaviour'>duration between requests</a>. Although an example endpoint path is provided (`"/api/rpde/sessions"`), it is outside the scope of this specification.
+`items` | REQUIRED | An array of `<item>`. This should simply by empty `[]` if no results are returned. The `items` property being empty is not sufficient to indicate the <a href='#last-page-definition'>last page</a>.
+[`license`](http://purl.org/dc/terms/license) | REQUIRED | Reference to the license under which the data has been published. Any website that links to this endpoint SHOULD also include text such as "This opportunity data is owned by My Company Ltd and is licensed under the Creative Commons Attribution Licence (CC-BY v4.0) for anyone to access, use and share.".
+
+
+    ### `<item>`
+
+
+    ```JSON
+    <item> => {
+          "state": "updated" | "deleted",
+          "kind": "session",
+          "id": <id>, 
+          "modified": <modified>,
+          "data": <data>
+       }
+    ```
+
+
+Property | Status | Notes
+--- | ---
+`state` | REQUIRED | The `state` property MUST be of value `"updated"` or value `"deleted"`. <a href='#deleted-items'>Deleted items</a> are included in the response with a `"deleted"` state, but no `<data>` associated.
+`kind` | REQUIRED | The `kind` property allows for the representation of different entity types, though where possible referenced entities should be embedded into the primary entity. Each entity type (`kind`) can be synchronised separately</a>, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (at System 2).
+`id` | REQUIRED | The `id` property is the unique identifier of the item. Two items MUST NOT share the same `id`. Although the IDs shown here are GUIDs, and other examples are numeric, this specification does not prescribe any specific format.
+`modified` | REQUIRED | The `modified` property should contain either the modified timestamp or change number of the item, depending on the <a href='#ordering-strategies'>ordering strategy</a> used. It MUST be appropriately comparable to itself as either a string or integer, representing a chronological ordering. It MUST always be updated when *any* data within `<data>` is updated, and such an update MUST set the value of the property to be greater than or equal to (`>=`) all existing `modified` values. It MAY be any format, but SHOULD be an integer where possible. Integer values MUST be represented as integers, not strings. The value of the `modified` property of the last item MUST be used in either the `afterTimestamp` or `afterChangeNumber` parameter of the `"next"` URL (though such an item may not be included in `<items>` if it is <a href='#in-stream-filtering'>filtered</a> out). The format of the `modified` property and the relevant URL parameter MUST be identical.
+`data` | REQUIRED | Note this property MUST NOT be included if state is `"deleted"`.
+
+
+    ### `<data>`
+
+    The `<data>` part of the response is open for applications to populate with whatever data structure is most appropriate for the entity type ("kind") being exchanged.
+
+    This specification includes generic constraints for representing values and entities, to ensure consistency across implementations.
+
+
+    #### Date and time formats
+
+    Dates and times within `<data>` MUST respect the specific profile of [[!ISO8601]] specified here, derived from [[!NOTE-datetime]], in order to ensure that event start times and other vital properties within `<data>` are interpreted correctly by data consumers.
+
+    Note that the `modified` property outside of `<data>` SHOULD be represented as an integer where possible.
+
+    Times within `<data>` MUST:
+    - be expressed either in UTC or in local time with a time zone offset (i.e. both approaches to handling time zone offsets defined in [[!NOTE-datetime]] are permissible)
+    - include a time zone designator
+    - include the trailing UTC time zone designator ("`Z`") where times are expressed in UTC
+    
+
+    Times within `<data>` SHOULD:
+    - be expressed in UTC instead of local time (e.g. `"2014-08-12T18:50:00Z"` instead of `"2016-07-13T20:00:00-05:00"`).
+
+
+    Dates and times within `<data>` MUST:
+    - be represented using the [[!NOTE-datetime]] profile of [[!ISO8601]], with the addition of two time-only formats, and hence conform to one of the following formats:
+      ```markdown
+       Year:
+          YYYY (eg 1997)
+       Year and month:
+          YYYY-MM (eg 1997-07)
+       Complete date:
+          YYYY-MM-DD (eg 1997-07-16)
+       Complete date plus hours and minutes:
+          YYYY-MM-DDThh:mmTZD (e.g 1997-07-16T19:20Z or 1997-07-16T19:20+01:00)
+       Complete date plus hours, minutes and seconds:
+          YYYY-MM-DDThh:mm:ssTZD (e.g. 1997-07-16T19:20:30Z or 1997-07-16T19:20:30+01:00)
+       Hours and minutes:
+          hh:mmTZD (e.g 19:20Z or 19:20+01:00)
+       Hours, minutes and seconds:
+          hh:mm:ssTZD (e.g. 19:20:30Z or 19:20:30+01:00)
+      ```
+
+      where:
+
+      ```markdown
+       YYYY = four-digit year
+       MM   = two-digit month (01=January, etc.)
+       DD   = two-digit day of month (01 through 31)
+       hh   = two digits of hour (00 through 23) (am/pm NOT allowed)
+       mm   = two digits of minute (00 through 59)
+       ss   = two digits of second (00 through 59)
+       TZD  = time zone designator (Z or +hh:mm or -hh:mm)
+      ```
+
+
+    #### Other value formats
+
+    - All URLs within `<data>` MUST be absolute.
+    - HTML or Markdown encoded values MUST be included as two separate properties within `<data>`: a plain text property stripped of formatting syntax, as well as an HTML or Markdown property containing the original value. 
+    - Integer properties MUST be represented as integers, not strings.
+
+
+    #### Entity properties
+
+    - <a href='#related-entities'>Embedded entities</a> within `<data>` MUST include their IDs, to allow for efficient processing by the consuming application (System 2).
+    - Where an embedded entity has a URL that represents it on a public facing website (e.g. a page for the location), this URL MUST be included, to allow it to be referenced by data consumers.
+
+
+    #### Use of standard data model
+    
+    Applications SHOULD use a standard data model to increase interoperability of the exchanged data. For example an application may choose to use entities and properties defined in [[SCHEMA-ORG]] to help structure data in a useful way for data consumers. 
+    
+    Applications that are exchanging data about entities described in [[!Modelling-Opportunity-Data]] MUST ensure that their data conforms to that specification. 
+    This includes data on Events, Organisations, Places, etc. [[Publishing-Opportunity-Data]] provides additional examples and guidance on using that data model 
+    in ways that are compatible with the other standards published by OpenActive.
+    
+    Applications that publish data using bespoke data models SHOULD provide users with relevant documentation.
+    
+    <div class="note">
+    The remainder of this specification uses simple examples when showing `<data>` in responses. However these examples are for illustrative purposes only. For a comprehensive selection of examples of opportunity data, read the [[Publishing-Opportunity-Data]] primer. 
+    </div>
+
+
+    ## Related entities
+
+    This specification can be implemented for each relevant entity type within System 1 (e.g. club, courses, sessions).
+
+    Data from related entities can either be:
+
+    1. **Embedded inside the parent entity**. This requires the parent `"updated"` field to reflect the maximum value of all children - achievable via <a href='#patterns-of-implementation'>database triggers or similar</a>.
+
+    1. **Provided by separate endpoints with distinct "kinds"** implementing this specification, the combination of which can be reassembled by System 2.
+
+    1. **Provided as distinct "kinds" within the same endpoint** implementing this specification, the combination of which can be reassembled by System 2.
+
+
+    Entities that have similar update frequencies (e.g. Event and Location) MUST be embedded in the same endpoint.
+
+    Entities with substantially different update frequencies (e.g. Event Description and Availability) MAY be provided as separate endpoints with distinct `kind`s, or as distinct `kind`s within the same endpoint. Each entity type MUST have a distinct `kind` to allow it to be considered separately. This allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (in System 2).
+
+    When distinct `kind`s are provided for different entity types, an ID within the `<data>` of one must reference an ID within the `<data>` of another.
+
+    The `modified` property of an item MUST be updated when any embedded child entities are updated.
+
+
+
+    ## Deleted items
+
+    If any item is added to the list or updated it MUST remain in the list in perpetuity while it is in an `"updated"` state, or remain in the list for at least 7 days from the point in time at which it transitioned to a `"deleted"` state. This ensures that deletions are synchronised to data consumers.
+
+    Deleted items are included in the response with a `"deleted"` state, but no `<data>` associated.
+
+    In order to implement this correctly, it is advisable for records in System 1 to have a "deleted" flag that is set instead of deleting the record permanently.
+
+
+
+    ## Example
+
+    A full example REST response from polling is included below. Note that the shape of the data within the `data` property is largely outside of the scope of this specification, however the dates/times, embedded entity identifiers, URLs, and integer values in the example below all demonstrate conformance to the relevant <a href='#-data-'>generic constraints</a> that are within the scope of this specification.
+
+
+Request:
+```markdown
+GET /api/rpde/sessions?afterTimestamp=1453931101&afterId=%7Bc15814e5-8931-470c-8a16-ef45afedaece%7D
+```
+
+Response:
+```
+{ 
+    "next": "http://www.example.com/api/rpde/sessions?afterTimestamp=1453931925&afterId=%7Bd97f73fb-4718-48ee-a6a9-9c7d717ebd85%7D",
+    "items": [
+        {
+            "state": "updated",
+            "kind": "session",
+            "id": "{c15814e5-8931-470c-8a16-ef45afedaece}",
+            "modified": 1453931101,
+            "data": {
+                "@context": "https://www.openactive.io/ns/oa.jsonld",
+                "type": "Event",
+                "identifier": "session-01jz93i3k1p3",
+                "superEvent": {
+                    "identifier": "eventType-ak6zw8ntsiqq"
+                },
+                "startDate": "2016-05-09T18:15:00Z",
+                "endDate": "2016-05-09T19:15:00Z",
+                "remainingAttendeeCapacity": 0,
+                "url": "https://bookingsystem.com/hulahoop/e/ev-ssyp-20160509191500?r=oa",
+                "attendanceCount": 29,
+                "location": {
+                    "type": "Place",
+                    "identifier": "location-jbnentuhxsnp",
+                    "url": "https://leisurecentre.org.uk/leisure-centre/camden/kentish-town-sports-centre",
+                    "name": "Kentish Town Sports Centre",
+                    "address": {
+                        "type": "PostalAddress",
+                        "addressLocality": "Camden",
+                        "addressRegion": "London West",
+                        "postalCode": "NW5 3DU",
+                        "streetAddress": "Kentish Town Sports Centre"
+                    }
+                }
+            }
+        },
+        {
+            "state": "deleted",
+            "kind": "session",
+            "id": "{d97f73fb-4718-48ee-a6a9-9c7d717ebd85}",
+            "modified": 1453931925
+        }
+    ],
+    "license": "https://creativecommons.org/licenses/by/4.0/"
+}
+```
+
+
+
+
+    # Transport
+
+    ## Polling
+
+    Polling mechanics and expected consumer behaviour are defined in this section.
+
+    <section class="informative">
+
+    ### Polling endpoint specification
+
+    Although the parameters for the endpoint are defined within the scope of this specification, the name and path of the endpoint are outside of the scope.
+
+    An illustrative example of an endpoint with parameters conforming to this specification is below:
+
+    - Without parameters (first page): `/sessions`
+    - With parameters (subsequent pages): `/sessions?afterTimestamp=1453931101&afterId=%7Bc15814e5-8931-470c-8a16-ef45afedaece%7D`
+
+    </section>
+
+
+    ### Expected consumer behaviour
+
+    #### Initial download
+
+    When consuming the data, pages are first downloaded sequentially to catchup with the current state of System 1. This is achieved by following the `next` property of each page until the <a href='#last-page-definition'>last page</a> is reached.
+
+
+    #### Polling for near real-time updates
+
+    The consumer MAY poll the endpoint infrequently at the <a href='#last-page-definition'>last page</a> URL to check for updates. When items are found, it SHOULD resume the behaviour of the initial download: following the `next` property of each page.
+
+
+    ### Content type
+
+    The polling endpoint MUST declare the correct content type 
+    `Content-Type: application/json`.
+
+
+    ### HTTP status codes
+
+    The polling endpoint MUST return the following status codes, and consuming applications MUST respect these:
+
+| HTTP Status Code | Interpretation | Expected consumer (System 2) behaviour |
+|------------------|----------------|-----------------------------|
+| `200` | Normal response | Continue download / infrequent polling  |
+| `503` | Temporary overloading or maintenance of the server | Retry after a random interval between 60 and 120 minutes, to ease load from multiple consumers |
+| `404` or `410` | Endpoint not found at this location | Consider this endpoint in an error state and do not retry |
+
+
+    ### Last page definition
+
+    The last page MUST have the following properties:
+
+    - The `items` property is an empty array.
+    - The `next` property matches the URL of the current page.
+
+
+    This allows for in-stream filtering and other usecases where the number of items in each page may vary.
+
+
+    ### In-stream filtering
+
+    The `items` property being empty is not sufficient to indicate the last page, as in-stream filtering is permitted on items within the page such that a page may appear to contain zero items, but specify a valid `next` URL distinct from the URL of the page.
+
+    <figure>
+      ![](images/image04.png)
+      <figcaption>Illustration of in-stream filtering</figcaption>
+    </figure>
+
+    Although a full page may be presented from System 1 to the filter, the filter may exclude any and all items within the list, resulting in a zero-item array at System 2.
+
+    Note that any items allowed to pass through the filter once MUST, at the point that they no longer meet the filter conditions and would otherwise be filtered out, be allowed to pass through the filter with a `"deleted"` state for at least 7 days. This is in keeping with the invariant described in the <a href='#core-concept'>core concept</a>, ensuring that System 2 correctly deletes items that have been modified such that they are subsequently filtered out.
+
+
+    ## Strict chronological ordering of items
+
+    For high-throughput, when updating data in the data consumer's state (System 2), the `modified` property of each item is available to ensure items are only updated with the most recent data, and that old data is ignored. Although this technique is intended to be used specifically for parallel processing scenarios, all methods of transport MUST respect a strict chronological ordering of items by modified timestamp and ID, or change number, for each kind in order to ensure data consistency. Ordering across kinds is not important.
+
+
+    ## Other transport mechanisms
+
+    Note that although this specification has been built to cater for other types of transport, it focuses on polling as the primary transport mechanism. The exploration of other transport mechanisms is encouraged for usecases that require higher throughput. To support additional testing and experimentation of new transport mechanisms, a "beta" wiki has been defined to allow the community to explore such mechanisms collaboratively. For more information on the process supporting this, see [[OpenActive-RPDE-Beta-Wiki]].
+
+
+
+    <section class="informative">
+
+    # Implementation
+
+    ## Common implementation issues
+
+    This specification is simple to implement, however such implementation requires precision to ensure that it is robust. The most common issues encountered during implementation are enumerated here:
+
+    - The <a href='#last-page-definition'>last page</a> must have zero items, and a correct next URL that matches the current page's URL.
+    - The <a href='#sql-query-example-for-timestamp-id'>query</a> must be correctly implemented with the parentheses in the correct positions.
+    - The <a href='#core-concept'>core concept</a> must be understood, specifically the nature of the list of items where each item appears only once, and each item exists in perpetuity unless deleted as specified in <a href='#deleted-items'>deleted items</a>.
+    - The <a href='#-item-'>`modified`</a> value (used for either the `afterTimestamp` or `afterChangeNumber` parameter) must always be updated when any data within the `data` property is updated. This can be achieved through e.g. <a href='#patterns-of-implementation'> adding triggers</a> for related changes to update the modified value on the primary table.
+    - The <a href='#-item-'>`modified`</a> value should match the format used in the `afterTimestamp` or `afterChangeNumber` parameters. 
+
+
+    ## Potential race condition with next URL
+
+    The logic used to generate the `"next"` URL must query the database only once to retrieve the list of items (though subsequent queries can be made for each item if required). Hence the <a href='#-response-'>`next` URL</a> must be derived from the last item of the original query, or the current page URL, instead of via a second query specifically for the next URL. If a second query is made, the state of the database may have changed in between the two queries, which can lead to inconsistent behaviour.
+
+
+    ## Patterns of implementation
+
+    Four common patterns of implementation are presented:
+
+    ### Single JSON entity cache table
+
+    A cache table is created which is updated on each related entity/table change, either via an application or database trigger. The table contains the rendered [[!JSON]] `<item>`, along with the Modified Timestamp or Change Number, the ID, and a deleted flag.
+
+    Updates to the table overwrite old items with a newer modified timestamp.
+
+    The [[!JSON]] response is generated from the cached [[!JSON]] fragments within the table.
+
+
+    ### Table join with new timestamp field
+
+    The primary table is amended to include a new timestamp field (Modified Timestamp or Change Number), and application or database triggers are added to update this timestamp each time an embedded entity is updated.
+
+    The [[!JSON]] response is generated on-demand from a query which joins together the various embedded entities (related tables) with the primary table, and ordering by the new timestamp field and existing ID field of the primary table.
+
+    A deleted flag will need to be added to the primary table if it does not already exist.
+
+
+    ### Table join with existing timestamp fields
+
+    The [[!JSON]] response is generated on-demand from a query which joins together the various embedded entities (related tables) from the primary table, ordering by a `max()` of the timestamp fields in each table and the existing ID field of the primary table.
+
+    This is the most inefficient of the four patterns for most use cases, but the easiest to implement without database schema changes (assuming a deleted flag already exists on the primary table, otherwise it must be created).
+
+
+    ### Hybrid approach: denormalised paging table
+
+    A denormalised paging table is created that contains the fields required for the related entities along with a Modified Timestamp or Change Number, ID and deleted flag.
+
+    This table is then updated during each entity (related table) update via application or database triggers, and the [[!JSON]] is generated on-demand from a simple query of the denormalised paging table.
+
+    The advantage of this approach is that the field mapping to any specification used for `<data>` can be separated from the trigger logic for the paging table, while reducing the load on the database for each query.
+
+
+    ## Additional notes
+
+    ### Calculated fields (e.g. available spaces or available tickets for a session)
+
+    Some entities will not need to be synchronised, but fields calculated from them will need to be known to the data consumer (System 2). For example, the "tickets" table may not need to be synchronised, but the "available tickets" calculated field on the "sessions" table will be required.
+
+    The suggested approach is to calculate the field "available tickets" and store it in the "sessions" table on each ticket sale. This has three advantages:
+
+    - It keeps the application logic for such a calculation together with the original action.
+    - It creates a cached value that can be used in other parts of the application to increase performance.
+    - It prevents the creation of complex calculations which are used only on-demand for the purposes of data synchronisation.
+
+    An alternative could be to calculate it on each synchronisation, however this will slow down the sync. Assuming that reads will occur on this calculated data more frequently than writes, caching the calculated field is recommended.
+
+
+
+    ### Database triggers (Microsoft SQL Server example)
+
+    For implementations using a
+     [timestamp](https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx)/[rowversion](https://msdn.microsoft.com/en-GB/library/ms182776.aspx) field on the parent table as the "change number", using the trigger below for each child table will update the rowversion field in the relevant rows on the parent table when the child table is updated.
+
+    The `SET SomeColumn = SomeColumn` part of this trigger could easily be replaced with setting materialised calculated fields (e.g. "total number of tickets sold") which contain the summary data required by System 2.
+
+    The example below has been adapted from [here](http://stackoverflow.com/questions/2165333/how-to-update-sql-server-timestamp-column-without-changing-record-data), see [here](https://msdn.microsoft.com/en-us/library/ms191300.aspx) for an explanation of the mechanics.
+
+    ```SQL
+    CREATE TRIGGER tgUpdateParentRowVersion ON ChildTable FOR INSERT, DELETE, UPDATE
+    AS
+    BEGIN
+       -- The updates below force the update of the parent table rowversion
+
+       -- Materialised field calculation goes here
+
+       UPDATE ParentTable
+          SET SomeColumn = SomeColumn
+         FROM ParentTable a
+         JOIN inserted    i on a.pkParentTable = i.fkParentTable
+
+       UPDATE ParentTable
+          SET SomeColumn = SomeColumn
+         FROM ParentTable a
+         JOIN deleted     d on a.pkParentTable = d.fkParentTable
+    END
+
+    ```
+    </section>
+
+    <section class='appendix informative'>
+    Acknowledgements
+    ================
+
+    The editors thank [all members](http://www.w3.org/community/openactive/participants) of the OpenActive Community Group for contributions of various kinds.
+    </section>
+  </body>
+</html>

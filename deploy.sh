@@ -67,14 +67,19 @@ cp -r ../0.2.2 .
 cp -r ../0.2.3 .
 cp -r ../0.2.4 .
 cp -r ../0.3.0 .
-cp -r ../EditorsDraft/* .
+cp -r ../EditorsDraft .
+cp -r ../1.0 .
+cp -r ../1.0/* .
 
 cd ..
 
 respec2html "file://$PWD/0.2.3/index.html" "$PWD/out/0.2.3/index.html" "0.2.3"
 respec2html "file://$PWD/0.2.4/index.html" "$PWD/out/0.2.4/index.html" "0.2.4"
 respec2html "file://$PWD/0.3.0/index.html" "$PWD/out/0.3.0/index.html" "0.3.0"
-respec2html "file://$PWD/EditorsDraft/index.html" "$PWD/out/index.html" "EditorsDraft"
+respec2html "file://$PWD/EditorsDraft/index.html" "$PWD/out/EditorsDraft/index.html" "EditorsDraft"
+respec2html "file://$PWD/1.0/index.html" "$PWD/out/1.0/index.html" "1.0"
+
+cp "$PWD/out/1.0/index.html" out/index.html
 
 cd out
 
