@@ -2,18 +2,18 @@
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en'>
   <head>
     <meta charset='utf-8'/>
-    <title>Realtime Paged Data Exchange 1.0</title>
+    <title>Realtime Paged Data Exchange 1.1</title>
 
     <script type="text/javascript" class='remove'>
         var respecConfig = {
           // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
-          specStatus:           "CG-FINAL",
+          specStatus:           "CG-DRAFT",
 
           // the specification's short name, as in http://www.w3.org/TR/short-name/
           shortName:            "realtime-paged-data-exchange",
 
           // if you wish the publication date to be other than today, set this
-          publishDate:  "2017-08-14",
+          publishDate:  "2018-02-21",
 
           // if there is a previously published draft, uncomment this and set its YYYY-MM-DD date
           // and its maturity status
@@ -21,9 +21,9 @@
           // previousMaturity:  "WD",
 
           // if there a publicly available Editor's Draft, this is the link
-          edDraftURI:           "https://www.openactive.io/realtime-paged-data-exchange/",
+          edDraftURI:           "https://www.openactive.io/realtime-paged-data-exchange/EditorsDraft/",
           //prevED:  "https://www.openactive.io/spec-template/",
-          previousURI:  "https://www.openactive.io/realtime-paged-data-exchange/0.3.0/",
+          previousURI:  "https://www.openactive.io/realtime-paged-data-exchange/1.0/",
           testSuiteURI: "https://www.openactive.io/endpoint-validator/",
           copyrightStart: 2015,
 
@@ -68,11 +68,11 @@
                 key: "Version",
                 data: [
                     {
-                        value: "1.0"
+                        value: "1.1"
                     },
                     {
                         value: "Previous",
-                        href: "https://www.openactive.io/realtime-paged-data-exchange/0.3.0/"
+                        href: "https://www.openactive.io/realtime-paged-data-exchange/1.0/"
                     }             
                 ]
             }
@@ -457,8 +457,24 @@ Property | Status | Notes
 `next` | REQUIRED | The `next` URL is a precomputed URL to be called by the data consumer (System 2) to get the next page of data. The `next` URL MUST be calculated from the last item used to generate the current page, and use the current page's own URL if no items exist. Not all items in the current page may be visible in the case of <a href='#in-stream-filtering'>filtering</a> so the last item used may not be contained within `items`. The `next` URL MUST be an absolute URL. Note "polling" and "paging" are differentiated only by the <a href='#expected-consumer-behaviour'>duration between requests</a>. Although an example endpoint path is provided (`"/api/rpde/sessions"`), it is outside the scope of this specification.
 `items` | REQUIRED | An array of `<item>`. This should simply by empty `[]` if no results are returned. The `items` property being empty is not sufficient to indicate the <a href='#last-page-definition'>last page</a>.
 [`license`](http://purl.org/dc/terms/license) | REQUIRED | Reference to the license under which the data has been published. Any website that links to this endpoint SHOULD also include text such as "This opportunity data is owned by My Company Ltd and is licensed under the Creative Commons Attribution Licence (CC-BY v4.0) for anyone to access, use and share.".
+`version` | OPTIONAL | The version number of the RPDE specification to which the feed conforms. This property is currently OPTIONAL, to retain backwards compatibility with earlier versions, but will become REQUIRED in the next major version of this specification. It is RECOMMENDED that implementations begin using this property. If a `version` property is not specified for a feed, then a client MAY assume that it conforms to version 1.0.
+`oppportunityModelVersion` | OPTIONAL | Presence of this property indicates that the feed is using the [[!Modelling-Opportunity-Data]] specification as the [standard data model](use-of-standard-data-model). Clients can expect that [`<data>`](#-data-) properties included in this feed will have values that conform to that specification. The value of the `oppportunityModelVersion` property should be the version number of the [[!Modelling-Opportunity-Data]] specification being used to publish data. Implementations that are using the standard model SHOULD always use this property. If the property is not specified then a client MAY use heuristics (e.g. detecting certain data structures) to attempt to determine which data model is being used.
+`feedObjects` | OPTIONAL | For feeds that conform to the [[!Modelling-Opportunity-Data]] specification this property indicates that types of object are included in the feed. E.g [Events](https://www.openactive.io/modelling-opportunity-data/#events) or [Organisations](https://www.openactive.io/modelling-opportunity-data/#organisers-persons-and-organizations-). The property allows clients to decide not to harvest feeds based on what type of data it contains. The value of the property should be an array of URIs, one for each of the types of resource that might appear in the feed. While this property is OPTIONAL, a feed that includes the `oppportunityModelVersion` property MUST include this property to help inform clients about the contents of the feed.
 
+The following example illustrates use of the additional optional properties:
 
+    ```JSON
+    <response> => {
+          "next": "http://www.example.com/api/rpde/sessions?afterTimestamp=<modified>&afterId=<id>",
+          "items": [<item>,<item>,<item>,...],
+          "license": "https://creativecommons.org/licenses/by/4.0/",
+          "version": "1.1",
+          "opportunityModelVersion": "1.0",
+          "feedObjects": ["http://schema.org/Event"]
+       }
+    ```
+
+ 
     ### `<item>`
 
 
@@ -557,6 +573,8 @@ Property | Status | Notes
     Applications that are exchanging data about entities described in [[!Modelling-Opportunity-Data]] MUST ensure that their data conforms to that specification. 
     This includes data on Events, Organisations, Places, etc. [[Publishing-Opportunity-Data]] provides additional examples and guidance on using that data model 
     in ways that are compatible with the other standards published by OpenActive.
+    
+    Feeds that are using the [[!Modelling-Opportunity-Data]] model MUST include the `oppportunityModelVersion` and `feedObjects` properties in the [`<response>`](#-response-) to clients.
     
     Applications that publish data using bespoke data models SHOULD provide users with relevant documentation.
     
@@ -704,8 +722,8 @@ Response:
 | HTTP Status Code | Interpretation | Expected consumer (System 2) behaviour |
 |------------------|----------------|-----------------------------|
 | `200` | Normal response | Continue download / infrequent polling  |
-| `503` | Temporary overloading or maintenance of the server | Retry after a random interval between 60 and 120 minutes, to ease load from multiple consumers |
-| `404` or `410` | Endpoint not found at this location | Consider this endpoint in an error state and do not retry |
+| `503` | Temporary overloading or maintenance of the server | Clients SHOULD retry after a random interval between 60 and 120 minutes, to ease load from multiple consumers |
+| `404` or `410` | Endpoint not found at this location | Clients SHOULD consider this endpoint to be in an error state and discontinue harvesting |
 
 
     ### Last page definition
