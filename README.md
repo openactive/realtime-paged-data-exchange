@@ -11,9 +11,10 @@ This specification tackles the generic use-case of unidirectional real-time data
 
 ###  Getting Started
 
-To get started post an example on the [Activation Issue Tracker](https://github.com/openactive/activation/blob/master/README.md), build a new API endpoint that conforms to the specification, and check it with the validator:
+To get started post an example on the [Activation Issue Tracker](https://github.com/openactive/activation/blob/master/README.md), build a new API endpoint that conforms to the specifications below, and check it with the validator:
 
-- **[Current Specification (Editor's Draft)](https://www.openactive.io/realtime-paged-data-exchange/)** - Section 3-4 explains the concept, Section 4.6 is an example.
+- **[Paging Specification 1.0](https://www.openactive.io/realtime-paged-data-exchange/)** - Section 3-4 explains the concept, Section 4.6 is an example.
+- **[Modelling Specification 1.0](https://www.openactive.io/modelling-opportunity-data/)**
 - [Validator](https://www.openactive.io/endpoint-validator/)
 
 ###  Implementation checklist
@@ -54,4 +55,4 @@ No breaking changes are made within a major version (e.g. 1.x.x), and no additiv
  [0.2.3](https://www.openactive.io/realtime-paged-data-exchange/0.2.3/) | 1 May 2016 | [Commits](https://github.com/openactive/realtime-paged-data-exchange/commits/master/0.2.3/index.html) [Issues](https://github.com/openactive/realtime-paged-data-exchange/milestones/0.2.3) | Migrated from Google Docs to Respec while clarifying minor elements of the specification.
  [0.2.4](https://www.openactive.io/realtime-paged-data-exchange/0.2.4/) | 26 May 2016 | [Commits](https://github.com/openactive/realtime-paged-data-exchange/commits/master/0.2.4/index.html) [Issues](https://github.com/openactive/realtime-paged-data-exchange/milestones/0.2.4) | Addresses a wide range of feedback from various implementing pioneers reduce ambiguity.
  [0.3.0](https://www.openactive.io/realtime-paged-data-exchange/0.3.0/) | 21 Jun 2017 | [Commits](https://github.com/openactive/realtime-paged-data-exchange/commits/master/0.3.0/index.html) [Issues](https://github.com/openactive/realtime-paged-data-exchange/milestones/0.3.0) | Recommendation linking to the OpenActive Modelling Opportunity Data Specification.
- [Editor's Draft](https://www.openactive.io/realtime-paged-data-exchange/) | July 2017 | [Commits](https://github.com/openactive/realtime-paged-data-exchange/commits/master/EditorsDraft/index.html)  [Issues](https://github.com/openactive/realtime-paged-data-exchange/milestones/Editor's%20Draft) [Validator](https://www.openactive.io/endpoint-validator/) | Increase in clarity and specificity based on many implementations over the past year.
+ [1.0](https://www.openactive.io/realtime-paged-data-exchange/) | 14 August 2017 | [Commits](https://github.com/openactive/realtime-paged-data-exchange/commits/master/EditorsDraft/index.html)  [Issues](https://github.com/openactive/realtime-paged-data-exchange/milestones/Editor's%20Draft) [Validator](https://www.openactive.io/endpoint-validator/) | Increase in clarity and specificity based on many implementations over the past year.
