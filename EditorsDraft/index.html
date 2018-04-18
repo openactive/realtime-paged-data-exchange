@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en" typeof="bibo:Document " prefix="bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#">
+<head><meta lang="" property="dc:language" content="en">
+    <meta charset="utf-8">
+    <title>Realtime Paged Data Exchange 1.1</title>
+
+    
+
+    
+
+    <!-- <script src='/builds/respec-w3c-common.js' class='remove'></script>-->
+
+    <!-- <script src='/node_modules/requirejs/require.js' data-main='/js/profile-w3c-common' async class='remove'></script> -->
+
+    <style>
+    table {border-collapse: collapse; border: 1px solid #bec9d9}
+    td, th {padding: 3px 0.5em; border-left:1px solid black; border-right: 1px solid black; border-bottom:1px solid #E2EDFE;}
+    tr th[colspan] {color: #005A9C; background-color: #FEEDE2; text-align: center}
+    th {color: #005A9C; background-color: #E2EDFE; font-weight: normal;border-bottom:1px solid #BEC9D9;}
+    tbody tr th {text-align: left;}
+    td.nb { font-size: smaller;}
+    .rec, .pr {color: #005A9C; background-color: #99EE99}
+    .ext {background-color: #FFFFFF}
+    .cr, .lcwd {color: #005A9C; background-color: #EEEE99}
+    .wd {color: #005A9C; background-color: #EE9999}
+    .ed, .fpwd  {color: #005A9C; background-color: #FF7777}
+    code {white-space: pre;}
+    </style>
+
+  <style>/*****************************************************************
+ * ReSpec 3 CSS
+ * Robin Berjon - http://berjon.com/
+ *****************************************************************/
+
+/* --- INLINES --- */
+em.rfc2119 { 
+    text-transform:     lowercase;
+    font-variant:       small-caps;
+    font-style:         normal;
+    color:              #900;
+}
+
+h1 acronym, h2 acronym, h3 acronym, h4 acronym, h5 acronym, h6 acronym, a acronym,
+h1 abbr, h2 abbr, h3 abbr, h4 abbr, h5 abbr, h6 abbr, a abbr {
+    border: none;
+}
+
+dfn {
+    font-weight:    bold;
+}
+
+a.internalDFN {
+    color:  inherit;
+    border-bottom:  1px solid #99c;
+    text-decoration:    none;
+}
+
+a.externalDFN {
+    color:  inherit;
+    border-bottom:  1px dotted #ccc;
+    text-decoration:    none;
+}
+
+a.bibref {
+    text-decoration:    none;
+}
+
+cite .bibref {
+    font-style: normal;
+}
+
+code {
+    color:  #C83500;
+}
+
+/* --- TOC --- */
+.toc a, .tof a {
+    text-decoration:    none;
+}
+
+a .secno, a .figno {
+    color:  #000;
+}
+
+ul.tof, ol.tof {
+    list-style: none outside none;
+}
+
+.caption {
+    margin-top: 0.5em;
+    font-style:   italic;
+}
+
+/* --- TABLE --- */
+table.simple {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    border-bottom:  3px solid #005a9c;
+}
+
+.simple th {
+    background: #005a9c;
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+}
+
+.simple th[scope="row"] {
+    background: inherit;
+    color:  inherit;
+    border-top: 1px solid #ddd;
+}
+
+.simple td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+}
+
+.simple tr:nth-child(even) {
+    background: #f0f6ff;
+}
+
+/* --- DL --- */
+.section dd > p:first-child {
+    margin-top: 0;
+}
+
+.section dd > p:last-child {
+    margin-bottom: 0;
+}
+
+.section dd {
+    margin-bottom:  1em;
+}
+
+.section dl.attrs dd, .section dl.eldef dd {
+    margin-bottom:  0;
+}
+
+.respec-hidden {
+    display: none;
+}
+
+@media print {
+    .removeOnSave {
+        display: none;
+    }
+}
+</style><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><style>/* --- ISSUES/NOTES --- */
+div.issue-title, div.note-title , div.ednote-title, div.warning-title {
+    padding-right:  1em;
+    min-width: 7.5em;
+    color: #b9ab2d;
+}
+div.issue-title { color: #e05252; }
+div.note-title, div.ednote-title { color: #2b2; }
+div.warning-title { color: #f22; }
+div.issue-title span, div.note-title span, div.ednote-title span, div.warning-title span {
+    text-transform: uppercase;
+}
+div.note, div.issue, div.ednote, div.warning {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+.note > p:first-child, .ednote > p:first-child, .issue > p:first-child, .warning > p:first-child { margin-top: 0 }
+.issue, .note, .ednote, .warning {
+    padding: .5em;
+    border-left-width: .5em;
+    border-left-style: solid;
+}
+div.issue, div.note , div.ednote,  div.warning {
+    padding: 1em 1.2em 0.5em;
+    margin: 1em 0;
+    position: relative;
+    clear: both;
+}
+span.note, span.ednote, span.issue, span.warning { padding: .1em .5em .15em; }
+
+.issue {
+    border-color: #e05252;
+    background: #fbe9e9;
+}
+.note, .ednote {
+    border-color: #52e052;
+    background: #e9fbe9;
+}
+
+.warning {
+    border-color: #f11;
+    border-width: .2em;
+    border-style: solid;
+    background: #fbe9e9;
+}
+
+.warning-title:before{
+    content: "⚠"; /*U+26A0 WARNING SIGN*/
+    font-size: 3em;
+    float: left;
+    height: 100%;
+    padding-right: .3em;
+    vertical-align: top;
+    margin-top: -0.5em;
+}
+
+li.task-list-item {
+    list-style: none;
+}
+
+input.task-list-item-checkbox {
+    margin: 0 0.35em 0.25em -1.6em;
+    vertical-align: middle;
+}
+</style><link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2016/cg-draft"><style>/*
+
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+
+code {
+  display: inline-block;
+  color: #333;
+  background: #f8f8f8;
+}
+
+
+pre code {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #333;
+  background: #f8f8f8;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #998;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #333;
+  font-weight: bold;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #008080;
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: #d14;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #900;
+  font-weight: bold;
+}
+
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: #458;
+  font-weight: bold;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+  color: #000080;
+  font-weight: normal;
+}
+
+.hljs-regexp,
+.hljs-link {
+  color: #009926;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: #990073;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #0086b3;
+}
+
+.hljs-meta {
+  color: #999;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #fdd;
+}
+
+.hljs-addition {
+  background: #dfd;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+</style><!--[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]--><script id="initialUserConfig" type="application/json">{
+  "specStatus": "CG-DRAFT",
+  "shortName": "realtime-paged-data-exchange",
+  "publishDate": "2018-02-21",
+  "edDraftURI": "https://www.openactive.io/realtime-paged-data-exchange/EditorsDraft/",
+  "previousURI": "https://www.openactive.io/realtime-paged-data-exchange/1.0/",
+  "testSuiteURI": "https://www.openactive.io/endpoint-validator/",
+  "copyrightStart": 2015,
+  "editors": [
+    {
+      "name": "Nick Evans",
+      "url": "http://nickevans.me/",
+      "company": "Open Data Institute",
+      "companyURL": "http://opendata.institute/",
+      "w3cid": 87551
+    },
+    {
+      "name": "Leigh Dodds",
+      "url": "http://ldodds.com/",
+      "company": "Open Data Institute",
+      "companyURL": "http://opendata.institute/",
+      "w3cid": 55359
+    }
+  ],
+  "authors": [
+    {
+      "name": "Luke Winship",
+      "url": "http://lukehesluke.co/",
+      "company": "imin",
+      "companyURL": "http://www.imin.co/",
+      "note": "original concept"
+    },
+    {
+      "name": "Nick Evans",
+      "url": "http://nickevans.me/",
+      "company": "imin",
+      "companyURL": "http://www.imin.co/",
+      "w3cid": 87551,
+      "note": "original concept"
+    }
+  ],
+  "otherLinks": [
+    {
+      "key": "Repo",
+      "value": "We are on Github",
+      "href": "https://github.com/openactive/realtime-paged-data-exchange/",
+      "class": "repo"
+    },
+    {
+      "key": "Issues",
+      "href": "https://github.com/openactive/realtime-paged-data-exchange/issues/"
+    },
+    {
+      "key": "Version",
+      "data": [
+        {
+          "value": "1.1"
+        },
+        {
+          "value": "Previous",
+          "href": "https://www.openactive.io/realtime-paged-data-exchange/1.0/"
+        }
+      ]
+    }
+  ],
+  "logos": [
+    {
+      "src": "https://www.openactive.io/assets/openactive-logo-large.png",
+      "href": "https://www.openactive.io",
+      "alt": "openactive.io",
+      "width": 255,
+      "height": 43,
+      "id": "logo"
+    }
+  ],
+  "wg": "OpenActive Community Group",
+  "wgURI": "http://www.w3.org/community/openactive/",
+  "wgPublicList": "public-openactive",
+  "wgPatentURI": "",
+  "maxTocLevel": 4,
+  "preProcess": [],
+  "alternateFormats": [
+    {
+      "uri": "diff-previous.html",
+      "label": "diff to previous version"
+    }
+  ],
+  "isRecTrack": true,
+  "isNoTrack": true,
+  "issueBase": "https://github.com/openactive/realtime-paged-data-exchange/issues/",
+  "format": "markdown",
+  "localBiblio": {
+    "Modelling-Opportunity-Data": {
+      "href": "https://www.openactive.io/modelling-opportunity-data/",
+      "title": "Modelling Opportunity Data",
+      "publisher": "OpenActive Community Group"
+    },
+    "SCHEMA-ORG": {
+      "href": "http://schema.org/",
+      "title": "Schema.org"
+    },
+    "NOTE-datetime": {
+      "href": "https://www.w3.org/TR/1998/NOTE-datetime-19980827",
+      "title": "Date and Time Formats"
+    },
+    "Publishing-Opportunity-Data": {
+      "href": "https://www.openactive.io/opportunity-data-primer/",
+      "title": "Publishing Opportunity Data: A Primer",
+      "publisher": "OpenActive Community Group"
+    },
+    "OpenActive-RPDE-Beta-Wiki": {
+      "href": "https://github.com/openactive/realtime-paged-data-exchange/wiki",
+      "title": "OpenActive Realtime Paged Data Exchange Beta Wiki",
+      "publisher": "OpenActive Community Group"
+    },
+    "URI-Handling-Function-Properties": {
+      "href": "https://www.ecma-international.org/ecma-262/5.1/#sec-15.1.3",
+      "title": "URI Handling Function Properties",
+      "publisher": "Ecma International"
+    }
+  }
+}</script></head>
+  <body class="h-entry toc-inline" role="document" id="respecDocument"><div class="head" role="contentinfo" id="respecHeader">
+  <p>
+    <a class="logo" href="http://www.w3.org/"><img width="72" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" alt="W3C"></a>
+  </p>
+  <p>
+      </p><p><span id="logo"><img src="https://www.openactive.io/assets/openactive-logo-large.png" width="255" height="43" alt="openactive.io"></span></p>
+  <p></p>
+  <h1 class="title p-name" id="title" property="dc:title">Realtime Paged Data Exchange 1.1</h1>
+  <h2 id="draft-community-group-report-21-february-2018">Draft Community Group Report <time property="dc:issued" class="dt-published" datetime="2018-02-21">21 February 2018</time></h2>
+  <dl>
+      <dt>Latest editor's draft:</dt>
+      <dd><a href="https://www.openactive.io/realtime-paged-data-exchange/EditorsDraft/">https://www.openactive.io/realtime-paged-data-exchange/EditorsDraft/</a></dd>
+      <dt>Test suite:</dt>
+      <dd><a href="https://www.openactive.io/endpoint-validator/">https://www.openactive.io/endpoint-validator/</a></dd>
+    <dt>Editors:</dt>
+    <dd class="p-author h-card vcard" property="bibo:editor" resource="_:editor0" data-editor-id="87551"><span property="rdf:first" typeof="foaf:Person"><meta property="foaf:name" content="Nick Evans"><a class="u-url url p-name fn" property="foaf:homepage" href="http://nickevans.me/">Nick Evans</a>, <a property="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://opendata.institute/">Open Data Institute</a></span>
+<span property="rdf:rest" resource="_:editor1"></span>
+</dd>
+<dd class="p-author h-card vcard" resource="_:editor1" data-editor-id="55359"><span property="rdf:first" typeof="foaf:Person"><meta property="foaf:name" content="Leigh Dodds"><a class="u-url url p-name fn" property="foaf:homepage" href="http://ldodds.com/">Leigh Dodds</a>, <a property="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://opendata.institute/">Open Data Institute</a></span>
+<span property="rdf:rest" resource="rdf:nil"></span>
+</dd>
+
+      <dt>Authors:</dt>
+      <dd class="p-author h-card vcard"><span property="dc:contributor" typeof="foaf:Person"><meta property="foaf:name" content="Luke Winship"><a class="u-url url p-name fn" property="foaf:homepage" href="http://lukehesluke.co/">Luke Winship</a>, <a property="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://www.imin.co/">imin</a> (original concept)</span>
+</dd>
+<dd class="p-author h-card vcard" data-editor-id="87551"><span property="dc:contributor" typeof="foaf:Person"><meta property="foaf:name" content="Nick Evans"><a class="u-url url p-name fn" property="foaf:homepage" href="http://nickevans.me/">Nick Evans</a>, <a property="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://www.imin.co/">imin</a> (original concept)</span>
+</dd>
+
+          <dt class="repo">Repo:</dt>
+              <dd class="repo">
+                <a href="https://github.com/openactive/realtime-paged-data-exchange/">
+                  We are on Github
+                </a>
+              </dd>
+          <dt>Issues:</dt>
+                <dd>
+                  <a href="https://github.com/openactive/realtime-paged-data-exchange/issues/">https://github.com/openactive/realtime-paged-data-exchange/issues/</a>
+                </dd>
+          <dt>Version:</dt>
+                  <dd>
+                    
+                      1.1
+                    
+                  </dd>
+                  <dd>
+                    <a href="https://www.openactive.io/realtime-paged-data-exchange/1.0/">
+                      Previous
+                    </a>
+                  </dd>
+  </dl>
+    <p>
+        This document is also available in this non-normative format: 
+      <a rel="alternate" href="diff-previous.html">diff to previous version</a>
+    </p>
+  <p class="copyright">
+    <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 
+    2015-2018
+    the Contributors to the Realtime Paged Data Exchange 1.1 Specification, published by the
+    <a href="http://www.w3.org/community/openactive/">OpenActive Community Group</a> under the
+      <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+      A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available.
+  </p>
+  <hr title="Separator for header">
+</div><style>
+   html {
+     background-image: none !important;
+   }
+   body {
+     background: white top left fixed no-repeat !important;
+     background-size: 25px auto !important;
+     background-image: url('https://www.openactive.io/assets/openactive-label-specification.png') !important;
+   }
+   body.toc-sidebar #toc {
+     background-size: 25px auto !important;
+     background-attachment: fixed !important;
+   }
+   h1 {
+     font-family: 'Open Sans',sans-serif !important;
+     font-weight: 300 !important;
+     color: #69b9ff !important;
+     font-size: 220%;
+   }
+   #toc {
+     padding-top: 0px !important;
+   }
+   .remove {
+     background-colour: yellow;
+   }
+   code {
+       color: #C83500;
+   }
+   </style><section id="abstract" class="introductory" property="dc:abstract"><h2 id="h-abstract" resource="#h-abstract"><span property="xhv:role" resource="xhv:heading">Abstract</span></h2><p>This specification tackles the generic use-case of unidirectional real-time data synchronisation between two systems, where the receiving system requires only summary data from the origin system.</p></section><section id="sotd" class="introductory"><h2 id="h-sotd" resource="#h-sotd"><span property="xhv:role" resource="xhv:heading">Status of This Document</span></h2>
+  <p>
+    This specification was published by the <a href="http://www.w3.org/community/openactive/">OpenActive Community Group</a>.
+    It is not a W3C Standard nor is it on the W3C Standards Track.
+      Please note that under the 
+      <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>
+      there is a limited opt-out and other conditions apply.
+    Learn more about 
+    <a href="http://www.w3.org/community/">W3C Community and Business Groups</a>.
+  </p>
+  <p>Contributions to this document are not only welcomed but are actively solicited and should be made via <a href="https://github.com/OpenActive/realtime-paged-data-exchange/issues">GitHub Issues</a> and pull requests. The source code is available on <a href="https://github.com/OpenActive/realtime-paged-data-exchange">GitHub</a>.</p>
+      <p>If you wish to make comments regarding this document, please send them to 
+      <a href="mailto:public-openactive@w3.org">public-openactive@w3.org</a> 
+      (<a href="mailto:public-openactive-request@w3.org?subject=subscribe">subscribe</a>,
+      <a href="http://lists.w3.org/Archives/Public/public-openactive/">archives</a>).</p>
+</section><nav id="toc"><h2 class="introductory" id="table-of-contents" resource="#table-of-contents"><span property="xhv:role" resource="xhv:heading">Table of Contents</span></h2><ul class="toc" role="directory"><li class="tocline"><a href="#introduction" class="tocxref"><span class="secno">1. </span>Introduction</a><ul class="toc"><li class="tocline"><a href="#openactive" class="tocxref"><span class="secno">1.1 </span>OpenActive</a></li><li class="tocline"><a href="#use-case-and-requirements" class="tocxref"><span class="secno">1.2 </span>Use case and requirements</a><ul class="toc"><li class="tocline"><a href="#realtime" class="tocxref"><span class="secno">1.2.1 </span>Realtime</a></li><li class="tocline"><a href="#simplicity-of-implementation" class="tocxref"><span class="secno">1.2.2 </span>Simplicity of implementation</a></li><li class="tocline"><a href="#flexibility-of-interface" class="tocxref"><span class="secno">1.2.3 </span>Flexibility of interface</a></li></ul></li><li class="tocline"><a href="#scope" class="tocxref"><span class="secno">1.3 </span>Scope</a><ul class="toc"><li class="tocline"><a href="#goals" class="tocxref"><span class="secno">1.3.1 </span>Goals</a></li><li class="tocline"><a href="#non-goals" class="tocxref"><span class="secno">1.3.2 </span>Non-goals</a></li></ul></li><li class="tocline"><a href="#objectives" class="tocxref"><span class="secno">1.4 </span>Objectives</a></li></ul></li><li class="tocline"><a href="#conformance" class="tocxref"><span class="secno">2. </span>Conformance</a></li><li class="tocline"><a href="#overall-approach" class="tocxref"><span class="secno">3. </span>Overall approach</a></li><li class="tocline"><a href="#paging" class="tocxref"><span class="secno">4. </span>Paging</a><ul class="toc"><li class="tocline"><a href="#simplicity" class="tocxref"><span class="secno">4.1 </span>Simplicity</a></li><li class="tocline"><a href="#core-concept" class="tocxref"><span class="secno">4.2 </span>Core concept</a></li><li class="tocline"><a href="#ordering-strategies" class="tocxref"><span class="secno">4.3 </span>Ordering strategies</a><ul class="toc"><li class="tocline"><a href="#modified-timestamp-and-id" class="tocxref"><span class="secno">4.3.1 </span>Modified Timestamp and ID</a><ul class="toc"><li class="tocline"><a href="#sql-query-example-for-timestamp-id" class="tocxref"><span class="secno">4.3.1.1 </span>SQL Query Example for Timestamp/ID</a></li><li class="tocline"><a href="#javascript-query-example-for-timestamp-id" class="tocxref"><span class="secno">4.3.1.2 </span>JavaScript Query Example for Timestamp/ID</a></li></ul></li><li class="tocline"><a href="#incrementing-unique-change-number" class="tocxref"><span class="secno">4.3.2 </span>Incrementing Unique Change Number</a><ul class="toc"><li class="tocline"><a href="#sql-query-example-for-change-number" class="tocxref"><span class="secno">4.3.2.1 </span>SQL Query Example for Change Number</a></li><li class="tocline"><a href="#javascript-query-example-for-change-number" class="tocxref"><span class="secno">4.3.2.2 </span>JavaScript Query Example for Change Number</a></li></ul></li></ul></li><li class="tocline"><a href="#response-grammar" class="tocxref"><span class="secno">4.4 </span>Response grammar</a><ul class="toc"><li class="tocline"><a href="#-response-" class="tocxref"><span class="secno">4.4.1 </span><code>&lt;response&gt;</code></a></li><li class="tocline"><a href="#-item-" class="tocxref"><span class="secno">4.4.2 </span><code>&lt;item&gt;</code></a></li><li class="tocline"><a href="#-data-" class="tocxref"><span class="secno">4.4.3 </span><code>&lt;data&gt;</code></a><ul class="toc"><li class="tocline"><a href="#date-and-time-formats" class="tocxref"><span class="secno">4.4.3.1 </span>Date and time formats</a></li><li class="tocline"><a href="#other-value-formats" class="tocxref"><span class="secno">4.4.3.2 </span>Other value formats</a></li><li class="tocline"><a href="#entity-properties" class="tocxref"><span class="secno">4.4.3.3 </span>Entity properties</a></li><li class="tocline"><a href="#use-of-standard-data-model" class="tocxref"><span class="secno">4.4.3.4 </span>Use of standard data model</a></li></ul></li></ul></li><li class="tocline"><a href="#related-entities" class="tocxref"><span class="secno">4.5 </span>Related entities</a></li><li class="tocline"><a href="#deleted-items" class="tocxref"><span class="secno">4.6 </span>Deleted items</a></li><li class="tocline"><a href="#example" class="tocxref"><span class="secno">4.7 </span>Example</a></li></ul></li><li class="tocline"><a href="#transport" class="tocxref"><span class="secno">5. </span>Transport</a><ul class="toc"><li class="tocline"><a href="#polling" class="tocxref"><span class="secno">5.1 </span>Polling</a><ul class="toc"><li class="tocline"><a href="#polling-endpoint-specification" class="tocxref"><span class="secno">5.1.1 </span>Polling endpoint specification</a></li><li class="tocline"><a href="#expected-consumer-behaviour" class="tocxref"><span class="secno">5.1.2 </span>Expected consumer behaviour</a><ul class="toc"><li class="tocline"><a href="#initial-download" class="tocxref"><span class="secno">5.1.2.1 </span>Initial download</a></li><li class="tocline"><a href="#polling-for-near-real-time-updates" class="tocxref"><span class="secno">5.1.2.2 </span>Polling for near real-time updates</a></li></ul></li><li class="tocline"><a href="#content-type" class="tocxref"><span class="secno">5.1.3 </span>Content type</a></li><li class="tocline"><a href="#http-status-codes" class="tocxref"><span class="secno">5.1.4 </span>HTTP status codes</a></li><li class="tocline"><a href="#last-page-definition" class="tocxref"><span class="secno">5.1.5 </span>Last page definition</a></li><li class="tocline"><a href="#in-stream-filtering" class="tocxref"><span class="secno">5.1.6 </span>In-stream filtering</a></li></ul></li><li class="tocline"><a href="#strict-chronological-ordering-of-items" class="tocxref"><span class="secno">5.2 </span>Strict chronological ordering of items</a></li><li class="tocline"><a href="#other-transport-mechanisms" class="tocxref"><span class="secno">5.3 </span>Other transport mechanisms</a></li></ul></li><li class="tocline"><a href="#implementation" class="tocxref"><span class="secno">6. </span>Implementation</a><ul class="toc"><li class="tocline"><a href="#common-implementation-issues" class="tocxref"><span class="secno">6.1 </span>Common implementation issues</a></li><li class="tocline"><a href="#potential-race-condition-with-next-url" class="tocxref"><span class="secno">6.2 </span>Potential race condition with next URL</a></li><li class="tocline"><a href="#patterns-of-implementation" class="tocxref"><span class="secno">6.3 </span>Patterns of implementation</a><ul class="toc"><li class="tocline"><a href="#single-json-entity-cache-table" class="tocxref"><span class="secno">6.3.1 </span>Single JSON entity cache table</a></li><li class="tocline"><a href="#table-join-with-new-timestamp-field" class="tocxref"><span class="secno">6.3.2 </span>Table join with new timestamp field</a></li><li class="tocline"><a href="#table-join-with-existing-timestamp-fields" class="tocxref"><span class="secno">6.3.3 </span>Table join with existing timestamp fields</a></li><li class="tocline"><a href="#hybrid-approach-denormalised-paging-table" class="tocxref"><span class="secno">6.3.4 </span>Hybrid approach: denormalised paging table</a></li></ul></li><li class="tocline"><a href="#additional-notes" class="tocxref"><span class="secno">6.4 </span>Additional notes</a><ul class="toc"><li class="tocline"><a href="#calculated-fields-e-g-available-spaces-or-available-tickets-for-a-session-" class="tocxref"><span class="secno">6.4.1 </span>Calculated fields (e.g. available spaces or available tickets for a session)</a></li><li class="tocline"><a href="#database-triggers-microsoft-sql-server-example-" class="tocxref"><span class="secno">6.4.2 </span>Database triggers (Microsoft SQL Server example)</a></li></ul></li></ul></li><li class="tocline"><a href="#acknowledgements" class="tocxref"><span class="secno">A. </span>Acknowledgements</a></li><li class="tocline"><a href="#references" class="tocxref"><span class="secno">B. </span>References</a><ul class="toc"><li class="tocline"><a href="#normative-references" class="tocxref"><span class="secno">B.1 </span>Normative references</a></li><li class="tocline"><a href="#informative-references" class="tocxref"><span class="secno">B.2 </span>Informative references</a></li></ul></li></ul></nav><section class="informative" typeof="bibo:Chapter" resource="#introduction" property="bibo:hasPart"><!--OddPage--><h2 id="introduction" resource="#introduction"><span property="xhv:role" resource="xhv:heading"><span class="secno">1. </span>Introduction</span></h2><p><em>This section is non-normative.</em></p><section typeof="bibo:Chapter" resource="#openactive" property="bibo:hasPart"><h3 id="openactive" resource="#openactive"><span property="xhv:role" resource="xhv:heading"><span class="secno">1.1 </span>OpenActive</span></h3><p>The W3C OpenActive Community Group was established with the objective of facilitating the sharing and use of physical activity data. Open publishing of this data has enormous potential to increase participation in physical activities.</p><p>OpenActive specifications are modular, each focussing on a specific use case regarding physical activity data.</p><p>Other aspects of the Community Group's work includes the collation and specification of test suites to assess conformance to referenced standards, and the specification of a framework within which such conformance testing might be assessed.</p></section><section typeof="bibo:Chapter" resource="#use-case-and-requirements" property="bibo:hasPart"><h3 id="use-case-and-requirements" resource="#use-case-and-requirements"><span property="xhv:role" resource="xhv:heading"><span class="secno">1.2 </span>Use case and requirements</span></h3><p>Booking systems contain session data (a specific event at a time in a location). Examples include bookable squash courts, Yoga classes, and running groups.</p><section typeof="bibo:Chapter" resource="#realtime" property="bibo:hasPart"><h4 id="realtime" resource="#realtime"><span property="xhv:role" resource="xhv:heading"><span class="secno">1.2.1 </span>Realtime</span></h4><p>This session data is frequently updated as sessions are booked and descriptions changed. Such data must be available as close to real-time as possible.</p></section><section typeof="bibo:Chapter" resource="#simplicity-of-implementation" property="bibo:hasPart"><h4 id="simplicity-of-implementation" resource="#simplicity-of-implementation"><span property="xhv:role" resource="xhv:heading"><span class="secno">1.2.2 </span>Simplicity of implementation</span></h4><p>Many booking systems are maintained by an agency or supplier, and changes are funded by organisations with small budgets. Hence simplicity and speed of implementation are paramount.</p></section><section typeof="bibo:Chapter" resource="#flexibility-of-interface" property="bibo:hasPart"><h4 id="flexibility-of-interface" resource="#flexibility-of-interface"><span property="xhv:role" resource="xhv:heading"><span class="secno">1.2.3 </span>Flexibility of interface</span></h4><p>Due to the cost of implementing any feature within a booking system, and the number of systems involved, any specified interface must not contain inherent constraints to innovation. For example, it should not impose restrictions that limit retrieval of data. Innovators should be able to easily implement novel solutions to increase physical activity using the data however they see fit. This means minimising query complexity within the booking system in order to maximise flexibility, and providing a simple solution that enables raw data synchronisation.</p></section></section><section typeof="bibo:Chapter" resource="#scope" property="bibo:hasPart"><h3 id="scope" resource="#scope"><span property="xhv:role" resource="xhv:heading"><span class="secno">1.3 </span>Scope</span></h3><p>This specification is tightly defined to cover data exchange and synchronisation itself; to cover the real-time exchange of generic entities between two systems.</p><section typeof="bibo:Chapter" resource="#goals" property="bibo:hasPart"><h4 id="goals" resource="#goals"><span property="xhv:role" resource="xhv:heading"><span class="secno">1.3.1 </span>Goals</span></h4><ul>
+<li>Sharing of session data, including related metadata (clubs, courses, membership requirements, skill level, cost), and events (e.g. open days).</li>
+<li>Paging and synchronisation to ensure robust incremental transport of data.</li>
+<li>Allow a data consumer to "refresh its cache", by providing the facility to download all data.</li>
+<li>(Stretch goal) Extendable to support real-time, high volume data transfer, to satisfy peak load requirements.</li>
+</ul></section><section typeof="bibo:Chapter" resource="#non-goals" property="bibo:hasPart"><h4 id="non-goals" resource="#non-goals"><span property="xhv:role" resource="xhv:heading"><span class="secno">1.3.2 </span>Non-goals</span></h4><ul>
+<li>User Authentication.</li>
+<li>Booking and payment.</li>
+<li>Availability of courts and facilities.</li>
+<li>Membership packages.</li>
+<li>Standardisation of content (e.g. "Football" = "Soccer").</li>
+</ul></section></section><section typeof="bibo:Chapter" resource="#objectives" property="bibo:hasPart"><h3 id="objectives" resource="#objectives"><span property="xhv:role" resource="xhv:heading"><span class="secno">1.4 </span>Objectives</span></h3><ul>
+<li>Easy to understand</li>
+<li>Simple to implement (does not require complex libraries)</li>
+<li>Based on existing standards where possible</li>
+<li>Minimalistic (focus on removing complexity)</li>
+<li>Minimise traffic between services</li>
+<li>Robust to errors and failed requests</li>
+<li>Capable of scaling to handle high volumes</li>
+</ul></section></section><section id="conformance" typeof="bibo:Chapter" resource="#conformance" property="bibo:hasPart"><!--OddPage--><h2 id="h-conformance" resource="#h-conformance"><span property="xhv:role" resource="xhv:heading"><span class="secno">2. </span>Conformance</span></h2>
+<p>
+  As well as sections marked as non-normative, all authoring guidelines, diagrams, examples,
+  and notes in this specification are non-normative. Everything else in this specification is
+  normative.
+</p>
+<p id="respecRFC2119">The key words <em class="rfc2119" title="MAY">MAY</em>, <em class="rfc2119" title="MUST">MUST</em>, <em class="rfc2119" title="MUST NOT">MUST NOT</em>, <em class="rfc2119" title="OPTIONAL">OPTIONAL</em>, <em class="rfc2119" title="RECOMMENDED">RECOMMENDED</em>, <em class="rfc2119" title="REQUIRED">REQUIRED</em>, and <em class="rfc2119" title="SHOULD">SHOULD</em> are 
+  to be interpreted as described in [<cite><a class="bibref" href="#bib-RFC2119">RFC2119</a></cite>].
+</p>
+<p>This specification describes the conformance criteria for OpenActive data synchronisation endpoints.</p></section><section typeof="bibo:Chapter" resource="#overall-approach" property="bibo:hasPart"><!--OddPage--><h2 id="overall-approach" resource="#overall-approach"><span property="xhv:role" resource="xhv:heading"><span class="secno">3. </span>Overall approach</span></h2><p>   In order to create a simple specification that is robust and scalable, the transport mechanism is separated from the paged exchange specifics. By applying paging to all transport alternatives, the approach is inherently scalable.</p><p>   The specification is split into the three labelled elements of <a href="#fig-elements-of-this-specification" class="fig-ref">Fig. <span class="figno">1</span> <span class="fig-title">Elements of this specification</span></a>.</p><figure id="fig-elements-of-this-specification">
+     <img src="images/image02.png" alt="">
+     <figcaption>Fig. <span class="figno">1</span> <span class="fig-title">Elements of this specification</span></figcaption>
+   </figure></section><section typeof="bibo:Chapter" resource="#paging" property="bibo:hasPart"><!--OddPage--><h2 id="paging" resource="#paging"><span property="xhv:role" resource="xhv:heading"><span class="secno">4. </span>Paging</span></h2><p>   A paged approach to [<cite><a class="bibref" href="#bib-JSON">JSON</a></cite>] data exchange is used, requiring minimum traffic for real-time or near-real-time synchronisation.</p><section typeof="bibo:Chapter" resource="#simplicity" property="bibo:hasPart"><h3 id="simplicity" resource="#simplicity"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.1 </span>Simplicity</span></h3><p>   The paged [<cite><a class="bibref" href="#bib-JSON">JSON</a></cite>] data exchange specification is incredibly simple to implement, but conceptually requires some explanation.</p></section><section typeof="bibo:Chapter" resource="#core-concept" property="bibo:hasPart"><h3 id="core-concept" resource="#core-concept"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.2 </span>Core concept</span></h3><p>   Consider an ordered list of records (termed "items" throughout this specification) as shown in <a href="#fig-illustration-of-the-deterministic-list" class="fig-ref">Fig. <span class="figno">2</span> <span class="fig-title">Illustration of the deterministic list</span></a>, with the following invariants:</p><ul>
+<li><p>A continuous list of records that <em class="rfc2119" title="MUST">MUST</em> be sorted deterministically and chronologically (in the order they were updated). Either (i) ordered first by modified timestamp, and second by ID or (ii) ordered by an incrementing counter where records are assigned a new unique value on each update.</p>
+</li>
+<li><p>Every record <em class="rfc2119" title="MUST">MUST</em> only be represented <em>once</em> in this list at a given moment, distinguished by its unique ID, with its position in the list depending on when it was last updated. Records can freely move position in the list as they are updated.</p>
+</li>
+<li><p>This deterministic ordering based on timestamp allows for pages of arbitrary size to be sent without concern for race conditions; if a record is updated during the transfer of a page it <em class="rfc2119" title="MUST">MUST</em> appear on a subsequent page (i.e. simply reappear further down the list).</p>
+</li>
+<li><p>Pages are defined using a "next page URL", which <em class="rfc2119" title="MUST">MUST</em> contain enough information to identify a position in the list (e.g. by a "timestamp" and "ID" combination). It <em class="rfc2119" title="MUST NOT">MUST NOT</em> reference a specific record, as that record can change position in the list.</p>
+</li>
+<li><p>If a "next page URL" is not used to access the list, the first page <em class="rfc2119" title="MUST">MUST</em> be returned.</p>
+</li>
+<li><p>If the consumer reaches the end of the list they consider themselves up-to-date at that moment, and can infrequently revisit the end of the list in order to retrieve further updates.</p>
+</li>
+<li><p>If any record is added to the list or updated it <em class="rfc2119" title="MUST">MUST</em> remain in the list in perpetuity while it is in an <code>"updated"</code> state, or remain in the list for at least 7 days from the point in time at which it transitioned to a <code>"deleted"</code> state. This ensures that deletions are synchronised to data consumers (System 2).</p>
+</li>
+</ul><p>   This paging allows for an ongoing data synchronisation that synchronises all data, which can be replayed arbitrarily by the data consumer (System 2).</p></section><section typeof="bibo:Chapter" resource="#ordering-strategies" property="bibo:hasPart"><h3 id="ordering-strategies" resource="#ordering-strategies"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.3 </span>Ordering strategies</span></h3><p>   Two recommended ordering strategies are described below, both adhere to the specified invariants described in the previous section. One of these two strategies <em class="rfc2119" title="MUST">MUST</em> be used as a basis for any implementation, unless the invariants are well understood and the implementation can be thoroughly tested.</p><p>   For both these ordering strategies the ordering of the results relative to the parameters <em class="rfc2119" title="MUST">MUST</em> be implemented exactly as described here.</p><section typeof="bibo:Chapter" resource="#modified-timestamp-and-id" property="bibo:hasPart"><h4 id="modified-timestamp-and-id" resource="#modified-timestamp-and-id"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.3.1 </span>Modified Timestamp and ID</span></h4><p>   The items are ordered first by modified timestamp, and second by ID. The content of the [<cite><a class="bibref" href="#bib-JSON">JSON</a></cite>] response depends on the supplied parameters, as specified below.</p><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Implementation</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>afterTimestamp</code></td>
+<td><em class="rfc2119" title="REQUIRED">REQUIRED</em></td>
+<td>The modified timestamp, after or at which results will be returned. If not specified, the request <em class="rfc2119" title="MUST">MUST</em> return results from the beginning of time. The timestamp <em class="rfc2119" title="SHOULD">SHOULD</em> be in integer format where possible (e.g. Unix epoch). For non-integer timestamps, this parameter <em class="rfc2119" title="MUST">MUST</em> be URI encoded using e.g. [<cite><a class="bibref" href="#bib-URI-Handling-Function-Properties">URI-Handling-Function-Properties</a></cite>].</td>
+</tr>
+<tr>
+<td><code>afterId</code></td>
+<td><em class="rfc2119" title="REQUIRED">REQUIRED</em></td>
+<td>Where multiple items have the same <code>modified</code> value, this parameter specifies the ID after which results will be returned. If not specified, the request <em class="rfc2119" title="MUST">MUST</em> return results from the beginning of time. For non-integer IDs, this parameter <em class="rfc2119" title="MUST">MUST</em> be URI encoded using e.g. [<cite><a class="bibref" href="#bib-URI-Handling-Function-Properties">URI-Handling-Function-Properties</a></cite>].</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td><em class="rfc2119" title="OPTIONAL">OPTIONAL</em></td>
+<td>The number of items returned within the page. A suggested default for most opportunity data sources is 500 items.</td>
+</tr>
+</tbody>
+</table><p>   In this example, <code>afterTimestamp=1453931925&amp;afterId=12</code> would return <strong>Page 2</strong> labelled in <a href="#fig-illustration-of-the-deterministic-list" class="fig-ref">Fig. <span class="figno">2</span> <span class="fig-title">Illustration of the deterministic list</span></a>, hence the last item of a returned page of results can be used to get parameters to retrieve the next page of results, and thus the last item can be used to generate the "next page URL".</p><p>   Note that the timestamp does not need to reflect actual time, as long as it provides a chronological ordering. Any integer or string representation is sufficient, provided it is sufficiently comparable to support the <a href="#core-concept">invariants</a>.</p><figure id="fig-illustration-of-the-deterministic-list">
+     <img src="images/image00.png" alt="">
+     <figcaption>Fig. <span class="figno">2</span> <span class="fig-title">Illustration of the deterministic list</span></figcaption>
+   </figure><section typeof="bibo:Chapter" resource="#sql-query-example-for-timestamp-id" property="bibo:hasPart"><h5 id="sql-query-example-for-timestamp-id" resource="#sql-query-example-for-timestamp-id"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.3.1.1 </span>SQL Query Example for Timestamp/ID</span></h5><p>   Where a table exists containing <code>modified</code> and <code>id</code> columns.</p><pre><code class="lang-SQL">   <span class="hljs-comment">--include WHERE clause only if @afterTimestamp and @afterId provided</span>
+      WHERE (modified = @afterTimestamp
+               AND id &gt; @afterId)
+         OR (modified &gt; @afterTimestamp)
+   ORDER BY modified,
+            id
+</code></pre><div class="note"><div class="note-title marker" aria-level="6" role="heading" id="h-note1"><span>Note</span></div><div class="">
+   Misreading this query is the single most common cause of incorrect implementation. Please read it carefully and ensure that brackets and comparators are used correctly. <code>&gt;</code> not <code>&gt;=</code> for example.
+   </div></div></section><section typeof="bibo:Chapter" resource="#javascript-query-example-for-timestamp-id" property="bibo:hasPart"><h5 id="javascript-query-example-for-timestamp-id" resource="#javascript-query-example-for-timestamp-id"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.3.1.2 </span>JavaScript Query Example for Timestamp/ID</span></h5><p>   Where a table or collection exists containing <code>modified</code> and <code>id</code> columns or properties.</p><pre><code class="lang-javascript">   <span class="hljs-keyword">var</span> query;
+   <span class="hljs-keyword">if</span> (queryParams.afterTimestamp &amp;&amp; queryParams.afterId) {
+       query = Session.query().filter((Session.modified == queryParams.afterTimestamp &amp;&amp; Session.id &gt; queryParams.afterId) || (Session.modified &gt; queryParams.afterTimestamp));
+   } <span class="hljs-keyword">else</span> {
+       query = Session.query()
+   }
+   <span class="hljs-keyword">return</span> query.sort([Session.modified, Session.id])
+</code></pre><p>   Note the example above is a hypothetical JavaScript ORM, for illustration.</p></section></section><section typeof="bibo:Chapter" resource="#incrementing-unique-change-number" property="bibo:hasPart"><h4 id="incrementing-unique-change-number" resource="#incrementing-unique-change-number"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.3.2 </span>Incrementing Unique Change Number</span></h4><p>   The items are ordered by an incrementing counter, and are assigned a new unique value on each update. The content of the [<cite><a class="bibref" href="#bib-JSON">JSON</a></cite>] response depends on the supplied parameters, as specified below.</p><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Implementation</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>afterChangeNumber</code></td>
+<td><em class="rfc2119" title="REQUIRED">REQUIRED</em></td>
+<td>An integer after which results will be returned. If not specified, the request <em class="rfc2119" title="MUST">MUST</em> return results from the beginning of time.</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td><em class="rfc2119" title="OPTIONAL">OPTIONAL</em></td>
+<td>The number of items returned within the page. A suggested default for most opportunity data sources is 500 items.</td>
+</tr>
+</tbody>
+</table><p>   The change number <em class="rfc2119" title="MUST">MUST</em> provide a deterministic chronological ordering within the scope of the endpoint. A database-wide counter is sufficient (such as SQL Server's <a href="https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx">timestamp</a> or <a href="https://msdn.microsoft.com/en-GB/library/ms182776.aspx">rowversion</a>). The data consumer (System 2) simply maintains the "next page URL", and hence the detail of the change number is transparent in their implementation.</p><p>   The <code>id</code> (unique identifier which is distinct from the change number) <em class="rfc2119" title="MUST">MUST</em> be included within the item, to allow items to be uniquely identified for the purposes of update and delete operations.</p><p>   The <code>modified</code> property <em class="rfc2119" title="MUST">MUST</em> be included within the item, and set to the change number, to allow items with identical <code>id</code>s from different pages to be compared chronologically.</p><p>   In this example, <code>afterChangeNumber=1453931931</code> would return <strong>Page 2</strong> labelled in <a href="#fig-illustration-of-the-deterministic-list-via-change-number" class="fig-ref">Fig. <span class="figno">3</span> <span class="fig-title">Illustration of the deterministic list via change number</span></a>, hence the last item of a returned page of results can be used to get parameters to retrieve the next page of results, and thus the last item can be used to generate the "next page URL".</p><figure id="fig-illustration-of-the-deterministic-list-via-change-number">
+     <img src="images/image03.png" alt="">
+     <figcaption>Fig. <span class="figno">3</span> <span class="fig-title">Illustration of the deterministic list via change number</span></figcaption>
+   </figure><section typeof="bibo:Chapter" resource="#sql-query-example-for-change-number" property="bibo:hasPart"><h5 id="sql-query-example-for-change-number" resource="#sql-query-example-for-change-number"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.3.2.1 </span>SQL Query Example for Change Number</span></h5><p>   Where a table exists containing a <code>change_number</code> column.</p><pre><code class="lang-SQL">   <span class="hljs-comment">--include WHERE clause only if @afterChangeNumber provided</span>
+      WHERE change_number &gt; @afterChangeNumber 
+   ORDER BY change_number
+</code></pre></section><section typeof="bibo:Chapter" resource="#javascript-query-example-for-change-number" property="bibo:hasPart"><h5 id="javascript-query-example-for-change-number" resource="#javascript-query-example-for-change-number"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.3.2.2 </span>JavaScript Query Example for Change Number</span></h5><p>   Where a table or collection exists containing a <code>changeNumber</code> column or property.</p><pre><code class="lang-javascript">   <span class="hljs-keyword">var</span> query;
+   <span class="hljs-keyword">if</span> (queryParams.afterChangeNumber) {
+       query = Session.query().filter(Session.changeNumber &gt; queryParams.afterChangeNumber);
+   } <span class="hljs-keyword">else</span> {
+       query = Session.query()
+   }
+   <span class="hljs-keyword">return</span> query.sort([Session.changeNumber])
+</code></pre><p>   Note the example above is a hypothetical JavaScript ORM, for illustration.</p></section></section></section><section typeof="bibo:Chapter" resource="#response-grammar" property="bibo:hasPart"><h3 id="response-grammar" resource="#response-grammar"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.4 </span>Response grammar</span></h3><p>   It should be noted that although <code>&lt;data&gt;</code> is open to conformance with [<cite><a class="bibref" href="#bib-JSON-LD">JSON-LD</a></cite>], the properties in this specification do not use any part of the [<cite><a class="bibref" href="#bib-JSON-LD">JSON-LD</a></cite>] specification.</p><p>   Endpoints <em class="rfc2119" title="MUST NOT">MUST NOT</em> include [<cite><a class="bibref" href="#bib-JSON-LD">JSON-LD</a></cite>] syntax except for within the <code>data</code> property.</p><section typeof="bibo:Chapter" resource="#-response-" property="bibo:hasPart"><h4 id="-response-" resource="#-response-"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.4.1 </span><code>&lt;response&gt;</code></span></h4><pre><code class="lang-JSON">   &lt;response&gt; =&gt; {
+         <span class="hljs-attr">"next"</span>: <span class="hljs-string">"http://www.example.com/api/rpde/sessions?afterTimestamp=&lt;modified&gt;&amp;afterId=&lt;id&gt;"</span>,
+         <span class="hljs-attr">"items"</span>: [&lt;item&gt;,&lt;item&gt;,&lt;item&gt;,...],
+         <span class="hljs-attr">"license"</span>: <span class="hljs-string">"https://creativecommons.org/licenses/by/4.0/"</span>
+      }
+</code></pre><p>   A generic response specification is included here, in order to standardise the transport encapsulation for the records across entities and systems - including paging and polling logic.</p><table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>next</code></td>
+<td><em class="rfc2119" title="REQUIRED">REQUIRED</em></td>
+<td>The <code>next</code> URL is a precomputed URL to be called by the data consumer (System 2) to get the next page of data. The <code>next</code> URL <em class="rfc2119" title="MUST">MUST</em> be calculated from the last item used to generate the current page, and use the current page's own URL if no items exist. Not all items in the current page may be visible in the case of <a href="#in-stream-filtering">filtering</a> so the last item used may not be contained within <code>items</code>. The <code>next</code> URL <em class="rfc2119" title="MUST">MUST</em> be an absolute URL. Note "polling" and "paging" are differentiated only by the <a href="#expected-consumer-behaviour">duration between requests</a>. Although an example endpoint path is provided (<code>"/api/rpde/sessions"</code>), it is outside the scope of this specification.</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td><em class="rfc2119" title="REQUIRED">REQUIRED</em></td>
+<td>An array of <code>&lt;item&gt;</code>. This should simply by empty <code>[]</code> if no results are returned. The <code>items</code> property being empty is not sufficient to indicate the <a href="#last-page-definition">last page</a>.</td>
+</tr>
+<tr>
+<td><a href="http://purl.org/dc/terms/license"><code>license</code></a></td>
+<td><em class="rfc2119" title="REQUIRED">REQUIRED</em></td>
+<td>Reference to the license under which the data has been published. Any website that links to this endpoint <em class="rfc2119" title="SHOULD">SHOULD</em> also include text such as "This opportunity data is owned by My Company Ltd and is licensed under the Creative Commons Attribution Licence (CC-BY v4.0) for anyone to access, use and share.".</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td><em class="rfc2119" title="OPTIONAL">OPTIONAL</em></td>
+<td>The version number of the RPDE specification to which the feed conforms. This property is currently <em class="rfc2119" title="OPTIONAL">OPTIONAL</em>, to retain backwards compatibility with earlier versions, but will become <em class="rfc2119" title="REQUIRED">REQUIRED</em> in the next major version of this specification. It is <em class="rfc2119" title="RECOMMENDED">RECOMMENDED</em> that implementations begin using this property. If a <code>version</code> property is not specified for a feed, then a client <em class="rfc2119" title="MAY">MAY</em> assume that it conforms to version 1.0.</td>
+</tr>
+<tr>
+<td><code>oppportunityModelVersion</code></td>
+<td><em class="rfc2119" title="OPTIONAL">OPTIONAL</em></td>
+<td>Presence of this property indicates that the feed is using the [<cite><a class="bibref" href="#bib-Modelling-Opportunity-Data">Modelling-Opportunity-Data</a></cite>] specification as the <a href="use-of-standard-data-model">standard data model</a>. Clients can expect that <a href="#-data-"><code>&lt;data&gt;</code></a> properties included in this feed will have values that conform to that specification. The value of the <code>oppportunityModelVersion</code> property should be the version number of the [<cite><a class="bibref" href="#bib-Modelling-Opportunity-Data">Modelling-Opportunity-Data</a></cite>] specification being used to publish data. Implementations that are using the standard model <em class="rfc2119" title="SHOULD">SHOULD</em> always use this property. If the property is not specified then a client <em class="rfc2119" title="MAY">MAY</em> use heuristics (e.g. detecting certain data structures) to attempt to determine which data model is being used.</td>
+</tr>
+<tr>
+<td><code>feedObjects</code></td>
+<td><em class="rfc2119" title="OPTIONAL">OPTIONAL</em></td>
+<td>For feeds that conform to the [<cite><a class="bibref" href="#bib-Modelling-Opportunity-Data">Modelling-Opportunity-Data</a></cite>] specification this property indicates that types of object are included in the feed. E.g <a href="https://www.openactive.io/modelling-opportunity-data/#events">Events</a> or <a href="https://www.openactive.io/modelling-opportunity-data/#organisers-persons-and-organizations-">Organisations</a>. The property allows clients to decide not to harvest feeds based on what type of data it contains. The value of the property should be an array of URIs, one for each of the types of resource that might appear in the feed. While this property is <em class="rfc2119" title="OPTIONAL">OPTIONAL</em>, a feed that includes the <code>oppportunityModelVersion</code> property <em class="rfc2119" title="MUST">MUST</em> include this property to help inform clients about the contents of the feed.</td>
+</tr>
+</tbody>
+</table><p>The following example illustrates use of the additional optional properties:</p><pre><code class="lang-JSON">   &lt;response&gt; =&gt; {
+         <span class="hljs-attr">"next"</span>: <span class="hljs-string">"http://www.example.com/api/rpde/sessions?afterTimestamp=&lt;modified&gt;&amp;afterId=&lt;id&gt;"</span>,
+         <span class="hljs-attr">"items"</span>: [&lt;item&gt;,&lt;item&gt;,&lt;item&gt;,...],
+         <span class="hljs-attr">"license"</span>: <span class="hljs-string">"https://creativecommons.org/licenses/by/4.0/"</span>,
+         <span class="hljs-attr">"version"</span>: <span class="hljs-string">"1.1"</span>,
+         <span class="hljs-attr">"opportunityModelVersion"</span>: <span class="hljs-string">"1.0"</span>,
+         <span class="hljs-attr">"feedObjects"</span>: [<span class="hljs-string">"http://schema.org/Event"</span>]
+      }
+</code></pre></section><section typeof="bibo:Chapter" resource="#-item-" property="bibo:hasPart"><h4 id="-item-" resource="#-item-"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.4.2 </span><code>&lt;item&gt;</code></span></h4><pre><code class="lang-JSON">   &lt;item&gt; =&gt; {
+         <span class="hljs-attr">"state"</span>: <span class="hljs-string">"updated"</span> | <span class="hljs-string">"deleted"</span>,
+         <span class="hljs-attr">"kind"</span>: <span class="hljs-string">"session"</span>,
+         <span class="hljs-attr">"id"</span>: &lt;id&gt;, 
+         <span class="hljs-attr">"modified"</span>: &lt;modified&gt;,
+         <span class="hljs-attr">"data"</span>: &lt;data&gt;
+      }
+</code></pre><table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>state</code></td>
+<td><em class="rfc2119" title="REQUIRED">REQUIRED</em></td>
+<td>The <code>state</code> property <em class="rfc2119" title="MUST">MUST</em> be of value <code>"updated"</code> or value <code>"deleted"</code>. <a href="#deleted-items">Deleted items</a> are included in the response with a <code>"deleted"</code> state, but no <code>&lt;data&gt;</code> associated.</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td><em class="rfc2119" title="REQUIRED">REQUIRED</em></td>
+<td>The <code>kind</code> property allows for the representation of different entity types, though where possible referenced entities should be embedded into the primary entity. Each entity type (<code>kind</code>) can be synchronised separately, this allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (at System 2).</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td><em class="rfc2119" title="REQUIRED">REQUIRED</em></td>
+<td>The <code>id</code> property is the unique identifier of the item. Two items <em class="rfc2119" title="MUST NOT">MUST NOT</em> share the same <code>id</code>. Although the IDs shown here are GUIDs, and other examples are numeric, this specification does not prescribe any specific format.</td>
+</tr>
+<tr>
+<td><code>modified</code></td>
+<td><em class="rfc2119" title="REQUIRED">REQUIRED</em></td>
+<td>The <code>modified</code> property should contain either the modified timestamp or change number of the item, depending on the <a href="#ordering-strategies">ordering strategy</a> used. It <em class="rfc2119" title="MUST">MUST</em> be appropriately comparable to itself as either a string or integer, representing a chronological ordering. It <em class="rfc2119" title="MUST">MUST</em> always be updated when <em>any</em> data within <code>&lt;data&gt;</code> is updated, and such an update <em class="rfc2119" title="MUST">MUST</em> set the value of the property to be greater than or equal to (<code>&gt;=</code>) all existing <code>modified</code> values. It <em class="rfc2119" title="MAY">MAY</em> be any format, but <em class="rfc2119" title="SHOULD">SHOULD</em> be an integer where possible. Integer values <em class="rfc2119" title="MUST">MUST</em> be represented as integers, not strings. The value of the <code>modified</code> property of the last item <em class="rfc2119" title="MUST">MUST</em> be used in either the <code>afterTimestamp</code> or <code>afterChangeNumber</code> parameter of the <code>"next"</code> URL (though such an item may not be included in <code>&lt;items&gt;</code> if it is <a href="#in-stream-filtering">filtered</a> out). The format of the <code>modified</code> property and the relevant URL parameter <em class="rfc2119" title="MUST">MUST</em> be identical.</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td><em class="rfc2119" title="REQUIRED">REQUIRED</em></td>
+<td>Note this property <em class="rfc2119" title="MUST NOT">MUST NOT</em> be included if state is <code>"deleted"</code>.</td>
+</tr>
+</tbody>
+</table></section><section typeof="bibo:Chapter" resource="#-data-" property="bibo:hasPart"><h4 id="-data-" resource="#-data-"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.4.3 </span><code>&lt;data&gt;</code></span></h4><div class="issue" id="issue-1"><div class="issue-title marker" aria-level="5" role="heading" id="h-issue1"><span>Issue 1</span></div><div class="">
+   <a href="https://github.com/openactive/realtime-paged-data-exchange/issues/84">Issue 84</a>: Revise recommendations around non-standard data models. 
+   </div></div><p>   The <code>&lt;data&gt;</code> part of the response is open for applications to populate with whatever data structure is most appropriate for the entity type ("kind") being exchanged.</p><p>   This specification includes generic constraints for representing values and entities, to ensure consistency across implementations.</p><section typeof="bibo:Chapter" resource="#date-and-time-formats" property="bibo:hasPart"><h5 id="date-and-time-formats" resource="#date-and-time-formats"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.4.3.1 </span>Date and time formats</span></h5><p>   Dates and times within <code>&lt;data&gt;</code> <em class="rfc2119" title="MUST">MUST</em> respect the specific profile of [<cite><a class="bibref" href="#bib-ISO8601">ISO8601</a></cite>] specified here, derived from [<cite><a class="bibref" href="#bib-NOTE-datetime">NOTE-datetime</a></cite>], in order to ensure that event start times and other vital properties within <code>&lt;data&gt;</code> are interpreted correctly by data consumers.</p><p>   Note that the <code>modified</code> property outside of <code>&lt;data&gt;</code> <em class="rfc2119" title="SHOULD">SHOULD</em> be represented as an integer where possible.</p><p>   Times within <code>&lt;data&gt;</code> <em class="rfc2119" title="MUST">MUST</em>:</p><ul>
+<li>be expressed either in UTC or in local time with a time zone offset (i.e. both approaches to handling time zone offsets defined in [<cite><a class="bibref" href="#bib-NOTE-datetime">NOTE-datetime</a></cite>] are permissible)</li>
+<li>include a time zone designator</li>
+<li>include the trailing UTC time zone designator ("<code>Z</code>") where times are expressed in UTC</li>
+</ul><p>   Times within <code>&lt;data&gt;</code> <em class="rfc2119" title="SHOULD">SHOULD</em>:</p><ul>
+<li>be expressed in UTC instead of local time (e.g. <code>"2014-08-12T18:50:00Z"</code> instead of <code>"2016-07-13T20:00:00-05:00"</code>).</li>
+</ul><p>   Dates and times within <code>&lt;data&gt;</code> <em class="rfc2119" title="MUST">MUST</em>:</p><ul>
+<li><p>be represented using the [<cite><a class="bibref" href="#bib-NOTE-datetime">NOTE-datetime</a></cite>] profile of [<cite><a class="bibref" href="#bib-ISO8601">ISO8601</a></cite>], with the addition of two time-only formats, and hence conform to one of the following formats:</p>
+<pre><code class="lang-markdown"> Year:
+<span class="hljs-code">    YYYY (eg 1997)</span>
+ Year and month:
+<span class="hljs-code">    YYYY-MM (eg 1997-07)</span>
+ Complete date:
+<span class="hljs-code">    YYYY-MM-DD (eg 1997-07-16)</span>
+ Complete date plus hours and minutes:
+<span class="hljs-code">    YYYY-MM-DDThh:mmTZD (e.g 1997-07-16T19:20Z or 1997-07-16T19:20+01:00)</span>
+ Complete date plus hours, minutes and seconds:
+<span class="hljs-code">    YYYY-MM-DDThh:mm:ssTZD (e.g. 1997-07-16T19:20:30Z or 1997-07-16T19:20:30+01:00)</span>
+ Hours and minutes:
+<span class="hljs-code">    hh:mmTZD (e.g 19:20Z or 19:20+01:00)</span>
+ Hours, minutes and seconds:
+<span class="hljs-code">    hh:mm:ssTZD (e.g. 19:20:30Z or 19:20:30+01:00)</span>
+</code></pre>
+<p>where:</p>
+<pre><code class="lang-markdown"> YYYY = four-digit year
+ MM   = two-digit month (01=January, etc.)
+ DD   = two-digit day of month (01 through 31)
+ hh   = two digits of hour (00 through 23) (am/pm NOT allowed)
+ mm   = two digits of minute (00 through 59)
+ ss   = two digits of second (00 through 59)
+ TZD  = time zone designator (Z or +hh:mm or -hh:mm)
+</code></pre>
+</li>
+</ul></section><section typeof="bibo:Chapter" resource="#other-value-formats" property="bibo:hasPart"><h5 id="other-value-formats" resource="#other-value-formats"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.4.3.2 </span>Other value formats</span></h5><ul>
+<li>All URLs within <code>&lt;data&gt;</code> <em class="rfc2119" title="MUST">MUST</em> be absolute.</li>
+<li>HTML or Markdown encoded values <em class="rfc2119" title="MUST">MUST</em> be included as two separate properties within <code>&lt;data&gt;</code>: a plain text property stripped of formatting syntax, as well as an HTML or Markdown property containing the original value. </li>
+<li>Integer properties <em class="rfc2119" title="MUST">MUST</em> be represented as integers, not strings.</li>
+</ul></section><section typeof="bibo:Chapter" resource="#entity-properties" property="bibo:hasPart"><h5 id="entity-properties" resource="#entity-properties"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.4.3.3 </span>Entity properties</span></h5><ul>
+<li><a href="#related-entities">Embedded entities</a> within <code>&lt;data&gt;</code> <em class="rfc2119" title="MUST">MUST</em> include their IDs, to allow for efficient processing by the consuming application (System 2).</li>
+<li>Where an embedded entity has a URL that represents it on a public facing website (e.g. a page for the location), this URL <em class="rfc2119" title="MUST">MUST</em> be included, to allow it to be referenced by data consumers.</li>
+</ul></section><section typeof="bibo:Chapter" resource="#use-of-standard-data-model" property="bibo:hasPart"><h5 id="use-of-standard-data-model" resource="#use-of-standard-data-model"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.4.3.4 </span>Use of standard data model</span></h5><p>   Applications <em class="rfc2119" title="SHOULD">SHOULD</em> use a standard data model to increase interoperability of the exchanged data. For example an application may choose to use entities and properties defined in [<cite><a class="bibref" href="#bib-SCHEMA-ORG">SCHEMA-ORG</a></cite>] to help structure data in a useful way for data consumers. </p><p>   Applications that are exchanging data about entities described in [<cite><a class="bibref" href="#bib-Modelling-Opportunity-Data">Modelling-Opportunity-Data</a></cite>] <em class="rfc2119" title="MUST">MUST</em> ensure that their data conforms to that specification. 
+   This includes data on Events, Organisations, Places, etc. [<cite><a class="bibref" href="#bib-Publishing-Opportunity-Data">Publishing-Opportunity-Data</a></cite>] provides additional examples and guidance on using that data model 
+   in ways that are compatible with the other standards published by OpenActive.</p><p>   Feeds that are using the [<cite><a class="bibref" href="#bib-Modelling-Opportunity-Data">Modelling-Opportunity-Data</a></cite>] model <em class="rfc2119" title="MUST">MUST</em> include the <code>oppportunityModelVersion</code> and <code>feedObjects</code> properties in the <a href="#-response-"><code>&lt;response&gt;</code></a> to clients.</p><p>   Applications that publish data using bespoke data models <em class="rfc2119" title="SHOULD">SHOULD</em> provide users with relevant documentation.</p><div class="note"><div class="note-title marker" aria-level="6" role="heading" id="h-note2"><span>Note</span></div><div class="">
+   The remainder of this specification uses simple examples when showing <code>&lt;data&gt;</code> in responses. However these examples are for illustrative purposes only. For a comprehensive selection of examples of opportunity data, read the [<cite><a class="bibref" href="#bib-Publishing-Opportunity-Data">Publishing-Opportunity-Data</a></cite>] primer. 
+   </div></div></section></section></section><section typeof="bibo:Chapter" resource="#related-entities" property="bibo:hasPart"><h3 id="related-entities" resource="#related-entities"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.5 </span>Related entities</span></h3><p>   This specification can be implemented for each relevant entity type within System 1 (e.g. club, courses, sessions).</p><p>   Data from related entities can either be:</p><ol>
+<li><p><strong>Embedded inside the parent entity</strong>. This requires the parent <code>"updated"</code> field to reflect the maximum value of all children - achievable via <a href="#patterns-of-implementation">database triggers or similar</a>.</p>
+</li>
+<li><p><strong>Provided by separate endpoints with distinct "kinds"</strong> implementing this specification, the combination of which can be reassembled by System 2.</p>
+</li>
+<li><p><strong>Provided as distinct "kinds" within the same endpoint</strong> implementing this specification, the combination of which can be reassembled by System 2.</p>
+</li>
+</ol><p>   Entities that have similar update frequencies (e.g. Event and Location) <em class="rfc2119" title="MUST">MUST</em> be embedded in the same endpoint.</p><p>   Entities with substantially different update frequencies (e.g. Event Description and Availability) <em class="rfc2119" title="MAY">MAY</em> be provided as separate endpoints with distinct <code>kind</code>s, or as distinct <code>kind</code>s within the same endpoint. Each entity type <em class="rfc2119" title="MUST">MUST</em> have a distinct <code>kind</code> to allow it to be considered separately. This allows a decoupling of the sync logic from the data structure, and allows the data structure to be reassembled on the data consumer side (in System 2).</p><p>   When distinct <code>kind</code>s are provided for different entity types, an ID within the <code>&lt;data&gt;</code> of one must reference an ID within the <code>&lt;data&gt;</code> of another.</p><p>   The <code>modified</code> property of an item <em class="rfc2119" title="MUST">MUST</em> be updated when any embedded child entities are updated.</p></section><section typeof="bibo:Chapter" resource="#deleted-items" property="bibo:hasPart"><h3 id="deleted-items" resource="#deleted-items"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.6 </span>Deleted items</span></h3><p>   If any item is added to the list or updated it <em class="rfc2119" title="MUST">MUST</em> remain in the list in perpetuity while it is in an <code>"updated"</code> state, or remain in the list for at least 7 days from the point in time at which it transitioned to a <code>"deleted"</code> state. This ensures that deletions are synchronised to data consumers.</p><p>   Deleted items are included in the response with a <code>"deleted"</code> state, but no <code>&lt;data&gt;</code> associated.</p><p>   In order to implement this correctly, it is advisable for records in System 1 to have a "deleted" flag that is set instead of deleting the record permanently.</p></section><section typeof="bibo:Chapter" resource="#example" property="bibo:hasPart"><h3 id="example" resource="#example"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.7 </span>Example</span></h3><p>   A full example REST response from polling is included below. Note that the shape of the data within the <code>data</code> property is largely outside of the scope of this specification, however the dates/times, embedded entity identifiers, URLs, and integer values in the example below all demonstrate conformance to the relevant <a href="#-data-">generic constraints</a> that are within the scope of this specification.</p><p>Request:</p><pre><code class="lang-markdown">GET /api/rpde/sessions?afterTimestamp=1453931101&amp;afterId=%7Bc15814e5-8931-470c-8a16-ef45afedaece%7D
+</code></pre><p>Response:</p><pre><code>{ 
+   <span class="hljs-attr">"next"</span>: <span class="hljs-string">"http://www.example.com/api/rpde/sessions?afterTimestamp=1453931925&amp;afterId=%7Bd97f73fb-4718-48ee-a6a9-9c7d717ebd85%7D"</span>,
+   <span class="hljs-attr">"items"</span>: [
+       {
+           <span class="hljs-attr">"state"</span>: <span class="hljs-string">"updated"</span>,
+           <span class="hljs-attr">"kind"</span>: <span class="hljs-string">"session"</span>,
+           <span class="hljs-attr">"id"</span>: <span class="hljs-string">"{c15814e5-8931-470c-8a16-ef45afedaece}"</span>,
+           <span class="hljs-attr">"modified"</span>: <span class="hljs-number">1453931101</span>,
+           <span class="hljs-attr">"data"</span>: {
+               <span class="hljs-attr">"@context"</span>: <span class="hljs-string">"https://www.openactive.io/ns/oa.jsonld"</span>,
+               <span class="hljs-attr">"type"</span>: <span class="hljs-string">"Event"</span>,
+               <span class="hljs-attr">"identifier"</span>: <span class="hljs-string">"session-01jz93i3k1p3"</span>,
+               <span class="hljs-attr">"superEvent"</span>: {
+                   <span class="hljs-attr">"identifier"</span>: <span class="hljs-string">"eventType-ak6zw8ntsiqq"</span>
+               },
+               <span class="hljs-attr">"startDate"</span>: <span class="hljs-string">"2016-05-09T18:15:00Z"</span>,
+               <span class="hljs-attr">"endDate"</span>: <span class="hljs-string">"2016-05-09T19:15:00Z"</span>,
+               <span class="hljs-attr">"remainingAttendeeCapacity"</span>: <span class="hljs-number">0</span>,
+               <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://bookingsystem.com/hulahoop/e/ev-ssyp-20160509191500?r=oa"</span>,
+               <span class="hljs-attr">"attendanceCount"</span>: <span class="hljs-number">29</span>,
+               <span class="hljs-attr">"location"</span>: {
+                   <span class="hljs-attr">"type"</span>: <span class="hljs-string">"Place"</span>,
+                   <span class="hljs-attr">"identifier"</span>: <span class="hljs-string">"location-jbnentuhxsnp"</span>,
+                   <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://leisurecentre.org.uk/leisure-centre/camden/kentish-town-sports-centre"</span>,
+                   <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Kentish Town Sports Centre"</span>,
+                   <span class="hljs-attr">"address"</span>: {
+                       <span class="hljs-attr">"type"</span>: <span class="hljs-string">"PostalAddress"</span>,
+                       <span class="hljs-attr">"addressLocality"</span>: <span class="hljs-string">"Camden"</span>,
+                       <span class="hljs-attr">"addressRegion"</span>: <span class="hljs-string">"London West"</span>,
+                       <span class="hljs-attr">"postalCode"</span>: <span class="hljs-string">"NW5 3DU"</span>,
+                       <span class="hljs-attr">"streetAddress"</span>: <span class="hljs-string">"Kentish Town Sports Centre"</span>
+                   }
+               }
+           }
+       },
+       {
+           <span class="hljs-attr">"state"</span>: <span class="hljs-string">"deleted"</span>,
+           <span class="hljs-attr">"kind"</span>: <span class="hljs-string">"session"</span>,
+           <span class="hljs-attr">"id"</span>: <span class="hljs-string">"{d97f73fb-4718-48ee-a6a9-9c7d717ebd85}"</span>,
+           <span class="hljs-attr">"modified"</span>: <span class="hljs-number">1453931925</span>
+       }
+   ],
+   <span class="hljs-attr">"license"</span>: <span class="hljs-string">"https://creativecommons.org/licenses/by/4.0/"</span>
+}
+</code></pre></section></section><section typeof="bibo:Chapter" resource="#transport" property="bibo:hasPart"><!--OddPage--><h2 id="transport" resource="#transport"><span property="xhv:role" resource="xhv:heading"><span class="secno">5. </span>Transport</span></h2><section typeof="bibo:Chapter" resource="#polling" property="bibo:hasPart"><h3 id="polling" resource="#polling"><span property="xhv:role" resource="xhv:heading"><span class="secno">5.1 </span>Polling</span></h3><p>   Polling mechanics and expected consumer behaviour are defined in this section.</p><section class="informative" typeof="bibo:Chapter" resource="#polling-endpoint-specification" property="bibo:hasPart"><h4 id="polling-endpoint-specification" resource="#polling-endpoint-specification"><span property="xhv:role" resource="xhv:heading"><span class="secno">5.1.1 </span>Polling endpoint specification</span></h4><p><em>This section is non-normative.</em></p><p>Although the parameters for the endpoint are defined within the scope of this specification, the name and path of the endpoint are outside of the scope.</p><p>An illustrative example of an endpoint with parameters conforming to this specification is below:</p><ul>
+<li>Without parameters (first page): <code>/sessions</code></li>
+<li>With parameters (subsequent pages): <code>/sessions?afterTimestamp=1453931101&amp;afterId=%7Bc15814e5-8931-470c-8a16-ef45afedaece%7D</code></li>
+</ul></section><section typeof="bibo:Chapter" resource="#expected-consumer-behaviour" property="bibo:hasPart"><h4 id="expected-consumer-behaviour" resource="#expected-consumer-behaviour"><span property="xhv:role" resource="xhv:heading"><span class="secno">5.1.2 </span>Expected consumer behaviour</span></h4><section typeof="bibo:Chapter" resource="#initial-download" property="bibo:hasPart"><h5 id="initial-download" resource="#initial-download"><span property="xhv:role" resource="xhv:heading"><span class="secno">5.1.2.1 </span>Initial download</span></h5><p>   When consuming the data, pages are first downloaded sequentially to catchup with the current state of System 1. This is achieved by following the <code>next</code> property of each page until the <a href="#last-page-definition">last page</a> is reached.</p></section><section typeof="bibo:Chapter" resource="#polling-for-near-real-time-updates" property="bibo:hasPart"><h5 id="polling-for-near-real-time-updates" resource="#polling-for-near-real-time-updates"><span property="xhv:role" resource="xhv:heading"><span class="secno">5.1.2.2 </span>Polling for near real-time updates</span></h5><p>   The consumer <em class="rfc2119" title="MAY">MAY</em> poll the endpoint infrequently at the <a href="#last-page-definition">last page</a> URL to check for updates. When items are found, it <em class="rfc2119" title="SHOULD">SHOULD</em> resume the behaviour of the initial download: following the <code>next</code> property of each page.</p></section></section><section typeof="bibo:Chapter" resource="#content-type" property="bibo:hasPart"><h4 id="content-type" resource="#content-type"><span property="xhv:role" resource="xhv:heading"><span class="secno">5.1.3 </span>Content type</span></h4><p>   The polling endpoint <em class="rfc2119" title="MUST">MUST</em> declare the correct content type 
+   <code>Content-Type: application/json</code>.</p></section><section typeof="bibo:Chapter" resource="#http-status-codes" property="bibo:hasPart"><h4 id="http-status-codes" resource="#http-status-codes"><span property="xhv:role" resource="xhv:heading"><span class="secno">5.1.4 </span>HTTP status codes</span></h4><p>   The polling endpoint <em class="rfc2119" title="MUST">MUST</em> return the following status codes, and consuming applications <em class="rfc2119" title="MUST">MUST</em> respect these:</p><table>
+<thead>
+<tr>
+<th>HTTP Status Code</th>
+<th>Interpretation</th>
+<th>Expected consumer (System 2) behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>200</code></td>
+<td>Normal response</td>
+<td>Continue download / infrequent polling</td>
+</tr>
+<tr>
+<td><code>503</code></td>
+<td>Temporary overloading or maintenance of the server</td>
+<td>Clients <em class="rfc2119" title="SHOULD">SHOULD</em> retry after a random interval between 60 and 120 minutes, to ease load from multiple consumers</td>
+</tr>
+<tr>
+<td><code>404</code> or <code>410</code></td>
+<td>Endpoint not found at this location</td>
+<td>Clients <em class="rfc2119" title="SHOULD">SHOULD</em> consider this endpoint to be in an error state and discontinue harvesting</td>
+</tr>
+</tbody>
+</table></section><section typeof="bibo:Chapter" resource="#last-page-definition" property="bibo:hasPart"><h4 id="last-page-definition" resource="#last-page-definition"><span property="xhv:role" resource="xhv:heading"><span class="secno">5.1.5 </span>Last page definition</span></h4><p>   The last page <em class="rfc2119" title="MUST">MUST</em> have the following properties:</p><ul>
+<li>The <code>items</code> property is an empty array.</li>
+<li>The <code>next</code> property matches the URL of the current page.</li>
+</ul><p>   This allows for in-stream filtering and other usecases where the number of items in each page may vary.</p></section><section typeof="bibo:Chapter" resource="#in-stream-filtering" property="bibo:hasPart"><h4 id="in-stream-filtering" resource="#in-stream-filtering"><span property="xhv:role" resource="xhv:heading"><span class="secno">5.1.6 </span>In-stream filtering</span></h4><p>   The <code>items</code> property being empty is not sufficient to indicate the last page, as in-stream filtering is permitted on items within the page such that a page may appear to contain zero items, but specify a valid <code>next</code> URL distinct from the URL of the page.</p><figure id="fig-illustration-of-in-stream-filtering">
+     <img src="images/image04.png" alt="">
+     <figcaption>Fig. <span class="figno">4</span> <span class="fig-title">Illustration of in-stream filtering</span></figcaption>
+   </figure><p>   Although a full page may be presented from System 1 to the filter, the filter may exclude any and all items within the list, resulting in a zero-item array at System 2.</p><p>   Note that any items allowed to pass through the filter once <em class="rfc2119" title="MUST">MUST</em>, at the point that they no longer meet the filter conditions and would otherwise be filtered out, be allowed to pass through the filter with a <code>"deleted"</code> state for at least 7 days. This is in keeping with the invariant described in the <a href="#core-concept">core concept</a>, ensuring that System 2 correctly deletes items that have been modified such that they are subsequently filtered out.</p></section></section><section typeof="bibo:Chapter" resource="#strict-chronological-ordering-of-items" property="bibo:hasPart"><h3 id="strict-chronological-ordering-of-items" resource="#strict-chronological-ordering-of-items"><span property="xhv:role" resource="xhv:heading"><span class="secno">5.2 </span>Strict chronological ordering of items</span></h3><p>   For high-throughput, when updating data in the data consumer's state (System 2), the <code>modified</code> property of each item is available to ensure items are only updated with the most recent data, and that old data is ignored. Although this technique is intended to be used specifically for parallel processing scenarios, all methods of transport <em class="rfc2119" title="MUST">MUST</em> respect a strict chronological ordering of items by modified timestamp and ID, or change number, for each kind in order to ensure data consistency. Ordering across kinds is not important.</p></section><section typeof="bibo:Chapter" resource="#other-transport-mechanisms" property="bibo:hasPart"><h3 id="other-transport-mechanisms" resource="#other-transport-mechanisms"><span property="xhv:role" resource="xhv:heading"><span class="secno">5.3 </span>Other transport mechanisms</span></h3><p>   Note that although this specification has been built to cater for other types of transport, it focuses on polling as the primary transport mechanism. The exploration of other transport mechanisms is encouraged for usecases that require higher throughput. To support additional testing and experimentation of new transport mechanisms, a "beta" wiki has been defined to allow the community to explore such mechanisms collaboratively. For more information on the process supporting this, see [<cite><a class="bibref" href="#bib-OpenActive-RPDE-Beta-Wiki">OpenActive-RPDE-Beta-Wiki</a></cite>].</p></section></section><section class="informative" typeof="bibo:Chapter" resource="#implementation" property="bibo:hasPart"><!--OddPage--><h2 id="implementation" resource="#implementation"><span property="xhv:role" resource="xhv:heading"><span class="secno">6. </span>Implementation</span></h2><p><em>This section is non-normative.</em></p><section typeof="bibo:Chapter" resource="#common-implementation-issues" property="bibo:hasPart"><h3 id="common-implementation-issues" resource="#common-implementation-issues"><span property="xhv:role" resource="xhv:heading"><span class="secno">6.1 </span>Common implementation issues</span></h3><p>This specification is simple to implement, however such implementation requires precision to ensure that it is robust. The most common issues encountered during implementation are enumerated here:</p><ul>
+<li>The <a href="#last-page-definition">last page</a> must have zero items, and a correct next URL that matches the current page's URL.</li>
+<li>The <a href="#sql-query-example-for-timestamp-id">query</a> must be correctly implemented with the parentheses in the correct positions.</li>
+<li>The <a href="#core-concept">core concept</a> must be understood, specifically the nature of the list of items where each item appears only once, and each item exists in perpetuity unless deleted as specified in <a href="#deleted-items">deleted items</a>.</li>
+<li>The <a href="#-item-"><code>modified</code></a> value (used for either the <code>afterTimestamp</code> or <code>afterChangeNumber</code> parameter) must always be updated when any data within the <code>data</code> property is updated. This can be achieved through e.g. <a href="#patterns-of-implementation"> adding triggers</a> for related changes to update the modified value on the primary table.</li>
+<li>The <a href="#-item-"><code>modified</code></a> value should match the format used in the <code>afterTimestamp</code> or <code>afterChangeNumber</code> parameters. </li>
+</ul></section><section typeof="bibo:Chapter" resource="#potential-race-condition-with-next-url" property="bibo:hasPart"><h3 id="potential-race-condition-with-next-url" resource="#potential-race-condition-with-next-url"><span property="xhv:role" resource="xhv:heading"><span class="secno">6.2 </span>Potential race condition with next URL</span></h3><p>The logic used to generate the <code>"next"</code> URL must query the database only once to retrieve the list of items (though subsequent queries can be made for each item if required). Hence the <a href="#-response-"><code>next</code> URL</a> must be derived from the last item of the original query, or the current page URL, instead of via a second query specifically for the next URL. If a second query is made, the state of the database may have changed in between the two queries, which can lead to inconsistent behaviour.</p></section><section typeof="bibo:Chapter" resource="#patterns-of-implementation" property="bibo:hasPart"><h3 id="patterns-of-implementation" resource="#patterns-of-implementation"><span property="xhv:role" resource="xhv:heading"><span class="secno">6.3 </span>Patterns of implementation</span></h3><p>Four common patterns of implementation are presented:</p><section typeof="bibo:Chapter" resource="#single-json-entity-cache-table" property="bibo:hasPart"><h4 id="single-json-entity-cache-table" resource="#single-json-entity-cache-table"><span property="xhv:role" resource="xhv:heading"><span class="secno">6.3.1 </span>Single JSON entity cache table</span></h4><p>A cache table is created which is updated on each related entity/table change, either via an application or database trigger. The table contains the rendered [<cite><a class="bibref" href="#bib-JSON">JSON</a></cite>] <code>&lt;item&gt;</code>, along with the Modified Timestamp or Change Number, the ID, and a deleted flag.</p><p>Updates to the table overwrite old items with a newer modified timestamp.</p><p>The [<cite><a class="bibref" href="#bib-JSON">JSON</a></cite>] response is generated from the cached [<cite><a class="bibref" href="#bib-JSON">JSON</a></cite>] fragments within the table.</p></section><section typeof="bibo:Chapter" resource="#table-join-with-new-timestamp-field" property="bibo:hasPart"><h4 id="table-join-with-new-timestamp-field" resource="#table-join-with-new-timestamp-field"><span property="xhv:role" resource="xhv:heading"><span class="secno">6.3.2 </span>Table join with new timestamp field</span></h4><p>The primary table is amended to include a new timestamp field (Modified Timestamp or Change Number), and application or database triggers are added to update this timestamp each time an embedded entity is updated.</p><p>The [<cite><a class="bibref" href="#bib-JSON">JSON</a></cite>] response is generated on-demand from a query which joins together the various embedded entities (related tables) with the primary table, and ordering by the new timestamp field and existing ID field of the primary table.</p><p>A deleted flag will need to be added to the primary table if it does not already exist.</p></section><section typeof="bibo:Chapter" resource="#table-join-with-existing-timestamp-fields" property="bibo:hasPart"><h4 id="table-join-with-existing-timestamp-fields" resource="#table-join-with-existing-timestamp-fields"><span property="xhv:role" resource="xhv:heading"><span class="secno">6.3.3 </span>Table join with existing timestamp fields</span></h4><p>The [<cite><a class="bibref" href="#bib-JSON">JSON</a></cite>] response is generated on-demand from a query which joins together the various embedded entities (related tables) from the primary table, ordering by a <code>max()</code> of the timestamp fields in each table and the existing ID field of the primary table.</p><p>This is the most inefficient of the four patterns for most use cases, but the easiest to implement without database schema changes (assuming a deleted flag already exists on the primary table, otherwise it must be created).</p></section><section typeof="bibo:Chapter" resource="#hybrid-approach-denormalised-paging-table" property="bibo:hasPart"><h4 id="hybrid-approach-denormalised-paging-table" resource="#hybrid-approach-denormalised-paging-table"><span property="xhv:role" resource="xhv:heading"><span class="secno">6.3.4 </span>Hybrid approach: denormalised paging table</span></h4><p>A denormalised paging table is created that contains the fields required for the related entities along with a Modified Timestamp or Change Number, ID and deleted flag.</p><p>This table is then updated during each entity (related table) update via application or database triggers, and the [<cite><a class="bibref" href="#bib-JSON">JSON</a></cite>] is generated on-demand from a simple query of the denormalised paging table.</p><p>The advantage of this approach is that the field mapping to any specification used for <code>&lt;data&gt;</code> can be separated from the trigger logic for the paging table, while reducing the load on the database for each query.</p></section></section><section typeof="bibo:Chapter" resource="#additional-notes" property="bibo:hasPart"><h3 id="additional-notes" resource="#additional-notes"><span property="xhv:role" resource="xhv:heading"><span class="secno">6.4 </span>Additional notes</span></h3><section typeof="bibo:Chapter" resource="#calculated-fields-e-g-available-spaces-or-available-tickets-for-a-session-" property="bibo:hasPart"><h4 id="calculated-fields-e-g-available-spaces-or-available-tickets-for-a-session-" resource="#calculated-fields-e-g-available-spaces-or-available-tickets-for-a-session-"><span property="xhv:role" resource="xhv:heading"><span class="secno">6.4.1 </span>Calculated fields (e.g. available spaces or available tickets for a session)</span></h4><p>Some entities will not need to be synchronised, but fields calculated from them will need to be known to the data consumer (System 2). For example, the "tickets" table may not need to be synchronised, but the "available tickets" calculated field on the "sessions" table will be required.</p><p>The suggested approach is to calculate the field "available tickets" and store it in the "sessions" table on each ticket sale. This has three advantages:</p><ul>
+<li>It keeps the application logic for such a calculation together with the original action.</li>
+<li>It creates a cached value that can be used in other parts of the application to increase performance.</li>
+<li>It prevents the creation of complex calculations which are used only on-demand for the purposes of data synchronisation.</li>
+</ul><p>An alternative could be to calculate it on each synchronisation, however this will slow down the sync. Assuming that reads will occur on this calculated data more frequently than writes, caching the calculated field is recommended.</p></section><section typeof="bibo:Chapter" resource="#database-triggers-microsoft-sql-server-example-" property="bibo:hasPart"><h4 id="database-triggers-microsoft-sql-server-example-" resource="#database-triggers-microsoft-sql-server-example-"><span property="xhv:role" resource="xhv:heading"><span class="secno">6.4.2 </span>Database triggers (Microsoft SQL Server example)</span></h4><p>For implementations using a
+<a href="https://msdn.microsoft.com/en-us/library/ms182776%28v=SQL.90%29.aspx">timestamp</a>/<a href="https://msdn.microsoft.com/en-GB/library/ms182776.aspx">rowversion</a> field on the parent table as the "change number", using the trigger below for each child table will update the rowversion field in the relevant rows on the parent table when the child table is updated.</p><p>The <code>SET SomeColumn = SomeColumn</code> part of this trigger could easily be replaced with setting materialised calculated fields (e.g. "total number of tickets sold") which contain the summary data required by System 2.</p><p>The example below has been adapted from <a href="http://stackoverflow.com/questions/2165333/how-to-update-sql-server-timestamp-column-without-changing-record-data">here</a>, see <a href="https://msdn.microsoft.com/en-us/library/ms191300.aspx">here</a> for an explanation of the mechanics.</p><pre><code class="lang-SQL"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TRIGGER</span> tgUpdateParentRowVersion <span class="hljs-keyword">ON</span> ChildTable <span class="hljs-keyword">FOR</span> <span class="hljs-keyword">INSERT</span>, <span class="hljs-keyword">DELETE</span>, <span class="hljs-keyword">UPDATE</span>
+<span class="hljs-keyword">AS</span>
+<span class="hljs-keyword">BEGIN</span>
+  <span class="hljs-comment">-- The updates below force the update of the parent table rowversion</span>
+
+  <span class="hljs-comment">-- Materialised field calculation goes here</span>
+
+  <span class="hljs-keyword">UPDATE</span> ParentTable
+     <span class="hljs-keyword">SET</span> SomeColumn = SomeColumn
+    <span class="hljs-keyword">FROM</span> ParentTable a
+    <span class="hljs-keyword">JOIN</span> inserted    i <span class="hljs-keyword">on</span> a.pkParentTable = i.fkParentTable
+
+  <span class="hljs-keyword">UPDATE</span> ParentTable
+     <span class="hljs-keyword">SET</span> SomeColumn = SomeColumn
+    <span class="hljs-keyword">FROM</span> ParentTable a
+    <span class="hljs-keyword">JOIN</span> deleted     d <span class="hljs-keyword">on</span> a.pkParentTable = d.fkParentTable
+<span class="hljs-keyword">END</span>
+</code></pre><p></p></section></section></section><section class="appendix informative" typeof="bibo:Chapter" resource="#acknowledgements" property="bibo:hasPart"><!--OddPage--><h2 id="acknowledgements" resource="#acknowledgements"><span property="xhv:role" resource="xhv:heading"><span class="secno">A. </span>Acknowledgements</span></h2><p><em>This section is non-normative.</em></p><p>The editors thank <a href="http://www.w3.org/community/openactive/participants">all members</a> of the OpenActive Community Group for contributions of various kinds.</p></section><p></p><p></p><section id="references" class="appendix" typeof="bibo:Chapter" resource="#references" property="bibo:hasPart"><!--OddPage--><h2 id="h-references" resource="#h-references"><span property="xhv:role" resource="xhv:heading"><span class="secno">B. </span>References</span></h2><section id="normative-references" typeof="bibo:Chapter" resource="#normative-references" property="bibo:hasPart"><h3 id="h-normative-references" resource="#h-normative-references"><span property="xhv:role" resource="xhv:heading"><span class="secno">B.1 </span>Normative references</span></h3><dl class="bibliography" resource=""><dt id="bib-ISO8601">[ISO8601]</dt><dd>International Organization for Standardization (ISO). <a href="http://www.iso.org/iso/catalogue_detail?csnumber=40874" property="dc:requires"><cite>Representation of dates and times. ISO 8601:2004.</cite></a>. 2004. ISO 8601:2004. URL: <a href="http://www.iso.org/iso/catalogue_detail?csnumber=40874" property="dc:requires">http://www.iso.org/iso/catalogue_detail?csnumber=40874</a>
+</dd><dt id="bib-JSON">[JSON]</dt><dd>D. Crockford. IETF. <a href="https://tools.ietf.org/html/rfc4627" property="dc:requires"><cite>The application/json Media Type for JavaScript Object Notation (JSON)</cite></a>. July 2006. Informational. URL: <a href="https://tools.ietf.org/html/rfc4627" property="dc:requires">https://tools.ietf.org/html/rfc4627</a>
+</dd><dt id="bib-JSON-LD">[JSON-LD]</dt><dd>Manu Sporny; Gregg Kellogg; Markus Lanthaler. W3C. <a href="https://www.w3.org/TR/json-ld/" property="dc:requires"><cite>JSON-LD 1.0</cite></a>. 16 January 2014. W3C Recommendation. URL: <a href="https://www.w3.org/TR/json-ld/" property="dc:requires">https://www.w3.org/TR/json-ld/</a>
+</dd><dt id="bib-Modelling-Opportunity-Data">[Modelling-Opportunity-Data]</dt><dd>OpenActive Community Group. <a href="https://www.openactive.io/modelling-opportunity-data/" property="dc:requires"><cite>Modelling Opportunity Data</cite></a>. URL: <a href="https://www.openactive.io/modelling-opportunity-data/" property="dc:requires">https://www.openactive.io/modelling-opportunity-data/</a>
+</dd><dt id="bib-NOTE-datetime">[NOTE-datetime]</dt><dd><a href="https://www.w3.org/TR/1998/NOTE-datetime-19980827" property="dc:requires"><cite>Date and Time Formats</cite></a>. URL: <a href="https://www.w3.org/TR/1998/NOTE-datetime-19980827" property="dc:requires">https://www.w3.org/TR/1998/NOTE-datetime-19980827</a>
+</dd><dt id="bib-RFC2119">[RFC2119]</dt><dd>S. Bradner. IETF. <a href="https://tools.ietf.org/html/rfc2119" property="dc:requires"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119" property="dc:requires">https://tools.ietf.org/html/rfc2119</a>
+</dd></dl></section><section id="informative-references" typeof="bibo:Chapter" resource="#informative-references" property="bibo:hasPart"><h3 id="h-informative-references" resource="#h-informative-references"><span property="xhv:role" resource="xhv:heading"><span class="secno">B.2 </span>Informative references</span></h3><dl class="bibliography" resource=""><dt id="bib-OpenActive-RPDE-Beta-Wiki">[OpenActive-RPDE-Beta-Wiki]</dt><dd>OpenActive Community Group. <a href="https://github.com/openactive/realtime-paged-data-exchange/wiki" property="dc:references"><cite>OpenActive Realtime Paged Data Exchange Beta Wiki</cite></a>. URL: <a href="https://github.com/openactive/realtime-paged-data-exchange/wiki" property="dc:references">https://github.com/openactive/realtime-paged-data-exchange/wiki</a>
+</dd><dt id="bib-Publishing-Opportunity-Data">[Publishing-Opportunity-Data]</dt><dd>OpenActive Community Group. <a href="https://www.openactive.io/opportunity-data-primer/" property="dc:references"><cite>Publishing Opportunity Data: A Primer</cite></a>. URL: <a href="https://www.openactive.io/opportunity-data-primer/" property="dc:references">https://www.openactive.io/opportunity-data-primer/</a>
+</dd><dt id="bib-SCHEMA-ORG">[SCHEMA-ORG]</dt><dd><a href="http://schema.org/" property="dc:references"><cite>Schema.org</cite></a>. URL: <a href="http://schema.org/" property="dc:references">http://schema.org/</a>
+</dd><dt id="bib-URI-Handling-Function-Properties">[URI-Handling-Function-Properties]</dt><dd>Ecma International. <a href="https://www.ecma-international.org/ecma-262/5.1/#sec-15.1.3" property="dc:references"><cite>URI Handling Function Properties</cite></a>. URL: <a href="https://www.ecma-international.org/ecma-262/5.1/#sec-15.1.3" property="dc:references">https://www.ecma-international.org/ecma-262/5.1/#sec-15.1.3</a>
+</dd></dl></section></section><p role="navigation" id="back-to-top"><a href="#toc"><abbr title="Back to Top">↑</abbr></a></p><script async="" defer="" src="https://www.w3.org/scripts/TR/2016/fixup.js"></script></body></html>
